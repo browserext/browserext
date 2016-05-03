@@ -1,1 +1,1 @@
-# browserext
+# The Browser Extension Specification
