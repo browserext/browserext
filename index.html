@@ -73,5 +73,109 @@
       <p>This document is a stub.</p>
     </section>
 
+    <section class='informative'>
+      <h2>Core APIs</h2>
+      <p>The goal for these core APIs is to provide functionality that extension authors need for:<br/>
+<ul>
+<li>page modification</li>
+<li>browser UI augmentation</li>
+<li>network request modification</li>
+</ul><br/>
+The core APIs are:<ul>
+  <li>browserAction</li> 
+  <li>contextMenu</li>
+  <li>extension</li>
+  <li>i18n</li>
+  <li>pageAction</li>
+  <li>runtime</li>
+  <li>tabs</li>
+  <li>webNavigation</li>
+  <li>webRequest</li>
+  <li>windows</li>
+</ul>
+Future iterations of this document will include the specifics of expected browser behavior (to ensure interoperability) and specific functions/events for each object (e.g. browserAction.setIcon(), pageAction.onClicked(), tabs.sendMessage(), etc.).<br/>
+<br/>
+</p>
+    </section>
+
+    <section class='informative'>
+      <h2>Manifest Format</h2>
+      <pre>
+// Before parsing the manifest, standards-compliant browsers are expected to pre-scan
+// and remove "//" comments. After this step the manifest.json file format for browser
+// extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.
+//
+// Other manifest keys that are well-formed JSON but are not listed here must be ignored.
+//
+// Note that some fields marked as Optional here are required by vendor-specific distribution Stores.
+
+{
+  "name": "The Name of Your Extension",             // Required
+  "version": "Your Extension Verison",              // Required
+  "default_locale": "en",                           // Required if locales are used. Otherwise, not allowed
+
+  "description": "Description for Your Extensions",   
+  "icons": {...},                                    
+  "developer": {                                    
+       "name": "Your Name or Company",              
+       "url": "Company Website"                      
+  }
+
+  // Note: Some browsers may support either browser_action or page_action, but not both
+  "browser_action": {  
+      "default_icon": {...},                        // Same format as "icons"
+      "default_popup": "Page URL",
+      "default_title": "Title string"
+  },
+  "page_action": {...},                             // Same format as "browser_action"
+  
+  "browser_specific_settings": {                    
+       "&lt;browser_name&gt;": {                          // Examples "gecko","opera","edge"
+            "&lt;key&gt;": "&lt;value&gt;"                      // Examples "strict_min_version": "42.0", "id": "addon@example.com"
+       }
+  },
+
+  "background": {                                   
+      "page": "Page URL",                           // Only one of "page" or "scripts" may be specified, but not both 
+      "scripts": [],                                // Only one of "page" or "scripts" may be specified, but not both 
+      "persistent": false                           // Required if "background" is specified
+  },
+
+  "content_scripts": {                                                    
+      "all_frames": false,                          
+      "css": [],                                   
+      "exclude_matches": [],                        
+      "js": [],                                     
+      "matches": [],                                
+      "run_at" : "document_start"                   // Also "document_end", "document_idle"
+  }
+
+  "content_security_policy": "&lt;policy-string&gt;",     
+  
+  "manifest_version": 2,                            // Not used
+
+  "required_keys": [],                              // If a browser does not recognize a key in the list, it must 
+                                                    // reject the manifest (e.g. "sidebar_action")
+                                                    // Future keys may be required to be in the list if used. 
+
+  "permissions": {                                  
+       "activeTab",                                                
+       "contextMenus",                              
+       "storage",                                   
+       "tabs",                                      
+       "webNavigation",                            
+       "webRequest",                                
+       "webRequestBlocking",                        
+       "&lt;url-pattern&gt;"                              // Examples "http://*/*", "<all_urls>"
+  },
+
+  "web_accessible_resources": [...]                 
+}
+
+
+      </pre>
+    </section>
+
+
   </body>
 </html>
