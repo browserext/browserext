@@ -3,6 +3,17 @@
   <head>
     <title>Browser Extensions</title>
     <meta charset='utf-8'>
+<style>
+table, td, th {
+    border: 1px solid black;
+    padding: 8px;
+font-size: 11pt;
+}
+
+table {
+    border-collapse: collapse;
+}
+</style>
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
     <script class='remove'>
       var respecConfig = {
@@ -77,13 +88,197 @@
       <h2>Core APIs</h2>
       <p>The goal for these core APIs is to provide functionality that extension authors need for:<br/>
 <ul>
-<li>page modification</li>
-<li>browser UI augmentation</li>
+<li>page modification for web site content</li>
+<li>UI augmentation for web browsers (host apps)</li>
 <li>network request modification</li>
-</ul><br/>
-The core APIs are:<ul>
+</ul></p><section>
+      <h3>API Availability</h3> 
+Browser extensions are authored primarily with JavaScript. In addition to the usual <a href="https://www.w3.org/standards/webdesign/script">JavaScript Web APIs</a>, additional APIs may be available exclusivley to extensions via the <code>browser</code> object. The specific APIs that are available to an extension from the <code>browser</code> object are dependent upon:
+<ul>
+<li>Execution context (e.g. background/event, popup, options, content, extension page)
+<li>Keys declared in the manifest (e.g. browser_action, page_action)
+<li>Permissions declared in the manifest (e.g. contextMenu, tabs, webNavigation, webRequest) 
+<li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
+</ul> 
+<section><h4>Due to Execution Context</h4>
+A browser extension's manifest may declare pages and their associated script be executed in one of the following contexts:
+<ul>
+<li>Browser host contexts ("Window")
+<ul>
+<li>Background page - use the "background" manifest key and specify "persistent" true 
+<li>Event page - use the "background" manifest key and specify "persistent" false 
+<li>Popup page - use the "browser_action" or "page_action" manifest key and specify "detault_popup" 
+<li>Options page - use the "options_page" manifest key 
+<li>Custom page - such as "browserext:&#x2F;&lt;ext_id&gt;&#x2F;myCustomPage.html" 
+</ul>
+<li>Content context - web-hosted pages such as https://en.wikipedia.org/wiki/Main_Page/index.html or https://w3c.github.io/html/index.html
+</ul>
+</section>
+
+<section><h4>Due to Manifest Keys and Permissions</h4> 
+The new extended attribute <code>"CheckAnyPermissions"</code> is required to express browser extensions API in WebIDL.<br/>
+<br/>
+Some API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below.<br/><br/>
+<table>
+<tr>
+  <th rowspan=2>API object</th>
+  <th colspan=2>Execution Context</th>
+  <th colspan=2>Required Declaration</th>
+</tr>
+<tr>
+  <th>Background page,<br/>Event page,<br/>Popup page,<br/>Options page,</br>Custom page</th>
+  <th>Content page</th>
+  <th>Manifest key</th>
+  <th>Optional Permissions<sup><a href="#note2">2</a></sup></th>
+</tr>
+<tr>
+  <th><code>browserAction</code></th>
+  <td>Y<sup><a href="#note1">1</a></sup></td>
+  <td><p></p></td>
+  <td>"browser_action"<sup><a href="#note1">1</a></sup></td>
+  <td><p></p></td>
+</tr>
+<tr>
+  <th><code>contextMenus</code></th>
+  <td>Y</td>
+  <td><p></p></td>
+  <td>"permissions":["context_menus"]</td>
+  <td>Y<sup><a href="#note2">2</a></sup></td>
+</tr>
+<tr>
+  <th><code>extension</code></th>
+  <td>Y</td>
+  <td>Y</td>
+  <td><p></p></td>
+  <td><p></p></td>
+</tr>
+<tr>
+  <th><code>i18n</code></th>
+  <td>Y</td>
+  <td>Y</td>
+  <td><p></p></td>
+  <td><p></p></td>
+</tr>
+<tr>
+  <th><code>pageAction</code></th>
+  <td>Y<sup><a href="#note1">1</a></sup></td>
+  <td><p></p></td>
+  <td>"page_action"<sup><a href="#note1">1</a></sup></td>
+  <td><p></p></td>
+</tr>
+<tr>
+  <th><code>runtime</code></th>
+  <td>Y</td>
+  <td>Y</td>
+  <td><p></p></td>
+  <td><p></p></td>
+</tr>
+<tr>
+  <th><code>tabs</code></th>
+  <td>Y</td>
+  <td><p></p></td>
+  <td>"permissions":["tabs"]</td>
+  <td>Y<sup><a href="#note2">2</a></sup></td>
+</tr>
+<tr>
+  <th><code>webNavigation</code></th>
+  <td>Y</td>
+  <td><p></p></td>
+  <td>"permissions":["webNavigation"]</td>
+  <td>Y<sup><a href="#note2">2</a></sup></td>
+</tr>
+<tr>
+  <th><code>webRequest</code></th>
+  <td>Y</td>
+  <td><p></p></td>
+  <td>"permissions":["webRequest"]</td>
+  <td>Y<sup><a href="#note2">2</a></sup></td>
+</tr>
+<tr>
+  <th><code>windows</code></th>
+  <td>Y</td>
+  <td><p></p></td>
+  <td><p></p></td>
+  <td><p></p></td>
+</tr>
+</table>
+<div id="note1" resource="#note1">
+<sup>1</sup> Either <code>browserAction</code> or <code>pageAction</code> may be supported by an extension, not both<br/></div>
+<div id="note2" resource="#note2">
+<sup>2</sup> Note that some web browsers support the <code>browser.permissions</code> object. These web browsers can dynamically request that additional APIs be available if the user accepts a runtime request for these capabilities and their associated APIs. This dynamic capability is not supported in all web browsers.</div>
+<br/>
+</section>
+
+
+
+<section><h4>Expressing Availability in WebIDL</h4> 
+To express these conditional situations in which certain APIs may or may not be available, depending on both the execution context and the expressed manifest keys or pemissions, the following WebIDL syntax is used. In this example, the <code>contextMenus</code> object is only available to the browser host contexts such as background, event, popup, and options pages. Also, the <code>contextMenus</code> object requires the extension author to specify <code>"permissions":["tabs"]</code> in the manifest.<br/>
+<br/>
+Now we will look at two examples of how WebIDL can express these conditions. 
+
+<section><h4>WebIDL Example (contextMenus)</h4>
+First, let's look at an example of how the <code>browser.contextMenus</code> object would be expressed in WebIDL.<br/>
+<br/>
+1) First, we declare the methods for the browser.contextMenus object. The methods would be declared in this interface<br/>
+<pre class="def idl">
+[NoInterfaceObject]
+interface BrowserContextMenus {
+}; 
+</pre>
+2) Next, we specify the necessary permissions and browser context ("Window") for the browser.contextMenus object. No methods need to be declared here.<br/>
+<pre class="def idl">
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="contextMenus"]
+interface BrowserContextMenusAPI {
+  readonly attribute BrowserContextMenus contextMenus; }
+</pre>
+3) Finally, we connect the contextMenus object to the browser.* object.</br>
+<pre class="def idl">
+Browser implements BrowserContextMenusAPI;
+</pre>
+</section>
+<section><h4>WebIDL Example (i18n)</h4>
+
+In the next example, the <code>i18n</code> API should be made available to both browser host scripts (background, event, popup, options, etc) and content scripts, and use of this API does not require a manifest declaration. Additionally, however, the manifest does specify a value (<code>default_locale</code>) that is necessary, but cannot be specified by the extension author in script code. This is expressed as a <code>WebExtensionManifest</code> dictionary.<br/>
+<br/>
+1) First, declare the methods for the <code>browser.contextMenus</code> object. Other methods would follow <code>getMessage</code>, but they now shown in this example for simplicity.<br/>
+<pre class="def idl">
+[NoInterfaceObject]
+interface BrowserI18n {
+  DOMString getMessage(DOMString messageName, sequence<DOMString>? substitutions);
+};
+</pre>
+
+2) Next, we specify the available contexts ("Window" for background/event/popup/options...) and "ContentScript" for the content context.
+<pre class="def idl">
+[NoInterfaceObject, Exposed=(Window,ContentScript)] interface BrowserI18nAPI {
+  readonly attribute BrowserI18n i18n;
+}
+</pre>
+3) Connect the <code>i18n</code> object to the <code>browser.*</code> object.
+<pre class="def idl">
+Browser implements BrowserI18nAPI;
+</pre>
+4) Finally, we express the locale from manifest.json. For example <code>"default_locale": "en"</code>
+<pre class="def idl">
+partial dictionary WebExtensionManifest {
+  DOMString? default_locale;
+};
+</pre>
+</section>
+</section>
+<section><h4>Due to Content Security Policy (CSP)</h4><p>
+Some APIs are restricted or due to CSP. Script execution via <code>eval()</code> and inline script execution are not allowed. Only script from the extension's package can be executed. Executing script from the web is not allowed.<br/><br/>
+
+Content scripts are only allowed to inject script that executes immediately. Injecting event-based delayed script exection may not be injected. Instead, the content script must handle non-immediate events. </p>
+</section>
+</section>
+
+
+<section>
+<h3 id="coreapis">The <code>browser</code> object</h3>
+The core browser extension API objects are available from the <code>browser</code> object:<ul>
   <li>browserAction</li> 
-  <li>contextMenu</li>
+  <li>contextMenus</li>
   <li>extension</li>
   <li>i18n</li>
   <li>pageAction</li>
@@ -93,11 +288,22 @@ The core APIs are:<ul>
   <li>webRequest</li>
   <li>windows</li>
 </ul>
-Future iterations of this document will include the specifics of expected browser behavior (to ensure interoperability) and specific functions/events for each object (e.g. browserAction.setIcon(), pageAction.onClicked(), tabs.sendMessage(), etc.).<br/>
-<br/>
 </p>
-    </section>
 
+<section><h4 id="browserAction">The <code>browserAction</code> object</h4></section>
+<section><h4 id="contextMenus">The <code>contextMenus</code> object</h4></section>
+<section><h4 id="extension">The <code>extension</code> object</h4></section>
+<section><h4 id="i18n">The <code>i18n</code> object</h4></section>
+<section><h4 id="pageAction">The <code>pageAction</code> object</h4></section>
+<section><h4 id="runtime">The <code>runtime</code> object</h4></section>
+<section><h4 id="tabs">The <code>tabs</code> object</h4></section>
+<section><h4 id="webNavigation">The <code>webNavigation</code> object</h4></section>
+<section><h4 id="webRequest">The <code>webRequest</code> object</h4></section>
+<section><h4 id="windows">The <code>windows</code> object</h4></section>
+
+
+    </section>
+</section>
     <section class='informative'>
       <h2>Manifest Format</h2>
       <pre>
@@ -152,6 +358,8 @@ Future iterations of this document will include the specifics of expected browse
 
   "content_security_policy": "&lt;policy-string&gt;",     
   
+  "options_page": "Page URL",                            // Optional
+
   "manifest_version": 2,                            // Not used
 
   "required_keys": [],                              // If a browser does not recognize a key in the list, it must 
@@ -175,7 +383,7 @@ Future iterations of this document will include the specifics of expected browse
 
       </pre>
     </section>
-
+<section class='informative'><h2>Browser Accessible Resources</h2></section>
 
   </body>
 </html>
