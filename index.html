@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <title>Browser Extensions</title>
@@ -101,6 +101,15 @@ Browser extensions are authored primarily with JavaScript. In addition to the us
 <li>Permissions declared in the manifest (e.g. contextMenu, tabs, webNavigation, webRequest) 
 <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
 </ul> 
+
+<section>
+<h4>Due to Content Security Policy (CSP)</h4><p>
+    Some APIs are restricted due to CSP. Script execution via <code>eval()</code> and inline script execution are not allowed. Only script from the extension's package can be executed. Executing script from the web is not allowed.<br /><br />
+
+    Content scripts are only allowed to inject script that executes immediately. Injecting event-based delayed exection script is now allowed. Instead, content script must be used to handle non-immediate events.
+</p>
+</section>
+
 <section><h4>Due to Execution Context</h4>
 A browser extension's manifest may declare pages and their associated script be executed in one of the following contexts:
 <ul>
@@ -110,15 +119,13 @@ A browser extension's manifest may declare pages and their associated script be 
 <li>Event page - use the "background" manifest key and specify "persistent" false 
 <li>Popup page - use the "browser_action" or "page_action" manifest key and specify "detault_popup" 
 <li>Options page - use the "options_page" manifest key 
-<li>Custom page - such as "browserext:&#x2F;&lt;ext_id&gt;&#x2F;myCustomPage.html" 
+<li>Custom page - such as "browserext:&#x2F;&#x2F;&lt;ext_id&gt;&#x2F;myCustomPage.html" 
 </ul>
 <li>Content context - web-hosted pages such as https://en.wikipedia.org/wiki/Main_Page/index.html or https://w3c.github.io/html/index.html
 </ul>
 </section>
 
 <section><h4>Due to Manifest Keys and Permissions</h4> 
-The new extended attribute <code>"CheckAnyPermissions"</code> is required to express browser extensions API in WebIDL.<br/>
-<br/>
 Some API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below.<br/><br/>
 <table>
 <tr>
@@ -213,39 +220,49 @@ Some API require a specific manifest key or specific permission. If the key or p
 
 
 <section><h4 id="webidl">Expressing Availability in WebIDL</h4> 
-To express these conditional situations in which certain APIs may or may not be available, depending on both the execution context and the expressed manifest keys or pemissions, the following WebIDL syntax is used. In this example, the <code>contextMenus</code> object is only available to the browser host contexts such as background, event, popup, and options pages. Also, the <code>contextMenus</code> object requires the extension author to specify <code>"permissions":["tabs"]</code> in the manifest.<br/>
-<br/>
-Now we will look at two examples of how WebIDL can express these conditions. 
+<section>
+    <h4>Extended Attribute: <code>CheckAnyPermissions</code></h4>To express the aforementioned conditional situations in which certain APIs may or may not be available, depending on both the execution context and the expressed manifest keys or pemissions, the new <a href="http://heycam.github.io/webidl/">WebIDL</a> extended attribute <code>"CheckAnyPermissions"</code> is used.<br />
+    <br />
+    Now we will look at two examples of how WebIDL can express these conditions. <br />
+    <br />
+</section>
 
 <section><h4>Example (contextMenus)</h4>
-First, let's look at an example of how the <code>browser.contextMenus</code> object would be expressed in WebIDL.<br/>
+First, let's look at an example of how the <code>browser.contextMenus</code> object would be expressed in WebIDL. In this case, the <code>contextMenus</code> object is only available to the browser host contexts such as background, event, event, popup, and options pages. Also, the <code>contextMenus</code> object requires the extension author to specify <code>"permissions":["tabs"]</code> in the manifest.<br/>
 <br/>
-1) First, we declare the methods for the <code>browser.contextMenus</code> object. The methods would be declared in this interface<br/>
+1) First, we declare the methods for the <code>browser.contextMenus</code> object.<br/>
 <pre class="def idl">
 [NoInterfaceObject]
 interface BrowserContextMenus {
-}; 
+    unsigned short create(ContextMenuCreateProperties data, Function callback);
+    object onClicked(Function callback);
+	void remove(unsigned short itemId, Function callback);
+	void removeAll(Function callback);
+	void update(unsigned short itemId, ContextMenuUpdateProperties data, Function callback);
+};
 </pre>
-2) Next, we specify the necessary permissions and browser context ("Window") for the browser.contextMenus object. No methods need to be declared here.<br/>
+2) Next, we specify the necessary permissions and browser context ("Window") for the <code>browser.contextMenus</code> object. No methods need to be declared here.<br/>
 <pre class="def idl">
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions="contextMenus"]
 interface BrowserContextMenusAPI {
-  readonly attribute BrowserContextMenus contextMenus; }
+  readonly attribute BrowserContextMenus contextMenus; 
+}
 </pre>
-3) Finally, we connect the contextMenus object to the browser.* object.</br>
+3) Finally, we connect the <code>contextMenus</code> object to the <code>browser.*</code> object.</br>
 <pre class="def idl">
 Browser implements BrowserContextMenusAPI;
 </pre>
 </section>
 <section><h4>Example (i18n)</h4>
 
-In the next example, the <code>i18n</code> API should be made available to both browser host scripts (background, event, popup, options, etc) and content scripts, and use of this API does not require a manifest declaration. Additionally, however, the manifest does specify a value (<code>default_locale</code>) that is necessary, but cannot be specified by the extension author in script code. This is expressed as a <code>WebExtensionManifest</code> dictionary.<br/>
+In the next example, the <code>i18n</code> API should be made available to both browser host scripts (background, event, popup, options, etc) and content scripts, and use of this API does not require a manifest declaration. Additionally, however, the manifest does specify a value (<code>default_locale</code>) that is necessary, but cannot be specified by the extension author in script code. This is expressed as a <code>BrowserExtensionManifest</code> dictionary.<br/>
 <br/>
-1) First, declare the methods for the <code>browser.contextMenus</code> object. Other methods would follow <code>getMessage</code>, but they now shown in this example for simplicity.<br/>
+1) First, declare the methods for the <code>browser.contextMenus</code> object. Other methods would follow <code>getMessage</code>, but they are omitted in this example for simplicity.<br/>
 <pre class="def idl">
 [NoInterfaceObject]
 interface BrowserI18n {
   DOMString getMessage(DOMString messageName, sequence<DOMString>? substitutions);
+  void otherMethodsOmittedInThisExampleForSimplicity();
 };
 </pre>
 
@@ -261,180 +278,653 @@ Browser implements BrowserI18nAPI;
 </pre>
 4) Finally, we express the locale from manifest.json. For example <code>"default_locale": "en"</code>
 <pre class="def idl">
-partial dictionary WebExtensionManifest {
-  DOMString? default_locale;
+partial dictionary BrowserExtensionManifest {
+  DOMString? defaultLocale;
 };
 </pre>
 </section>
 </section>
-<section><h4>Due to Content Security Policy (CSP)</h4><p>
-Some APIs are restricted or due to CSP. Script execution via <code>eval()</code> and inline script execution are not allowed. Only script from the extension's package can be executed. Executing script from the web is not allowed.<br/><br/>
 
-Content scripts are only allowed to inject script that executes immediately. Injecting event-based delayed script exection may not be injected. Instead, the content script must handle non-immediate events. </p>
-</section>
 </section>
 
 <section><h3>Events</h3> 
-Extension events are similar to DOM Events [<a href="https://www.w3.org/TR/dom/">DOM4</a>]. However, extension events are dispatched only to objects in the relevant extension scope (background, options, content, etc). Objects in the extension scope can observe events by calling
+Extension events are similar to DOM Events [<a href="https://www.w3.org/TR/dom/">DOM4</a>]. However, extension events are dispatched only to objects in the relevant extension scope (background, event, options, content, etc). Script in the extension scope can observe events by calling
         <code>addListener()</code>.<br/>
 <pre class="def idl">
-[Exposed=Window, CheckAnyPermissions="webextensions"]
+[Exposed=Window, CheckAnyPermissions="browserextensions"]
+dictionary Rule {
+  optional DOMString id;
+  optional sequence&lt;DOMString&gt; tags;
+  sequence&lt;Any&gt; conditions;
+  sequence&lt;Any&gt; actions;
+  optional unsigned short priority;
+}
+
+typedef sequence&lt;Rule&gt; Rules;
+
 interface BrowserExtensionEvent {
   void    addListener(Function callback);
   void    removeListener(Function callback);
   boolean hasListener(Function callback);
   boolean hasListeners();
-  void    addRules(TBD);
-  void    getRules(TBD);
-  void    removeRules(TBD);
+  void    addRules(Rules rules);
+  void    getRules(sequence&lt;DOMString&gt; ruleIdentifiers, Function callback);
+  void    removeRules(sequence&lt;DOMString&gt; ruleIdentifiers, Function callback);
 }
 </pre>
 </section>
 
-<section>
-<h3 id="coreapis">The <code>browser</code> object</h3>
-<b>Overview</b><br/>
-The core Browser Extension API objects are accessible from the <code>browser</code> object. Their availability varies, depending on conditions outlined in the <a href="#apiavailability">API Availability</a> section.<ul>
-  <li>browserAction</li> 
-  <li>contextMenus</li>
-  <li>extension</li>
-  <li>i18n</li>
-  <li>pageAction</li>
-  <li>runtime</li>
-  <li>tabs</li>
-  <li>webNavigation</li>
-  <li>webRequest</li>
-  <li>windows</li>
-</ul>
-</p>
+        <section>
+            <h3 id="coreapis">The <code>browser</code> object</h3>
+            <b>Overview</b><br />
+            The core Browser Extension API objects are accessible from the <code>browser</code> object. Their availability varies, depending on conditions outlined in the <a href="#apiavailability">API Availability</a> section.<ul>
+                <li>browserAction</li>
+                <li>contextMenus</li>
+                <li>extension</li>
+                <li>i18n</li>
+                <li>pageAction</li>
+                <li>runtime</li>
+                <li>tabs</li>
+                <li>webNavigation</li>
+                <li>webRequest</li>
+                <li>windows</li>
+            </ul>
+            </p>
 
-<b>WebIDL Definition</b><br/>
-A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br/><br/>
+            <b>WebIDL Definition</b><br />
+            A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br /><br />
 <pre class="def idl">
 interface ExtensionGlobal {
-  [CheckAnyPermissions="webextensions"]
+  [CheckAnyPermissions="browserextensions"]
   readonly attribute Browser browser;
 };
-
 Window implements ExtensionGlobal;
-
 [NoInterfaceObject]
 interface Browser {
 };
-
-dictionary WebExtensionManifest {
+dictionary BrowserExtensionIcon {
+   DOMString size;
+   DOMString path;
+};
+typedef sequence&lt;BrowserExtensionIcon&gt; BrowserExtensionIconArray;
+dictionary Developer {
+  DOMString name;
+  optional DOMString? url;
+};
+dictionary BrowserOrPageAction {
+   optional BrowserExtensionIcon defaultIcon;
+   optional DOMString defaultPopup;
+   optional DOMString defaultTitle;
+};
+dictonary KeyValue {
+   DOMString key;
+   DOMString? value;
+};
+dictionary BrowserSpecificSettings {
+   DOMString browserName;
+   sequence&lt;KeyValue&gt; keyValue;
+};
+dictionary BackroundOrEvent {
+  optional DOMString page;
+  optional sequence&lt;DOMString&gt; scripts;
+  boolean persistent;
+};
+dictionary ContentScripts {
+  optional boolean allFrames;
+  optional sequence&lt;DOMString&gt; css;
+  optional sequence&lt;DOMString&gt; excludeMatches;
+  optional sequence&lt;DOMString&gt; js;
+  optional sequence&lt;DOMString&gt; matches;
+  optional DOMString runAt;
+};
+dictionary BrowserExtensionManifest {
   DOMString name;
   DOMString version;
-  DOMString? description;
-
-  // TODO: Need to add ... icons, developer, browser_specific_settings, background, content_scripts, content_security_policy, options_page, required_keys, permissions [storage, url-pattern], web_accessible_resources
+  DOMString defaultLocale;
+  optional DOMString? description;
+  optional BrowserExtensionIconArray icons;
+  optional Developer developer;
+  
+  optional BrowserAction browserAction;
+  optional BrowserOrPageAction pageAction;
+  optional BrowserSpecificSettings browserSpecificSettings;
+  optional Background background;
+  optional ContentScripts contentScripts;
+  optional DOMString contentSecurityPolicy;
+  optional DOMString optionsPage;
+  optional unsigned short manifestVersion;
+  optional sequence&lt;DOMString&gt; requiredKeys;
+  optional sequence&lt;DOMString&gt; permissions;
+  optional sequence&lt;DOMString&gt; webAccessibleResources;
 };
 </pre>
- 
 
 
 
-<section><h4 id="browserAction">The <code>browserAction</code> object</h4>
-<b>Overview</b><br/>
-The <code>browserAction</code> object adds an always-visible button to the browser application, usually near the top of the browser application UI in the toolbar area. An extension may have either a <code>browserAction</code> or a <code>pageAction</code>, but not both.<br/><br/>
-<b>Manifest</b><br/>
-The <code>"browser_action"</code> and <code>"default_title"</code> keys are required. The other keys are optional.<br/><br/>
+
+            <section>
+                <h4 id="browserAction">The <code>browserAction</code> object</h4>
+                <b>Overview</b><br />
+                The <code>browserAction</code> object adds an always-visible button to the browser application, usually near the top of the browser application UI in the toolbar area. An extension may have either a <code>browserAction</code> or a <code>pageAction</code>, but not both.<br /><br />
+                <b>Manifest</b><br />
+                The <code>"browser_action"</code> and <code>"default_title"</code> keys are required. The other keys are optional.<br /><br />
 <pre>
   "browser_action": {                               // Required
       "default_icon": {...},                        // Same format as "icons"
       "default_popup": "Page URL",                  // Optional
       "default_title": "Title string"               // Required
   }
-</pre><br/>
-<b>WebIDL Definition</b><br/>
-A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br/><br/>
+</pre><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
 <pre class="def idl">
-
 dictionary BrowserActionDefaults {
-  DOMString? default_popup;
-  DOMString  default_title;
-  BrowserExtensionIconArray default_icon;
+  DOMString? defaultPopup;
+  DOMString  defaultTitle;
+  BrowserExtensionIconArray defaultIcon;
 };
-
-partial dictionary WebExtensionManifest {
+partial dictionary BrowserExtensionManifest {
   BrowserActionDefaults? browser_action;
 };
-
+typedef sequence&lt;unsigned short&gt; ColorArray;
+dictionary TabIdDetailsObject {
+   unsigned short tabId;
+};
+dictonary BadgeObjectColorArrayTabId {
+  ColorArray color;
+  optional unsigned short tabId;
+};
+dictionary BadgeObjectTextTabId {
+  DOMSTRING text;
+  optional unsigned short tabId;
+};
+dictionary BadgeObjectPathTabId {
+  DOMString path;
+  optional unsigned short tabId;
+};
+dictionary BadgeObjectTabIdPopup {
+  DOMString popupHTMLFileName;
+  optional unsigned short tabId;
+};
 [NoInterfaceObject]
 interface BrowserBrowserAction {
-  type ColorArray();
-  void disable();
-  void enable();
-  void getBadgeBackgroundColor();
-  void getBadgeText();
-  void getPopup();
-  BrowserExtensionEvent onClicked();
-  void setBadgeBackgroundColor();
-  void setBadgeText();
-  void setIcon();
-  void setPopup();
+  void disable(unsigned short tabId);
+  void enable(unsigned short tabId);
+  void getBadgeBackgroundColor(TabIdDetailsObject details, Function callback);
+  void getBadgeText(TabIdDetailsObject details, Function callback);
+  void getPopup(TabIdDetailsObject details, Function callback);
+  BrowserExtensionEvent onClicked(Function callback);
+  void setBadgeBackgroundColor(BadgeObjectColorArrayTabId details);
+  void setBadgeText(BadgeObjectTextTabId details);
+  void setIcon(BadgeObjectPathTabId data, Function callback);
+  void setPopup(BadgeObjectTabIdPopup details);
 };
-
-
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="pageAction"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="browserAction"]
 interface BrowserBrowserActionAPI {
-  readonly attribute BrowserBrowserAction browserAction; }
-
+  readonly attribute BrowserBrowserAction browserAction; 
+};
 Browser implements BrowserBrowserActionAPI;
 </pre>
 
-</section>
+            </section>
 
 
-<section><h4 id="contextMenus">The <code>contextMenus</code> object</h4></section>
-<section><h4 id="extension">The <code>extension</code> object</h4></section>
-<section><h4 id="i18n">The <code>i18n</code> object</h4></section>
-<section><h4 id="pageAction">The <code>pageAction</code> object</h4>
-<b>WebIDL Definition</b><br/>
-A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br/><br/>
+            <section>
+                <h4 id="contextMenus">The <code>contextMenus</code> object</h4>
+                <b>Overview</b><br />
+                The <code>contextMenus</code> object allows additional entries to be added to the browser's context menu. The menu may selectively be shown for various browser UI elements (browser action or page action button) or page elements (frame, image, link, page, selection, etc).<br /><br />
+                <b>Manifest</b><br />
+                A <code>"contextMenus"</code> entry must be declared in the <code>"permissions"</code> key. The icon keys are optional.<br /><br />
+<pre>
+  "permissions": [                                  // Required
+      "contextMenus"                                // Required
+  ],                                                // Required
+  "icons": {                                        // Optional
+      "&lt;size&gt;":"&lt;name.png&gt;"                         // Optional, size 16 recommended
+  }                                                 // Optional
+</pre><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
 <pre class="def idl">
+enum ContextType { "all", "audio", "browser_action", "editable", "frame", "image", "launcher", "link", "page", "page_action", "selection", "video" };
+enum ItemType { "checkbox","normal","radio","separator" };
+dictionary ContextMenuCreateProperties {
+    optional DOMString type;
+    optional DOMString id;
+    optional DOMString title;
+    optional boolean checked;
+    optional sequence&lt;ContextType&gt; contexts;
+    optional Function onclick;
+    optional (unsigned short or DOMString) parentId;
+    optional sequence&lt;DOMString&gt; documentUrlPatterns;
+    optional sequence&lt;DOMString&gt; targetUrlPatterns;
+    optional boolean enabled;
+};
+dictionary ContextMenuUpdateProperties {
+    optional ItemType type;
+    optional DOMString title;
+    optional boolean checked;
+    optional sequence&lt;ContextType&gt; contexts;
+    optional Function onclick;
+    optional unsigned short parentId;
+    optional sequence&lt;DOMString&gt; documentUrlPatterns;
+    optional sequence&lt;DOMString&gt; targetUrlPatterns;
+    optional boolean enabled;
+};
+[NoInterfaceObject]
+interface BrowserContextMenus {
+    unsigned short create(ContextMenuCreateProperties data, Function callback);
+    object onClicked(Function callback);
+	void remove((unsigned short or DOMString) itemId, Function callback);
+	void removeAll(Function callback);
+	void update((unsigned short or DOMString) itemId, ContextMenuUpdateProperties data, Function callback);
+};
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="contextMenus"]
+interface BrowserContextMenusAPI {
+  readonly attribute BrowserContextMenus contextMenus; 
+};
+Browser implements BrowserContextMenusAPI;
+</pre>
 
+            </section>
+
+            <section>
+                <h4 id="extension">The <code>extension</code> object</h4>
+                <b>Overview</b><br />
+                The <code>extension</code> object provides a way to determine the absolute path to extension resources (e.g. browserext://&lt;ext_id&gt;/options.html) or access the background page's <code>window</code> object.<br /><br />
+                <b>Manifest</b><br />
+                There are no additional manifest entries required to use this object. <br /><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">    
+[NoInterfaceObject]
+interface BrowserExtension {
+   DOMString getURL(DOMString path);
+   Window getBackgroundPage();
+};
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="browserextensions"]
+interface BrowserExtensionAPI {
+   readonly attribute BrowserExtension extension; 
+}
+Browser implements BrowserExtensionAPI;
+</pre>
+
+            </section>
+
+
+            <section>
+                <h4 id="i18n">The <code>i18n</code> object</h4>
+                <b>Overview</b><br />
+                The <code>i81n</code> object provides a way to access strings that have been localized into supported languages.<br /><br />
+                <b>Manifest</b><br />
+                When providing localized strings, you must specify a default locale using a two-character code. Codes can be found at <a href="http://www.w3.org/TR/1999/REC-html401-19991224/struct/dirlang.html">RFC1766</a> or <a href="http://www.w3.org/International/articles/language-tags/">IETF BCP47</a>. To manifest localize strings, the syntax below may be used. <br />
+<pre>
+"default_locale" : "&lt;twoCharLocaleCode&gt;",              // Required
+"name" : "__MSG_&lt;yourCustomNameStringIdentifier&gt;__",
+"descripton" : "__MSG_&lt;yourCustomDescriptionStringIdentifier&gt;__",
+</pre>
+                For example<br />
+                <pre>
+"default_locale" : "en",              // English
+"name" : "__MSG_MySampleExtension__",
+"descripton" : "__MSG_MySampleExensionDecription__",
+</pre>
+                <br />
+                <b>Localized Strings</b><br />
+                Each supported locale must have its own <code>messages.json</code> file stored in the folder <code>_locales/&lt;twoCharLocaleCode&gt;</code>. The two-character codes used for directory names here the same as are used in the <code>mainfest.json</code> to specify <code>default_locale</code>.<br /><br />
+                <b>messages.json Syntax</b><br />
+                <font style="background:yellow;">TODO: The requirements for the messages.json file will be described here.</font><br /><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">    
+[NoInterfaceObject]
+interface BrowserI18n {
+  DOMString getMessage(DOMString messageName, sequence<DOMString>? substitutions);
+};
+[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions="browserextensions"] 
+interface BrowserI18nAPI {
+       readonly attribute BrowserI18n i18n;
+};
+Browser implements BrowserI18nAPI;
+partial dictionary WebExtensionManifest {
+  DOMString? defaultLocale;
+};
+</pre>
+
+            </section>
+
+            <section>
+                <h4 id="pageAction">The <code>pageAction</code> object</h4>
+                <b>Overview</b><br />
+                The <code>pageAction</code> object adds a button to the browser application, usually within the address bar. This button typically appears only when the extension has detected that it can perform an action on the current page for the active tab. An extension may have either a <code>browserAction</code> or a <code>pageAction</code>, but not both.<br /><br />
+                <b>Manifest</b><br />
+                The <code>"page_action"</code> and <code>"default_title"</code> keys are required. The other keys are optional.<br /><br />
+<pre>
+"page_action": {                               // Required
+    "default_icon": {...},                        // Same format as "icons"
+    "default_popup": "Page URL",                  // Optional
+    "default_title": "Title string"               // Required
+}
+</pre><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">
 dictionary PageActionDefaults {
   DOMString? default_popup;
   DOMString  default_title;
-  // ...
+  BrowserExtensionIconArray defaultIcon;
 };
-
-partial dictionary WebExtensionManifest {
-  PageActionDefaults? page_action;
+partial dictionary BrowserExtensionManifest {
+  PageActionDefaults? pageAction;
 };
-
+dictionary BadgeObjectPath {
+  DOMString path;
+};
 [NoInterfaceObject]
 interface BrowserPageAction {
-  void getPopup();
-  void getTitle();
-  void hide();
-  BrowserExtensionEvent onClicked();
-  void setIcon();
-  void setPopup();
-  void setTitle();
-  void show();
+  void getPopup(TabIdDetailsObject details, Function callback);
+  void getTitle(TabIdDetailsObject details, Function callback);
+  void hide(unsigned short tabId);
+  BrowserExtensionEvent onClicked(Function callback);
+  void setIcon(BadgeObjectPath details, Function callback);
+  void setPopup(BadgeObjectPathTabId details);
+  void setTitle(BadgeObjectTextTabId details);
+  void show(unsigned short tabId);
 };
-
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions="pageAction"]
 interface BrowserPageActionAPI {
-  readonly attribute BrowserPageAction pageAction; }
-
+  readonly attribute BrowserPageAction pageAction; 
+};
 Browser implements BrowserPageActionAPI;
 </pre>
-</section>
-<section><h4 id="runtime">The <code>runtime</code> object</h4></section>
-<section><h4 id="tabs">The <code>tabs</code> object</h4></section>
-<section><h4 id="webNavigation">The <code>webNavigation</code> object</h4></section>
-<section><h4 id="webRequest">The <code>webRequest</code> object</h4></section>
-<section><h4 id="windows">The <code>windows</code> object</h4></section>
+            </section>
+
+            <section>
+                <h4 id="runtime">The <code>runtime</code> object</h4>
+                <b>Overview</b><br />
+                The <code>runtime</code> object is used to send and receive messages across contexts, as well as access extension-level information such as the id, manifest, and absolute path to resources. <br /><br />
+                <b>Manifest</b><br />
+                There are no additional manifest entries required to use this object. <br /><br />
+
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">
+dictionary RuntimePort {
+   DOMString name;
+   Function disconnect;
+   object onDisconnect;
+   object onMessage;
+   Function postMessage;
+   optional MessageSender sender;
+};
+dictionary RuntimeMessageSender {
+   optional TabObject tab;
+   optional unsigned short frameId;
+   optional DOMString id;
+   optional DOMString url;
+};
+[NoInterfaceObject]
+interface BrowserRuntime {
+   object getManifest();
+   DOMString getURL(DOMString path);
+   DOMString id;
+   void onConnect(Function callback);
+   void onMessage(Function callback);
+   void sendMessage(optional DOMString extensionId, any message, optional Function callback);
+   RuntimePort Port;
+   RuntimeMessageSender MessageSender;
+};
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="browserextensions"]
+interface BrowserRuntimeAPI {
+    readonly attribute BrowserRuntime runtimen; 
+};
+Browser implements BrowserRuntimeAPI;
+</pre>
+            </section>
+
+            <section>
+                <h4 id="tabs">The <code>tabs</code> object</h4>
+                <b>Overview</b><br />
+                The <code>tabs</code> object is used to acccess metadata about a tab, such as its title, or to access the current content within the tab itself. <br /><br />
+                <b>Manifest</b><br />
+                The <code>"tabs"</code> permission is required to use this object.<br /><br />
+<pre>
+{
+   "permissions": [                               // Required
+       "tabs"                                     // Required
+   ]                                              // Required   
+}
+</pre><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">
+dictionary TabConnectObject {
+   optional DOMString name;
+   optional unsigned short frameId;
+};
+dictionary TabCreateProperties {
+   optional unsigned short windowId;
+   optional unsigned short index;
+   optional DOMString url;
+   optional boolean active;
+   optional boolean pinned;
+   optional unsigned short openerTabId;
+};
+enum RunAt { "document_end", "document_idle", "document_start" };
+dictionary TabScriptAndCSSDetails {
+   optional DOMString code;
+   optional DOMString file;
+   optional boolean allFrames;
+   optional unsigned short frameId;
+   optional boolean matchAboutBlank
+   optional RunAt runAt;
+};
+enum TabStatus { "complete", "loading" };
+enum WindowTypes { "app", "normal", "panel", "popup" };
+dictionary TabQueryInfo {
+   optional boolean active;
+   optional boolean pinned;
+   optional boolean audible;  
+   optional boolean muted;
+   optional boolean highlighted;
+   optional boolean currentWindow;
+   optional boolean lastFocusedWindow;
+   optional TabStatus status;
+   optional DOMString title;
+   optional (DOMString or sequence&lt;DOMString&gt;) url;
+   optional unsigned short windowId;
+   optional WindowType windowType;
+   optional unsigned short index;
+};
+dictionary TabReloadProperties {
+   optoinal boolean bypassCache;
+};
+dictionary TabSendMessageOptions {
+   optional unsigned short frameId;
+};
+dictionary TabUpdateProperties {
+   optional DOMString url;
+   optional boolean active;
+   optional boolean highlighted;
+   optional boolean pinned;
+   optional boolean muted;
+   optional unsigned short openerTabId;
+};
+[NoInterfaceObject]
+interface BrowserTabs {
+    RuntimePort connect(unsigned short tabId, TabConnectInfo details);
+    void create(TabCreateProperties details, Function callback);
+    void executeScript(unsigned short tabId, TabScriptAndCSSDetails details);
+    void get(unsigned short tabId, Function callback);
+    void getCurrent(Function callback);
+    void insertCSS(unsigned short tabId, TabScriptAndCSSDetails details);
+    void onActivated(Function callback);
+    void onCreated(Function callback);
+    void onRemoved(Function callback);
+    void onUpdated(Function callback);
+    void query(TabQueryInfo queryInfo, Function callback);
+    void reload(TabReloadProperties details, Function callback);
+    void remove((unsigned short or sequence&lt;unsigned short&gt;) tabIds, Function callback);
+    void sendMessage(unsigned short tabId, any message, optional TabSendMessageOptions details, optional Function callback);
+    void update(optional unsigned short tabId, TabUpdateProperties details, optional Function callback);
+};
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="tabs"]
+interface BrowserTabsAPI {
+readonly attribute BrowserTabs tabs; 
+};
+Browser implements BrowserTabsAPI;
+</pre>
+            </section>
 
 
-    </section>
+            <section>
+                <h4 id="webNavigation">The <code>webNavigation</code> object</h4>
+                <b>Overview</b><br />
+                The <code>webNavigation</code> object is used to monitor events related to networking requests. <br /><br />
+                <b>Manifest</b><br />
+                The <code>"webNavigation"</code> permission is required to use this object.<br /><br />
+<pre>
+{
+   "permissions": [                               // Required
+       "webNavigation"                            // Required
+   ]                                              // Required   
+}
+</pre><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">
+enum TransitionTypes { "link", "typed" };
+[NoInterfaceObject]
+interface BrowserWebNavigation {
+   void onBeforeNavigate(Function callback);
+   void onCommitted(Function callback);
+   void onCompleted(Function callback);
+   void onDOMContentLoaded(Function callback);
+   void onErrorOccurred(Function callback);
+   void onReferenceFragmentUpdated(Function callback);
+};
+    
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="webNavigation"]
+interface BrowserWebNavigationAPI {
+   readonly attribute BrowserWebNavigation webNavigation; 
+};
+Browser implements BrowserWebNavigationAPI;
+</pre>
+            </section>
+
+
+            <section>
+                <h4 id="webRequest">The <code>webRequest</code> object</h4>
+                <b>Overview</b><br />
+                The <code>webRequest</code> object is used to modify or cancel networking requests. <br /><br />
+                <b>Manifest</b><br />
+                The <code>"webRequest"</code> permission is required to use this object.<br /><br />
+<pre>
+{
+   "permissions": [                           // Required
+      "webRequest"                            // Required
+      "webRequestBlocking"                    // Optional
+      "&lt;URL pattern&gt;"                         // Optional, e.g. "*://*.w3c.org/"
+   ]                                          // Required   
+}
+</pre><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">
+[NoInterfaceObject]
+interface BrowserWebRequest {
+   void onBeforeRequest(Function callback);
+   void onBeforeSendHeaders(Function callback);
+   void onCompleted(Function callback);
+   void onHeadersReceived(Function callback);
+   void onSendHeaders(Function callback);
+};
+    
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="webRequest"]
+interface BrowserWebRequestAPI {
+   readonly attribute BrowserWebRequest webRequest; 
+};
+Browser implements BrowserWebRequestAPI;
+</pre>
+            </section>
+
+            <section>
+                <h4 id="windows">The <code>windows</code> object</h4>
+                <b>Overview</b><br />
+                The <code>windows</code> object is used to modify or cancel networking requests. <br /><br />
+                <b>Manifest</b><br />
+                The <code>"tabs"</code> permission is required to access properties on the Tab object that is returned by the <code>TODO</code> methods of this object.<br /><br />
+<pre>
+{
+   "permissions": [                           // Required
+      "tabs"                                  // Required
+   ]                                          // Required   
+}
+</pre><br />
+                <b>WebIDL Definition</b><br />
+                A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.<br />
+<pre class="def idl">
+enum CreateWindowType { "detached_panel", "normal", "panel", "popup" };
+enum WindowState { "docked", "fullscreen", "maximized", "minimized", "normal" };
+dictionary CreateWindowInfo {
+   optional (DOMString or sequence&lt;DOMString&gt;) url;
+   optional unsigned short tabId;
+   optional unsigned short left;
+   optional unsigned short top;
+   optional unsigned short width;
+   optional unsigned short height;
+   optional boolean focused;
+   optional boolean incognito;
+   optional WindowCreateType incognito;
+   optional WindowState state;
+};
+dictionary GetWindowInfo {
+   optional boolean populate;
+   optional sequence&lt;WindowTypes&gt; windowTypes;
+};
+dictionary WindowUpdateInfo {
+   optional unsigned short left;
+   optional unsigned short top;
+   optional unsigned short width;
+   optional unsigned short height;
+   optional boolean focused;
+   optional boolean drawAttention;
+   optional WindowState windowState;
+};
+[NoInterfaceObject]
+interface BrowserWindows {
+   void create(CreateWindowInfo details, Function callback);
+   void get(unsigned short, optional GetWindowInfo details, Function callback);
+   void getAll(optional GetWindowInfo details, Function callback);
+   void getCurrent(optional GetWindowInfo details, Function callback);
+   void getLastFocused(optional GetWindowInfo details, Function callback);
+   void onFocusChanged(Function callback);
+   void update(unsigned short windowId, optional WindowUpdateInfo updateInfo, optional Function callback);
+};
+    
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="browserextensions"]
+interface BrowserWindowsAPI {
+readonly attribute BrowserWindows windows; 
+};
+Browser implements BrowserWindowsAPI;
+</pre>
+            </section>
+        </section>
+            <section class='informative'>
+                <h3>Native Messaging</h3>
+                Native Messaging is covered in another specification.<br />
+            </section>
+
 </section>
+
     <section class='informative'>
       <h2>Manifest Format</h2>
-      <pre>
+        <section><h3>Pre-parsing</h3>
+            Before parsing the manifest, standards-compliant browsers are expected to pre-scan and remove "//" comments. After this step the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.<br/>
+        </section>
+        <section>
+            <h3>Full Example</h3>
+            <pre>
 // Before parsing the manifest, standards-compliant browsers are expected to pre-scan
 // and remove "//" comments. After this step the manifest.json file format for browser
 // extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.
@@ -442,19 +932,16 @@ Browser implements BrowserPageActionAPI;
 // Other manifest keys that are well-formed JSON but are not listed here must be ignored.
 //
 // Note that some fields marked as Optional here are required by vendor-specific distribution Stores.
-
 {
   "name": "The Name of Your Extension",             // Required
   "version": "Your Extension Verison",              // Required
   "default_locale": "en",                           // Required if locales are used. Otherwise, not allowed
-
   "description": "Description for Your Extensions",   
   "icons": {...},                                    
   "developer": {                                    
        "name": "Your Name or Company",              
        "url": "Company Website"                      
   }
-
   // Note: Some browsers may support either browser_action or page_action, but not both
   "browser_action": {  
       "default_icon": {...},                        // Same format as "icons"
@@ -468,13 +955,11 @@ Browser implements BrowserPageActionAPI;
             "&lt;key&gt;": "&lt;value&gt;"                      // Examples "strict_min_version": "42.0", "id": "addon@example.com"
        }
   },
-
   "background": {                                   
       "page": "Page URL",                           // Only one of "page" or "scripts" may be specified, but not both 
       "scripts": [],                                // Only one of "page" or "scripts" may be specified, but not both 
       "persistent": false                           // Required if "background" is specified
   },
-
   "content_scripts": {                                                    
       "all_frames": false,                          
       "css": [],                                   
@@ -483,17 +968,13 @@ Browser implements BrowserPageActionAPI;
       "matches": [],                                
       "run_at" : "document_start"                   // Also "document_end", "document_idle"
   }
-
   "content_security_policy": "&lt;policy-string&gt;",     
   
   "options_page": "Page URL",                            // Optional
-
   "manifest_version": 2,                            // Not used
-
   "required_keys": [],                              // If a browser does not recognize a key in the list, it must 
                                                     // reject the manifest (e.g. "sidebar_action")
                                                     // Future keys may be required to be in the list if used. 
-
   "permissions": {                                  
        "activeTab",                                                
        "contextMenus",                              
@@ -504,14 +985,30 @@ Browser implements BrowserPageActionAPI;
        "webRequestBlocking",                        
        "&lt;url-pattern&gt;"                              // Examples "http://*/*", "<all_urls>"
   },
-
   "web_accessible_resources": [...]                 
 }
-
-
       </pre>
+        </section>
     </section>
-<section class='informative'><h2>Browser Accessible Resources</h2></section>
+      <section class='informative'>
+          <h2>Extension Resources</h2>
+          <section><h3>The <code>browserext://</code> protocol</h3> 
+          To access resources within the extension, such as <code>browserext://&lt;ext_id&gt;/options.html</code>, the <code>browserext://</code> protocol is used. </section>
+          <section>
+            <h3>Extension IDs</h3> 
+            Each extension has an extension ID that follows the <code>browserext://</code> protocol. For example<br />&nbsp;&nbsp;&nbsp;<code>browserext://MyExtension_c1wakc4j0nefm/options.html</code><br />&nbsp;&nbsp;&nbsp;<code>browserext://dfcijpibodeoenkablikbkiobbdnkfki/options.html</code><br/><br/>
+              The algorithms that generate these IDs are different for each browser. To access these resources, do not hardcode the ID generated by a particular browser. Instead, use the <code>runtime.getURL()</code> method to convert a relative file name or path to the absolute name or path, which includes the extension ID.
+          </section>
+      </section>
+      <section class='informative'>
+          <h2>Content Security Polity (CSP)</h2>
+          <font style="background:yellow;">TODO: The CSP is covered here.</font>
+          </section>
+      <section class='informative'>
+          <h2>Testing Extensions with WebDriver</h2>
+          There are proposed additions to WebDriver that allow for automated testing of extension popups, browser and page actions, and more. This is covered in <a href="http://rawgit.com/dhbrett/webdriver/extensions_reduced/webdriver-spec.html#extensions">another specification</a>.<br />
+      </section>
 
-  </body>
+
+</body>
 </html>
