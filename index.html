@@ -99,6 +99,9 @@
             <li>passing data from Internet-hosted web pages to extensions</li>
             <li>accessing user settings such as bookmarks and cookies</li>
         </ul>
+        <p class="issue">Need to resolve ID issue before we can address messaging ('passing data')</p>
+        <p class="issue">Cookies can be accessed through content scripts</p>
+        <p class="issue">Remove bookmarks</p>
         <section class='informative'>
             <h3 id="apiavailability">API Availability</h3>
             <p>
@@ -110,11 +113,16 @@
                 <li>Permissions declared in the manifest (e.g. contextMenu, tabs, webNavigation, webRequest)
                 <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
             </ul>
+            <p class="issue">Need to specify this is the default CSP and can be changed (Kris)</p>
+            <p class="issue">Need to link to default CSP</p>
+            <p class="issue">Need to say what happens if you do this (Florian)</p>
+            <p class="issue">Add a separate non-normative section on how content scripts interact with CSP (Kris)</p>
             <section>
                 <h4>Availability based on Content Security Policy (CSP)</h4>
                 <p>
                     Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the following default policy is applied.
                 </p>
+                <p class="issue">The last bullet about content scripts is not clear. Please restate.</p>
                 <ul>
                     <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
                     <li>Only script from the extension's package can be executed</li>
@@ -149,7 +157,11 @@
                     Some browser extension API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below.
                 </p>
                 <p class="issue">
-                    DISCUSS: Should we remove the "Optional Permissions" column? Do we plan to support this in the common/core spec?
+                    DISCUSS: Should we remove the "Optional Permissions" column? Do we plan to support this in the common/core spec?<br/>
+                    DECISION (2016.09.22) - Remove it. We can add back if needed
+                </p>
+                <p class="issue">
+                    Be clear that if a key is not part of this spec it may be ignored
                 </p>
                 <table>
                     <tr>
@@ -344,7 +356,8 @@ interface BrowserI18nAPI {
             <p>
                 Extension events are similar to DOM Events [<a href="https://www.w3.org/TR/dom/">DOM4</a>]. However, extension events are dispatched only to objects in the relevant extension scope (background, event, options, content, etc.). Script in the extension scope can observe events by calling <code>addListener()</code>.
             </p>
-            <p class="issue">Should there be a readonly attribute EventListener onClicked?</p>
+            <p class="issue">Should there be a readonly attribute EventListener onClicked?<br/>
+             [2016.09.22] Mikepie to follow up with reviewers for more info</p>
             <pre class="def idl">
 [NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions="browserextensions"]
 dictionary Rule {
@@ -494,8 +507,10 @@ dictionary BrowserExtensionManifest {
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
-                    <p class="issue">Should we standardize the spec to use "...Details" or "...Object" or "...Data" or "...Info" for objects used to specify parameter objects?</p>
-                    <p class="issue">Should we prefix object names with "Browser..." or "BrowserExt..." or "&lt;Object&gt;..." (e.g. "Tabs...")?</p>
+                    <p class="issue">Should we standardize the spec to use "...Details" or "...Object" or "...Data" or "...Info" for objects used to specify parameter objects?<br/>
+                    DECISION (2016.09.22) use ...Details</p>
+                    <p class="issue">Should we prefix object names with "Browser..." or "BrowserExt..." or "&lt;Object&gt;..." (e.g. "Tabs...")?<br />
+                    DECISION (2016.09.22)Use BrowserExt&lt;Object&lt;...</p>
                     <p class="issue">Need to find all strings that support null and add ? to DOMString (DOMString?).</p>
 <pre class="def idl">
 dictionary BrowserActionDefaults {
@@ -650,7 +665,8 @@ Browser implements BrowserContextMenusAPI;
             <section>
                 <h4 id="extension">The <code>extension</code> object</h4>
                 <section class="introductory"><h4>Overview</h4>
-                <p class="issue">TODO: Do we really need this object? Can we just support runtime?</p>
+                <p class="issue">TODO: Do we really need this object? Can we just support runtime?<br/>
+                    DECISION (2016.09.22) Decided to remove it. If we need to add any new methods we can re-open this conversation or add to runtime object</p>
                     <p>
                         The <code>extension</code> object provides a way to determine the absolute path to extension resources (e.g. browserext://&lt;ext_id&gt;/options.html) or access the background page's <code>window</code> object.
                     </p>
@@ -1210,7 +1226,9 @@ Browser implements BrowserWebNavigationAPI;
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
-                    <p class="issue"><code>unsigned short</code> was used in many places in this spec to represent both unsigned integers and signed integers. Need to go back and find the places where negative numbers are allowed and changed from unsigned short to short.</p>
+                    <p class="issue"><code>unsigned short</code> was used in many places in this spec to represent both unsigned integers and signed integers. Need to go back and find the places where negative numbers are allowed and changed from unsigned short to short.<br/>
+                    NOTE: Frame ID can be 64-bit (long), ask Kris about others
+                    </p>
 <pre class="def idl">
 enum ResourceType { "main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "other" };
 
