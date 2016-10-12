@@ -812,7 +812,9 @@ Browser implements BrowserExtPageActionAPI;
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
-
+                    <p class="issue">
+                        By adding support for lastError and onInstalled we can increase the number of key extension scenarios   
+                    </p>
 <pre class="def idl">
 dictionary BrowserExtRuntimePort {
     Function disconnect;
@@ -837,7 +839,9 @@ interface BrowserExtBrowserRuntime {
     object getManifest();
     DOMString getURL(DOMString path);
     DOMString id;
+    TBD lastError(TBD tbd);
     void onConnect(RuntimeOnConnectCallback callback);
+    TBD onInstalled(TBD tbd);
     void onMessage(RuntimeOnMessageCallback callback);
     void sendMessage(optional DOMString extensionId, any message, optional RuntimeSendMessageCallback callback);
     RuntimePort Port;
@@ -883,6 +887,9 @@ Browser implements BrowserExtRuntimeAPI;
                     <h4>WebIDL Definition</h4>
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
+                    </p>
+                    <p class="issue">
+                        By adding support for captureVisibleTab and onReplaced we can increase the number of key extension scenarios
                     </p>
 
 <pre class="def idl">
@@ -993,6 +1000,7 @@ callback BrowserExtTabsSendMessageCallback = void (any response);
 callback BrowserExtTabsUpdateCallback = void (BrowserExtTabsTab tab);
 [NoInterfaceObject]
 interface BrowserExtBrowserTabs {
+    TBD captureVisibleTab(TBD tbd);
     RuntimePort connect(unsigned short tabId, BrowserExtTabConnectDetails details);
     void create(BrowserExtTabCreateDetails details, optional TabsCreateCallback callback);
     void executeScript(unsigned short tabId, BrowserExtTabScriptAndCSSDetails details);
@@ -1002,6 +1010,7 @@ interface BrowserExtBrowserTabs {
     void onActivated(BrowserExtTabsOnActivatedCallback callback);
     void onCreated(BrowserExtTabsOnCreatedCallback callback);
     void onRemoved(BrowserExtTabsOnRemovedCallback callback);
+    TBD onReplaced(TBD tbd);
     void onUpdated(BrowserExtTabsOnUpdatedCallback callback);
     void query(BrowserExtTabQueryDetails queryDetails, BrowserExtTabsQueryCallback callback);
     void reload(BrowserExtTabReloadDetails details, Function callback);
