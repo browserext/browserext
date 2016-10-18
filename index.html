@@ -278,20 +278,20 @@
                     <p>
                         To express the aforementioned conditional situations in which certain APIs may or may not be available due to expressed manifest keys or permissions, the new <a href="http://heycam.github.io/webidl/">WebIDL</a> extended attribute <code>"<a href="https://developer.mozilla.org/en-US/docs/Mozilla/WebIDL_bindings#CheckAnyPermissions">CheckAnyPermissions</a>"</code> is used.
                     </p>
-                    <p class="issue">Need to come up with a different JavaScript formatting implementation for WebIDL parsing in this spec. The default ReSpec implementation for class="def idl" generates errors due to this new extended attribute.<br/><a href="https://github.com/browserext/browserext/issues/20">GitHub Issue 20</a>  </p>
+                    <p class="issue">Need to come up with a different JavaScript formatting implementation for WebIDL parsing in this spec. The default ReSpec implementation for class="def idl" generates errors due to this new extended attribute.[RESOLVED] (2016.10.18) Added JS function to address this.<br/><a href="https://github.com/browserext/browserext/issues/20">GitHub Issue 20</a>  </p>
                     <table>
                         <tr><td><b>API object</b></td><td><b>CheckAnyPermissions Value</b></td><td><b>Manifest Key or Value</b></td></tr>
-                        <tr><td>browser</td><td>"browserextensions"</td><td>N/A</td></tr>
-                        <tr><td>browser.browserAction</td><td>"browserAction"</td><td>"browserAction":[...]</td></tr>
-                        <tr><td>browser.contextMenu</td><td>"contextMenus"</td><td>"permissions":["contextMenus"]</td></tr>
-                        <tr><td>browser.extension</td><td>"browserextensions"</td><td><p></p></td></tr>
-                        <tr><td>i18n</td><td>"browserextensions"</td><td>"default_language": "&lt;code&gt;"</td></tr>
-                        <tr><td>pageAction</td><td>"pageAction"</td><td>"pageAction":[...]</td></tr>
-                        <tr><td>runtime</td><td>"browserextensions"</td><td><p></p></td></tr>
-                        <tr><td>tabs</td><td>"tabs"</td><td>"permissions":["tabs"] or<br/>"permissions":["activeTab"]</td></tr>
-                        <tr><td>webNavigation</td><td>"webNavigation"</td><td>"permissions":["webNavigation"]</td></tr>
-                        <tr><td>webRequest</td><td>"webRequest"</td><td>"permissions":["webRequest"]</td></tr>
-                        <tr><td>windows</td><td>"browserextensions"</td><td><p></p></td></tr>
+                        <tr><td>browser</td><td>"browserExt"</td><td>N/A</td></tr>
+                        <tr><td>browser.browserAction</td><td>"browserExtBrowserAction"</td><td>"browserAction":[...]</td></tr>
+                        <tr><td>browser.contextMenu</td><td>"browserExtContextMenus"</td><td>"permissions":["contextMenus"]</td></tr>
+                        <tr><td>browser.extension</td><td>"browserExt"</td><td><p></p></td></tr>
+                        <tr><td>i18n</td><td>"browserExt"</td><td>"default_language": "&lt;code&gt;"</td></tr>
+                        <tr><td>pageAction</td><td>"browserExtPageAction"</td><td>"pageAction":[...]</td></tr>
+                        <tr><td>runtime</td><td>"browserExt"</td><td><p></p></td></tr>
+                        <tr><td>tabs</td><td>"browserExtTabs"</td><td>"permissions":["tabs"] or<br/>"permissions":["activeTab"]</td></tr>
+                        <tr><td>webNavigation</td><td>"browserExtWebNavigation"</td><td>"permissions":["webNavigation"]</td></tr>
+                        <tr><td>webRequest</td><td>"browserExtWebRequest"</td><td>"permissions":["webRequest"]</td></tr>
+                        <tr><td>windows</td><td>"browserExt"</td><td><p></p></td></tr>
 
                     </table>
                 </section>
@@ -318,7 +318,7 @@ interface BrowserI18n {
 [NoInterfaceObject, Exposed=(Window,ContentScript)] 
 interface BrowserI18nAPI {
     readonly attribute BrowserI18n i18n;
-}
+};
                         </pre>
                         </li>
                         <li>
@@ -351,21 +351,21 @@ partial dictionary BrowserExtensionManifest {
             <p class="issue">Should there be a readonly attribute EventListener onClicked?<br/>
              [CLARIFY] (2016.09.22) Mikepie to follow up with reviewers for more info. Not sure who originally made this suggestion/comment. Will check GitHub</p>
             <pre class="def idl">
-[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions="browserextensions"]
+[NoInterfaceObject]
 dictionary BrowserExtRule {
     DOMString id;
     sequence&lt;DOMString&gt; tags;
     sequence&lt;Any&gt; conditions;
     sequence&lt;Any&gt; actions;
     unsigned short priority;
-}
-[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions="browserextensions"]
+};
+[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_]
 interface BrowserExtEvent {
     void    addListener(Function callback);
     void    removeListener(Function callback);
     boolean hasListener(Function callback);
     boolean hasListeners();
-}
+};
 </pre>
         </section>
 
@@ -401,7 +401,7 @@ interface BrowserExtEvent {
                     A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                 </p>
 <pre class="def idl">
-[CheckAnyPermissions="browserextensions"]
+[CheckAnyPermissions_browserExt_]
 interface BrowserExtGlobal {
     readonly attribute Browser browser;
 };
@@ -554,7 +554,7 @@ interface BrowserExtBrowserAction {
     void setIcon(BadgePathTabId details, BrowserExtBrowserActionSetIconCallback callback);
     void setPopup(BrowserExtBadgeTabIdPopup details);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="browserAction"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtBrowserAction_]
 interface BrowserExtBrowserActionAPI {
     readonly attribute BrowserExtBrowserAction browserAction; 
 };
@@ -595,10 +595,11 @@ Browser implements BrowserExtBrowserActionAPI;
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
 
+                              <p class="issue">TBD - Need to fill BrowserExtContextMenuOnClickedDetails out<br /><a href="https://github.com/browserext/browserext/issues/22">GitHub Issue 22</a></p>
 <pre class="def idl">
-enum BrowserExtContextType { "all", "audio", "browser_action", "editable", "frame", "image", "link", "page", "page_action", "selection", "video" };
+    enum BrowserExtContextType { "all", "audio", "browser_action", "editable", "frame", "image", "link", "page", "page_action", "selection", "video" };
 enum BrowserExtItemType { "checkbox","normal","radio","separator" };
-dictionary BrowserExtContextMenuCreateDetails {
+    dictionary BrowserExtContextMenuCreateDetails {
     boolean checked;
     boolean enabled;
     sequence&lt;DOMString&gt; documentUrlPatterns;
@@ -622,8 +623,8 @@ dictionary BrowserExtContextMenuUpdateDetails {
     ItemType type;
 };
 dictionary BrowserExtContextMenuOnClickedDetails {
-                    <p class="issue">TBD - Need to fill this out<br /><a href="https://github.com/browserext/browserext/issues/22">GitHub Issue 22</a></p>
-}
+    void tbd;                
+};
 callback BrowserExtContextMenuCreateCallback = void ();
 callback BrowserExtContextMenuOnClickedCallback = void (BrowserExtContextMenuOnClickedDetails details, TabsTab tab);
 callback BrowserExtContextMenuOnUpdateCallback = void ();
@@ -637,7 +638,7 @@ interface BrowserExtContextMenus {
 	void removeAll(optional BrowserExtContextMenuOnRemoveAllCallback callback);
 	void update((unsigned short or DOMString) itemId, BrowserExtContextMenuUpdateDetails details, optional BrowserExtContextMenuOnUpdateCallback callback);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="contextMenus"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtContextMenus_]
 interface BrowserExtContextMenusAPI {
     readonly attribute BrowserExtContextMenus contextMenus; 
 };
@@ -707,7 +708,7 @@ Browser implements BrowserExtContextMenusAPI;
 interface BrowserExtI18n {
     DOMString getMessage(DOMString messageName, sequence&lt;DOMString&gt;? substitutions);
 };
-[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions="browserextensions"] 
+[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_] 
 interface BrowserExtI18nAPI {
         readonly attribute BrowserExtI18n i18n;
 };
@@ -777,7 +778,7 @@ interface BrowserExtPageAction {
     void setTitle(BrowserExtBadgeTextTabId details);
     void show(unsigned short tabId);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="pageAction"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtPageAction_]
 interface BrowserExtPageActionAPI {
     readonly attribute BrowserExtPageAction pageAction; 
 };
@@ -842,16 +843,16 @@ callback BrowserExtRuntimeSendMessageCallback = void (any response);
 interface BrowserExtBrowserRuntime {
     object getManifest();
     DOMString getURL(DOMString path);
-    DOMString id;
+    attribute DOMString id;
     TBD lastError(TBD tbd);
     void onConnect(RuntimeOnConnectCallback callback);
     TBD onInstalled(TBD tbd);
     void onMessage(RuntimeOnMessageCallback callback);
     void sendMessage(optional DOMString extensionId, any message, optional RuntimeSendMessageCallback callback);
-    RuntimePort Port;
-    RuntimeMessageSender MessageSender;
+    attribute RuntimePort Port;
+    attribute RuntimeMessageSender MessageSender;
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="browserextensions"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExt_]
 interface BrowserExtRuntimeAPI {
     readonly attribute BrowserExtRuntime runtime; 
 };
@@ -896,7 +897,7 @@ Browser implements BrowserExtRuntimeAPI;
                         By adding support for captureVisibleTab and onReplaced we can increase the number of key extension scenarios<br /><a href="https://github.com/browserext/browserext/issues/26">GitHub Issue 26</a>
                     </p>
 
-<pre class="def idl">
+                    <pre class="def idl">
 dictionary BrowserExtTabsTab {
     boolean active;
     boolean audible;
@@ -922,7 +923,7 @@ dictionary BrowserExtTabMutedDetails {
     boolean muted;
     TabMutedReasonDetails reason;
 };
-dictionary BrowserExtTabConnectDetails {
+    dictionary BrowserExtTabConnectDetails {
     unsigned short frameId;
     DOMString name;
 };
@@ -940,8 +941,8 @@ dictionary BrowserExtTabScriptAndCSSDetails {
     DOMString code;
     DOMString file;
     unsigned short frameId;
-    boolean matchAboutBlank
-    RunAt runAt;
+    boolean matchAboutBlank;
+    BrowserExtRunAt runAt;
 };
 enum BrowserExtTabStatus { "complete", "loading" };
 enum BrowserExtWindowTypes { "app", "normal", "panel", "popup" };
@@ -956,7 +957,7 @@ dictionary BrowserExtTabQueryDetails {
     boolean pinned;
     TabStatus status;
     DOMString title;
-    (DOMString or sequence&lt;DOMString&gt;) url;
+    (DOMString or sequence<DOMString>) url;
     unsigned short windowId;
     WindowType windowType;
 };
@@ -1018,11 +1019,11 @@ interface BrowserExtBrowserTabs {
     void onUpdated(BrowserExtTabsOnUpdatedCallback callback);
     void query(BrowserExtTabQueryDetails queryDetails, BrowserExtTabsQueryCallback callback);
     void reload(BrowserExtTabReloadDetails details, Function callback);
-    void remove((unsigned short or sequence&lt;unsigned short&gt;) tabIds, BrowserExtTabsRemoveCallback callback);
+    void remove((unsigned short or sequence<unsigned short>) tabIds, BrowserExtTabsRemoveCallback callback);
     void sendMessage(unsigned short tabId, any message, optional BrowserExtTabSendMessageOptions details, optional BrowserExtTabsSendMessageCallback callback);
     void update(optional unsigned short tabId, BrowserExtTabUpdateDetails details, optional BrowserExtTabsUpdateCallback callback);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="tabs"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtTabs_]
 interface BrowserExtTabsAPI {
 readonly attribute BrowserExtTabs tabs; 
 };
@@ -1126,7 +1127,7 @@ interface BrowserExtBrowserWebNavigation {
     void onReferenceFragmentUpdated(BrowserExtWebNavigationOnReferenceFragmentUpdated callback);
 };
     
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="webNavigation"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtWebNavigation_]
 interface BrowserExtWebNavigationAPI {
     readonly attribute BrowserExtWebNavigation webNavigation; 
 };
@@ -1264,7 +1265,7 @@ interface BrowserExtBrowserWebRequest {
     void onHeadersReceived(BrowserExtWebRequestOnHeadersReceivedCallback callback);
     void onSendHeaders(Function callback);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="webRequest"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtWebRequest_]
 interface BrowserExtWebRequestAPI {
     readonly attribute BrowserExtWebRequest webRequest; 
 };
@@ -1326,7 +1327,7 @@ dictionary BrowserExtWindowUpdateDetails {
     unsigned short width;
     BrowserExtWindowState windowState;
 };
-dictionary BrowserExtWindowsWindow = {
+    dictionary BrowserExtWindowsWindow {
     boolean alwaysOnTop;
     boolean focused;
     unsigned short height;
@@ -1349,8 +1350,8 @@ callback BrowserExtWindowsOnFocusChangedCallback = void (unsigned short windowId
 callback BrowserExtWindowsUpdateCallback = void (BrowserExtWindowsWindow window);
 [NoInterfaceObject]
 interface BrowserExtWindows {
-    void create(CreateWindowDetails details, Function callback);
-    void get(unsigned short, optional BrowserExtGetWindowDetails details, BrowserExtWindowsGetCallback callback);
+    void create(CreateWindowDetails details, BrowserExtWindowsCreateCallback callback);
+    void get(unsigned short windowId, optional BrowserExtGetWindowDetails details, BrowserExtWindowsGetCallback callback);
     void getAll(optional BrowserExtGetWindowDetail details, BrowserExtWindowsGetAllCallback callback);
     void getCurrent(optional BrowserExtGetWindowDetail details, BrowserExtWindowsGetCurrentCallback callback);
     void getLastFocused(optional BrowserExtGetWindowDetail details, BrowserExtWindowsGetLastFocusedCallback callback);
@@ -1358,11 +1359,11 @@ interface BrowserExtWindows {
     void update(unsigned short windowId, optional BrowserExtWindowUpdateDetails details, optional BrowserExtWindowsUpdateCallback callback);
 };
     
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions="browserextensions"]
+[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExt_]
 interface BrowserExtWindowsAPI {
 readonly attribute BrowserExtWindows windows; 
 };
-Browser implements BrowserWindowsAPI;
+Browser implements BrowserExtWindowsAPI;
 </pre>
                 </section>
             </section>
@@ -1881,7 +1882,25 @@ Browser implements BrowserWindowsAPI;
                 }
             }
         }
+        function updateCheckAnyPermissions() {
+            var checkAnyPermissionsToken = "CheckAnyPermissions_";
+            var e = document.body.getElementsByTagName("pre");
+            var n = e.length;
+            var q1 = -1;
+
+            for (var i = 0; i < n; i++) {
+                var s = e[i].innerHTML;
+                if (s.indexOf(checkAnyPermissionsToken) >= 0) {
+                    q1 = s.indexOf(checkAnyPermissionsToken) + checkAnyPermissionsToken.length;
+                    q2 = s.indexOf("_", q1);
+                    s = s.substring(0, q2) + '"' + s.substring(q2 + 1, s.length);
+                    e[i].innerHTML = s.replace(checkAnyPermissionsToken, 'CheckAnyPermissions="');
+
+                }
+            }
+        }
         setTimeout("updateResolved()", 2000);
+        setTimeout("updateCheckAnyPermissions()", 2000);
     </script>
 </body>
 </html>
