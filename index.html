@@ -1559,15 +1559,20 @@ Browser implements BrowserExtWindowsAPI;
                             </tr>
                             <tr>
                                 <td>GET</td>
-                                <td>/session/{<var>sessionId</var>}/browserext/actions</td>
+                                <td>/session/{<var>sessionId</var>}/browserexts</td>
+                                <td>Get Browser Extensions</td>
+                            </tr>                            
+                            <tr>
+                                <td>GET</td>
+                                <td>/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/actions</td>
                                 <td>Get Browser Extension Actions</td>
                             </tr>
                             <tr>
                                 <td>POST</td>
-                                <td>/session/{<var>sessionId</var>}/browserext/actions/{<var>ExtensionActionID</var>}</td>
+                                <td>/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/{<var>extensionActionID</var>}</td>
                                 <td>Take Browser Extension Action</td>
                             </tr>
-                            <tr>
+<!--                             <tr>
                                 <td>POST</td>
                                 <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenu</td>
                                 <td>Select Browser Extension Context Menu</td>
@@ -1576,7 +1581,7 @@ Browser implements BrowserExtWindowsAPI;
                                 <td>POST</td>
                                 <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenu/{<var>item</var>}</td>
                                 <td>Select Browser Extension Context Menu Item</td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </section>
@@ -1608,12 +1613,12 @@ Browser implements BrowserExtWindowsAPI;
                                 </td>
                             </tr>
                             <tr>
-                                <td><dfn id="dfn-no-such-browser-extension-popup" data-dfn-type="dfn">no such browser extension popup</dfn></td>
+                                <td><dfn id="dfn-no-such-browser-extension-action" data-dfn-type="dfn">no such browser extension action</dfn></td>
                                 <td>400</td>
-                                <td><code>no such browser extension popup</code></td>
+                                <td><code>no such browser action</code></td>
                                 <td>
-                                    A request to switch to a browser extension popup could not be satisfied because
-                                    there is no browser extension popup currently open.
+                                    A request to take a browser extension action could not be satisfied because
+                                    there is no browser extension action with the given id.
                                 </td>
                             </tr>
                             <tr>
@@ -1651,6 +1656,34 @@ Browser implements BrowserExtWindowsAPI;
                     <p>Users interact with extensions through several means. First there are actions embedded in the chrome of the browser, which can do something directly or open a popup. If the extension uses a popup, it can contain any html content. Finally, extensions can add items to the browser's context menu. WebDriver needs to be able to emulate user actions for all three of these controls in order to completely emulate user interaction.</p>
                     <p>In addition to the commands defined in the WebDriver specification [[webdriver]], support support for browser extensions requires the following additional commands. </p>
                     <section>
+                        <h3><code>getBrowserExtensions()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>GET</td>
+                                    <td id="get-browser-extensions">/session/{<var>sessionId</var>}/browserexts</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            This command returns a list of all browser extensions available to the current browsing session.
+                        </p><ul>
+                            <li><p>Let <var>extension</var> be a new JSON Object.</p></li>
+
+                            <li>
+                                <p>
+                                    Set the property <code>id</code> on <var>extension</var> to a
+                                    string which is unique for each browser extension.
+                                </p>
+                            </li>
+                    </section>                    
+                    <section>
                         <h3><code>getBrowserExtensionActions()</code></h3>
                         <table class="simple jsoncommand">
                             <tbody>
@@ -1661,14 +1694,14 @@ Browser implements BrowserExtWindowsAPI;
                                 </tr>
                                 <tr>
                                     <td>GET</td>
-                                    <td id="get-browser-extension-actions">/session/{<var>sessionId</var>}/browserext/actions</td>
+                                    <td id="get-browser-extension-actions">/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/actions</td>
                                     <td></td>
                                 </tr>
                             </tbody>
                         </table>
                         <p>
                             This command returns a list of browser extension actions
-                            available on the current page. Note that this can change from page to page.
+                            available for a particular browser extension. Note that this can change from page to page.
                             It MUST return a list of objects which describes the available browser extension
                             actions using the following algorithm for each action:
 
@@ -1700,18 +1733,30 @@ Browser implements BrowserExtWindowsAPI;
 
                             <li>
                                 <p>
-                                    Set the property <code>badgeText</code> on <var>action</var> to the
-                                    badge text displayed over the action or an empty string if none is
-                                    present.
+                                    If the action supports the <code>badgeText</code> property, 
+                                    set the property <code>badgeText</code> on <var>action</var> to the
+                                    badge text displayed over the action or an empty string if none is present.
                                 </p>
                             </li>
 
                             <li>
                                 <p>
-                                    Return <code>success</code> with <var>data</var> action
+                                    Return <code>success</code> with data <var>action</var>
                                 </p>
                             </li>
                         </ul>
+                        <dl class="parameters">
+                            <dt>DOMString extensionId</dt>
+                            <dd>
+                                The unique identifier of the browser extension whose available actions are to be queried. 
+                                Returned by the <code>getBrowserExtensions()</code> command.
+                            </dd>
+                            <p>
+                                If the id specified does not correspond to a browser extension in the current sesssion, a
+                                <code><a href="#dfn-no-such-browser-extension">no such browser extension</a></code>
+                                status code MUST be returned.
+                            </p>                            
+                        </dl>                        
                         <p></p>
                     </section>
                     <section>
@@ -1725,7 +1770,7 @@ Browser implements BrowserExtWindowsAPI;
                                 </tr>
                                 <tr>
                                     <td>POST</td>
-                                    <td id="take-browser-extension-action">/session/{<var>sessionId</var>}/browserext/action/{<var>browserExtensionActionId</var>}</td>
+                                    <td id="take-browser-extension-action">/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/{<var>extensionActionID</var>}</td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -1736,16 +1781,26 @@ Browser implements BrowserExtWindowsAPI;
                             on the browser extension, this may cause a popup to be opened.
                         </p>
                         <dl class="parameters">
-                            <dt>DOMString browserExtensionActionId</dt>
+                            <dt>DOMString extensionId</dt>
+                            <dd>
+                                The unique identifier of the browser extension whose available actions are to be queried. 
+                                Returned by the <code>getBrowserExtensions()</code> command.
+                            </dd>  
+                            <p>
+                                If the id specified does not correspond to a browser extension in the current sesssion, a
+                                <code><a href="#dfn-no-such-browser-extension">no such browser extension</a></code>
+                                status code MUST be returned.
+                            </p>                                                  
+                            <dt>DOMString extensionActionID</dt>
                             <dd>
                                 The unique identifier of the browser extension action to be taken, as returned
                                 by the <code>getBrowserExtensionActions()</code> command.
                             </dd>
                         </dl>
                         <p>
-                            If the id specified does not correspond to a browser extension on the current
+                            If the id specified does not correspond to a browser extension action on the current
                             page, a
-                            <code><a href="#status-no-such-browser-extension">no such browser extension</a></code>
+                            <code><a href="#dfn-no-such-browser-extension-action">no such browser extension action</a></code>
                             status code MUST be returned.
                         </p>
                     </section>
@@ -1868,7 +1923,7 @@ Browser implements BrowserExtWindowsAPI;
                         </dl>
                         <p>
                             If no popup is currently open, a
-                            <code><a href="#status-no-such-browser-extension-context-menu-item">no such extension context menu item</a></code>
+                            <code><a href="#dfn-no-such-browser-extension-context-menu-item">no such extension context menu item</a></code>
                             status code MUST be returned.
                         </p>
                     </section>
