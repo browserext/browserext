@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Browser Extensions</title>
@@ -1569,7 +1569,7 @@ Browser implements BrowserExtWindowsAPI;
                             </tr>
                             <tr>
                                 <td>POST</td>
-                                <td>/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/{<var>extensionActionID</var>}</td>
+                                <td>/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/</td>
                                 <td>Take Browser Extension Action</td>
                             </tr>
 <!--                             <tr>
@@ -1609,7 +1609,7 @@ Browser implements BrowserExtWindowsAPI;
                                 <td>400</td>
                                 <td><code>no such browser extension</code></td>
                                 <td>
-                                    There is no available browser extension on the current page with the given id.
+                                    There is no available browser extension on the current page with the given type.
                                 </td>
                             </tr>
                             <tr>
@@ -1710,8 +1710,8 @@ Browser implements BrowserExtWindowsAPI;
 
                             <li>
                                 <p>
-                                    Set the property <code>id</code> on <var>action</var> to a
-                                    string which is unique for the current session.
+                                    Set the property <code>type</code> on <var>action</var> to a
+                                    string which represents the type of browser extension action 
                                 </p>
                             </li>
 
@@ -1770,7 +1770,7 @@ Browser implements BrowserExtWindowsAPI;
                                 </tr>
                                 <tr>
                                     <td>POST</td>
-                                    <td id="take-browser-extension-action">/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/{<var>extensionActionID</var>}</td>
+                                    <td id="take-browser-extension-action">/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/</td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -1791,15 +1791,24 @@ Browser implements BrowserExtWindowsAPI;
                                 <code><a href="#dfn-no-such-browser-extension">no such browser extension</a></code>
                                 status code MUST be returned.
                             </p>                                                  
-                            <dt>DOMString extensionActionID</dt>
+                            <dt>DOMString extensionActionType</dt>
                             <dd>
-                                The unique identifier of the browser extension action to be taken, as returned
-                                by the <code>getBrowserExtensionActions()</code> command.
+                                The type of the browser extension action to be taken, as returned
+                                by the <code>getBrowserExtensionActions()</code> command. This value
+                                <em class="rfc2119" title="SHOULD">SHOULD</em> be one of the following: "<code>pageAction</code>", 
+                                or "<code>browserAction</code>"
                             </dd>
                         </dl>
+                        <aside class="example">
+                            <div class="example-tite"></div>
+                            <p>
+                                To click a pageAction of an extension with ID <i>1</i> in a session with ID <i>0</i>, the local end would  
+                                POST to <code>/session/0/browserext/1/action/</code> with the request body 
+                            </p>
+                            <pre class="highlight hljs xquery">{ <span class="hljs-string">"type"</span>: <span class="hljs-string">"pageAction"</span> }</pre>
+                        </aside>                        
                         <p>
-                            If the id specified does not correspond to a browser extension action on the current
-                            page, a
+                            If the type specified does not correspond to a browser extension action available in the browser/on the current page, a
                             <code><a href="#dfn-no-such-browser-extension-action">no such browser extension action</a></code>
                             status code MUST be returned.
                         </p>
