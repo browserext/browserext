@@ -352,15 +352,6 @@ interface BrowserExtEvent {
 };
 </pre>
             </section>
-            <section  >
-                <h4>Promises and Callbacks</h4>
-                <p class="issue">
-                    [ISSUE] ##38## (2016.11.15) Spec currently uses callbacks, but you can use a polyfill to convert to promises. Or should the spec use promises and use a polyfill to convert to callbacks?
-                </p>
-                <p>
-                    This specification uses callbacks for events, but by using a polyfill, extension developers can use promises instead. Here is an example of a polyfill that works in reverse, converting the promise syntax to a callback: <a href="https://github.com/mozilla/webextension-polyfill"></a>.
-                </p>
-            </section>
         </section>
 
         <section>
@@ -518,22 +509,22 @@ dictionary BrowserExtBadgeTabIdPopup {
     DOMString popupHTMLFileName;
     unsigned short tabId;
 };
-callback BrowserExtBrowserActionGetBadgeBackgroundColorCallback = void (ColorArray result);
-callback BrowserExtBrowserActionGetBadgeTextCallback = void (DOMString result);
-callback BrowserExtBrowserActionGetPopupCallback = void (DOMString result);
+
+
+
 callback BrowserExtBrowserActionOnClickedCallback = void (TabsTab tab);
-callback BrowserExtBrowserActionSetIconCallback = void ();
+
 [NoInterfaceObject]
 interface BrowserExtBrowserAction {
     void disable(unsigned short tabId);
     void enable(unsigned short tabId);
-    void getBadgeBackgroundColor(BrowserExtTabIdDetails details, BrowserExtBrowserActionGetBadgeBackgroundColorCallback callback);
-    void getBadgeText(BrowserExtTabIdDetails details, BrowserExtBrowserActionGetBadgeTextCallback callback);
-    void getPopup(BrowserExtTabIdDetails details, BrowserExtBrowserActionGetPopupCallback callback);
+    Promise&lt;ColorArray&gt; getBadgeBackgroundColor(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString&gt; getBadgeText(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString&gt; getPopup(BrowserExtTabIdDetails details);
     BrowserExtEvent onClicked(BrowserExtBrowserActionOnClickedCallback callback);
     void setBadgeBackgroundColor(BrowserExtBadgeColorArrayTabId details);
     void setBadgeText(BrowserExtBadgeTextTabId details);
-    void setIcon(BadgePathTabId details, BrowserExtBrowserActionSetIconCallback callback);
+    Promise&lt;void&gt; setIcon(BadgePathTabId details);
     void setPopup(BrowserExtBadgeTabIdPopup details);
 };
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtBrowserAction_]
@@ -616,18 +607,15 @@ dictionary BrowserExtContextMenuOnClickedDetails {
     DOMString srcUrl;
     boolean wasChecked;
 };
-callback BrowserExtContextMenuCreateCallback = void ();
+
 callback BrowserExtContextMenuOnClickedCallback = void (BrowserExtContextMenuOnClickedDetails details, TabsTab tab);
-callback BrowserExtContextMenuOnUpdateCallback = void ();
-callback BrowserExtContextMenuOnRemoveCallback = void ();
-callback BrowserExtContextMenuOnRemoveAllCallback = void ();
 [NoInterfaceObject]
 interface BrowserExtContextMenus {
-    unsigned short create(BrowserExtContextMenuCreateDetails details, optional ContextMenuCreateCallback callback);
+    Promise&lt;unsigned short&gt; create(BrowserExtContextMenuCreateDetails details);
     object onClicked(Function callback);
-	void remove((unsigned short or DOMString) itemId, optional BrowserExtContextMenuOnRemoveCallback callback);
-	void removeAll(optional BrowserExtContextMenuOnRemoveAllCallback callback);
-	void update((unsigned short or DOMString) itemId, BrowserExtContextMenuUpdateDetails details, optional BrowserExtContextMenuOnUpdateCallback callback);
+	Promise&lt;void&gt; remove((unsigned short or DOMString) itemId);
+    Promise&lt;void&gt;  removeAll();
+    Promise&lt;void&gt;  update((unsigned short or DOMString) itemId, BrowserExtContextMenuUpdateDetails details);
 };
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtContextMenus_]
 interface BrowserExtContextMenusAPI {
@@ -752,16 +740,15 @@ partial dictionary BrowserExtManifest {
 dictionary BrowserExtBadgePath {
     DOMString path;
 };
-callback BrowserExtPageActionGetPopupCallback = void (DOMString result);
-callback BrowserExtPageActionGetTitleCallback = void (DOMString result);
+
 callback BrowserExtPageActionOnClickedCallback = void (TabsTab tab);
-callback BrowserExtPageActionSetIconCallback = void ();
+
 interface BrowserExtPageAction {
-    void getPopup(BrowserExtTabIdDetails details, BrowserExtPageActionGetPopupCallback callback);
-    void getTitle(BrowserExtTabIdDetails details, BrowserExtPageActionGetTitleCallback callback);
+    Promise&lt;DOMString&gt; getPopup(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString&gt; getTitle(BrowserExtTabIdDetails details);
     void hide(unsigned short tabId);
     BrowserExtensionEvent onClicked(BrowserExtPageActionOnClickedCallback callback);
-    void setIcon(BrowserExtBadgePath path, optional BrowserExtPageActionSetIconCallback callback);
+    Promise&lt;void&gt; setIcon(BrowserExtBadgePath path);
     void setPopup(BrowserExtBadgePathTabId details);
     void setTitle(BrowserExtBadgeTextTabId details);
     void show(unsigned short tabId);
@@ -806,6 +793,8 @@ Browser implements BrowserExtPageActionAPI;
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
 <pre class="def idl">
+enum BrowserExtRuntimeOnInstalledReason {"browser_update", "extension_install", "extension_update"};
+
 dictionary BrowserExtRuntimeOnInstalledDetails {
     BrowserExtRuntimeOnInstalledReason reason;
     DOMString previousVersion;
@@ -825,20 +814,20 @@ dictionary BrowserExtRuntimeMessageSender {
     BrowserExtTabsTab tab;
     DOMString url;
 };
+
 callback BrowserExtRuntimeOnConnectCallback = void (BrowserExtRuntimePort port);
 callback BrowserExtRuntimeOnInstalledCallback = void (BrowserExtRuntimeOnInstalledDetails details);
 callback BrowserExtRuntimeOnMessageCallback = void (optional any message, BrowserExtRuntimeMessageSender sender, BrowserExtRuntimeSendResponseCallback callback);
-callback BrowserExtRuntimeSendMessageCallback = void (any response);
-callback BrowserExtRuntimeSendResponseCallback = void ();
+
 [NoInterfaceObject]
 interface BrowserExtBrowserRuntime {
     object getManifest();
     DOMString getURL(DOMString path);
     attribute DOMString id;
-    void onConnect(RuntimeOnConnectCallback callback);
-    TBD onInstalled(TBD tbd);
-    void onMessage(RuntimeOnMessageCallback callback);
-    void sendMessage(optional DOMString extensionId, any message, optional RuntimeSendMessageCallback callback);
+    void onConnect(BrowserExtRuntimeOnConnectCallback callback);
+    void onInstalled(BrowserExtRuntimeOnInstalledCallback callback);
+    void onMessage(BrowserExtRuntimeOnMessageCallback callback);
+    Promise&lt;any&gt; sendMessage(optional DOMString extensionId, any message);
     attribute RuntimePort Port;
     attribute RuntimeMessageSender MessageSender;
 };
@@ -990,36 +979,29 @@ dictionary BrowserExtTabsOnUpdatedChangeDetails {
     DOMString title;
     DOMString url;
 };
-callback BrowserExtTabsCaptureVisibleTabCallback = void (DOMString dataUrl);
-callback BrowserExtTabsCreateCallback = void (BrowserExtTabsTab tab);
-callback BrowserExtTabsGetCallback = void (BrowserExtTabsTab tab);
-callback BrowserExtTabsGetCurrentCallback = void (BrowserExtTabsTab tab);
 callback BrowserExtTabsOnActivatedCallback = void (BrowserExtTabIdWindowId activeDetails);
 callback BrowserExtTabsOnCreatedCallback = void (BrowserExtTabTab tab);
 callback BrowserExtTabsOnRemovedCallback = void (BrowserExtTabsWindowIdIsWindowClosing removeDetails);
 callback BrowserExtTabsOnUpdatedCallback = void (unsigned short tabId, BrowserExtTabsOnUpdatedChangeDetails details, TabsTab tab);
-callback BrowserExtTabsQueryCallback = void (BrowserExtTabsTab tab);
-callback BrowserExtTabsRemoveCallback = void ();
-callback BrowserExtTabsSendMessageCallback = void (any response);
-callback BrowserExtTabsUpdateCallback = void (BrowserExtTabsTab tab);
+
 [NoInterfaceObject]
 interface BrowserExtBrowserTabs {
-    void captureVisibleTab(unsigned short windowId, BrowserExtTabsCaptureVisibleTabDetails details, BrowserExtTabsCaptureVisibleTabCallback callback);
+    Promise&lt;DOMString&gt; captureVisibleTab(unsigned short windowId, BrowserExtTabsCaptureVisibleTabDetails details);
     RuntimePort connect(unsigned short tabId, BrowserExtTabConnectDetails details);
-    void create(BrowserExtTabCreateDetails details, optional TabsCreateCallback callback);
+    Promise&lt;BrowserExtTabsTab&gt; create(BrowserExtTabCreateDetails details);
     void executeScript(unsigned short tabId, BrowserExtTabScriptAndCSSDetails details);
-    void get(unsigned short tabId, BrowserExtTabsGetCallback callback);
-    void getCurrent(BrowserExtTabsGetCurrentCallback callback);
+    Promise&lt;BrowserExtTabsTab&gt; get(unsigned short tabId);
+    Promise&lt;BrowserExtTabsTab&gt; getCurrent();
     void insertCSS(unsigned short tabId, BrowserExtTabScriptAndCSSDetails details);
     void onActivated(BrowserExtTabsOnActivatedCallback callback);
     void onCreated(BrowserExtTabsOnCreatedCallback callback);
     void onRemoved(BrowserExtTabsOnRemovedCallback callback);
     void onUpdated(BrowserExtTabsOnUpdatedCallback callback);
-    void query(BrowserExtTabQueryDetails queryDetails, BrowserExtTabsQueryCallback callback);
-    void reload(BrowserExtTabReloadDetails details, Function callback);
-    void remove((unsigned short or sequence&lt;unsigned short&gt;) tabIds, BrowserExtTabsRemoveCallback callback);
-    void sendMessage(unsigned short tabId, any message, optional BrowserExtTabSendMessageOptions details, optional BrowserExtTabsSendMessageCallback callback);
-    void update(optional unsigned short tabId, BrowserExtTabUpdateDetails details, optional BrowserExtTabsUpdateCallback callback);
+    Promise&lt;BrowserExtTabsTab&gt; query(BrowserExtTabQueryDetails queryDetails);
+    Promise&lt;void&gt; reload(BrowserExtTabReloadDetails details);
+    Promise&lt;void&gt; remove((unsigned short or sequence&lt;unsigned short&gt;) tabIds);
+    Promise&lt;any&gt;sendMessage(unsigned short tabId, any message, optional BrowserExtTabSendMessageOptions details);
+    Promise&lt;BrowserExtTabsTab&gt; update(optional unsigned short tabId, BrowserExtTabUpdateDetails details);
 };
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtTabs_]
 interface BrowserExtTabsAPI {
@@ -1118,7 +1100,7 @@ callback BrowserExtWebNavigationOnReferenceFragmentUpdated = void (BrowserExtWeb
 [NoInterfaceObject]
 interface BrowserExtBrowserWebNavigation {
     void onBeforeNavigate(BrowserExtWebNavigationOnBeforeNavigateCallback callback);
-    void WebNavigationOnCommittedCallback(BrowserExtWebNavigationOnCommittedCallback callback);
+    void onCommitted(BrowserExtWebNavigationOnCommittedCallback callback);
     void onCompleted(BrowserExtWebNavigationOnCompletedCallback callback);
     void onDOMContentLoaded(BrowserExtWebNavigationOnDOMContentLoadedCallback callback);
     void onErrorOccurred(BrowserExtWebNavigationOnErrorOccurredCallback callback);
@@ -1339,22 +1321,16 @@ dictionary BrowserExtWindowUpdateDetails {
     unsigned short width;
     BrowserExtWindowsWindowType windowType;
 };
-callback BrowserExtWindowsCreateCallback = void (optional BrowserExtWindowsWindow window);
-callback BrowserExtWindowsGetCallback = void (BrowserExtWindowsWindow window);
-callback BrowserExtWindowsGetAllCallback = void (sequence&lt;BrowserExtWindowsWindow&gt; windows);
-callback BrowserExtWindowsGetCurrentCallback = void (BrowserExtWindowsWindow window);
-callback BrowserExtWindowsGetLastFocusedCallback = void (BrowserExtWindowsWindow window);
-callback BrowserExtWindowsOnFocusChangedCallback = void (unsigned short windowId);
-callback BrowserExtWindowsUpdateCallback = void (BrowserExtWindowsWindow window);
+callback BrowserExtWindowsOnFocusChangedCallback = void ( windowId);
 [NoInterfaceObject]
 interface BrowserExtWindows {
-    void create(CreateWindowDetails details, BrowserExtWindowsCreateCallback callback);
-    void get(unsigned short windowId, optional BrowserExtGetWindowDetails details, BrowserExtWindowsGetCallback callback);
-    void getAll(optional BrowserExtGetWindowDetail details, BrowserExtWindowsGetAllCallback callback);
-    void getCurrent(optional BrowserExtGetWindowDetail details, BrowserExtWindowsGetCurrentCallback callback);
-    void getLastFocused(optional BrowserExtGetWindowDetail details, BrowserExtWindowsGetLastFocusedCallback callback);
-    void onFocusChanged(BrowserExtWindowsOnFocusChangedCallback callback);
-    void update(unsigned short windowId, optional BrowserExtWindowUpdateDetails details, optional BrowserExtWindowsUpdateCallback callback);
+    Promise&lt;BrowserExtWindowsWindow&gt; create(CreateWindowDetails details);
+    Promise&lt;BrowserExtWindowsWindow&gt; get(unsigned short windowId, optional BrowserExtGetWindowDetails details);
+    Promise&lt;sequence&lt;BrowserExtWindowsWindow&gt;&gt; getAll(optional BrowserExtGetWindowDetail details);
+    Promise&lt;BrowserExtWindowsWindow&gt; getCurrent(optional BrowserExtGetWindowDetail details);
+    Promise&lt;BrowserExtWindowsWindow&gt; getLastFocused(optional BrowserExtGetWindowDetail details);
+    onFocusChanged(BrowserExtWindowsOnFocusChangedCallback callback);
+    Promise&lt;BrowserExtWindowsWindow&gt; update(unsigned short windowId, optional BrowserExtWindowUpdateDetails details);
 };
     
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExt_]
