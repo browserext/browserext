@@ -659,25 +659,97 @@ Browser implements BrowserExtContextMenusAPI;
                     </p>
                 </section>
                 <section class="introductory">
-                    <h4>messages.json Syntax</h4>
-                    <p class="issue">##23## The requirements for the messages.json file will be described here.<br />
-                        [UPDATE] (2016.11.15) Kris - should we update with content from here? <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization">MDN Internationalizatoin docs</a>
-                    </p>
-                </section><section class="introductory">
-                    <h4>String Patterns</h4>
-                    <p class="issue">##24## Define insertions, @@patterns, etc...<br />
-                        [UPDATE] (2016.11.15) Kris - should we update with content from here? <a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization">MDN Internationalizatoin docs</a>
-                    </p>
-                </section><section class="introductory">
-                    <h4>Context</h4>
+                    <h4>Locale Codes and Matching</h4>
+                    <p>Locale codes used in file/directory names and returned by the API, contrary to common standards, are in the form:</p>
+                    <code> &lt;language&gt;[_&lt;region&gt;] </code>
                     <p>
-                        This API is available in Window context (background, event, popup, options and custom pages) and Content Script context.
+                        Which is to say, a two-letter language code, optionally followed by an underscore and a two-letter region code.
+                        Locale codes are matched such that an exact match is used if available, falling back to the least-specific, closest match. Therefore, for "en_US", the following locales would be chosen, in order of preference:
                     </p>
-                </section><section class="introductory">
-                    <h4>WebIDL Definition</h4>
+                    <ul>
+                        <li>en_US</li>
+                        <li>en_US_var</li>
+                        <li>en</li>
+                        <li>en_GB</li>
+                        <li>en_GB_var</li>
+                    </ul>
+                    </p>
+                </section>
+                <section class="introductory">
+                    <h4>String tokens</h4>
+                    <p>Strings are localized by pre-processing messages, replacing <code>|$[a-zA-Z0-9@_]+$|</code> tokens with the value of their replacements. Later, it processes the resulting string for <code>|$[0-9]|</code> replacements.<p>
+                    <p>Any number of sequential |$|s are permitted, and are replaced with that number minus 1. Instances of <code>|$|</code> followed by any number of sequential digits is also permitted, but a localized string which provides more than 9 substitutions are ignored.</p>
+                </section>
+
+                <section class="introductory">
+                    <h4>Locale Message Replacement</h4>
                     <p>
-                        A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
+                        Locale messages in the form <code>__MSG_&lt;message name&gt;_</code> are automatically replaced with the appropriate localized message in CSS files and certain manifest.json string values.
+                        Specifically, the replacements are done according to the regular expression <code>__MSG_([A-Za-z0-9@_]+?)__</code>, meaning that the first occurrence of __ terminates the message name immediately.
                     </p>
+                    <p>
+                        CSS files are pre-processed as a raw text stream, with no considerations for CSS syntax.
+                        <code>manifest.json</code> values are processed after the JSON has been parsed, and the results are always treated as literal strings. The following manifest keys are processed for localization messges:
+                    </p>
+                    <ul>
+                        <li>name</a>
+                        <li>short_name</a>
+                        <li>description</a>
+                        <li>author</a>
+                        <li>homepage_url</a>
+                        <li>developer.name</a>
+                        <li>developer.url</a>
+                        <li>browser_action.default_title</a>
+                        <li>browser_action.default_url</a>
+                        <li>page_action.default_title</a>
+                        <li>page_action.default_url</a>
+</ul>
+                    </p>
+                </section>
+                <section class="introductory">
+                    <h4>Placeholders</h4>
+                    <p>A translated string may contain substrings that will not be translated or will be replaced with variable content. For example</p>
+                    <pre>
+"messageExample": {
+    "message": "You clicked $URL$.",
+    "description": "Tells the user which link they clicked.",
+    "placeholders": {
+      "url" : {
+        "content" : "$1"
+        "example" : "https://www.w3c.org"
+      }
+</pre>
+                    <p>The placeholder <code>name</code> ("url" in the above example) is used to represent the placeholder in the substitution string (e.g. "url" becomes $URL$). It is case insensitive and can contain the same characters as a message string name.</p>
+                    <p>The <code>"content"</code> item defines the content of the placeholder. This can be a hardcoded string, such as "My placeholder", but it can also include values obtained from a i18n.getMessage() call. </p>
+                    <p>The optional <code>"example"</code> item is intended to help translators by showing them an example of how the placeholder would appear to end users, allowing them to make the best choice when localizing the file.</p>
+                </section>
+                    <section class="introductory">
+                        <h4>Predefined messages</h4>
+                        <p>Predefined messages are accessed in the same way as other messages. The syntax for standard messages is:</p>
+                        <code>__MSG_extensionName__</code>
+                        <p>Predefined messages use exactly the same syntax, except with @@ before the message name. For example:</p>
+                        <code>__MSG_@@ui_locale__</code>
+                        <p>The following table shows the different available predefined messages:</p>
+                        <table>
+                            <tr><td><b>Message name</b></td><td><b>Description</b></td></tr>
+                            <tr><td>@@extension_id</td><td>The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message. Note that you can't use this message in a manifest file.</td></tr>
+                            <tr><td>@@ui_locale</td><td>The current locale; you might use this string to construct locale-specific URLs.</td></tr>
+                            <tr><td>@@bidi_dir</td><td>The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Arabic.</td></tr>
+                            <tr><td>@@bidi_reversed_dir</td><td>If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it's "ltr".</td></tr>
+                            <tr><td>@@bidi_start_edge</td><td>If the @@bidi_dir is "ltr", then this is "left"; otherwise, it's "right".</td></tr>
+                            <tr><td>@@bidi_end_edge</td><td>If the @@bidi_dir is "ltr", then this is "right"; otherwise, it's "left".</td></tr>
+                        </table>
+</section>
+                <section class="introductory">
+                        <h4>Context</h4>
+                        <p>
+                            This API is available in Window context (background, event, popup, options and custom pages) and Content Script context.
+                        </p>
+                    </section><section class="introductory">
+                        <h4>WebIDL Definition</h4>
+                        <p>
+                            A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
+                        </p>
 
 <pre class="def idl">    
 [NoInterfaceObject]
@@ -693,8 +765,8 @@ partial dictionary BrowserExtManifest {
     DOMString? defaultLocale;
 };
 </pre>
+                    </section>
                 </section>
-            </section>
 
             <section>
                 <h4 id="pageAction">The <code>pageAction</code> object</h4>
@@ -1916,6 +1988,11 @@ Browser implements BrowserExtWindowsAPI;
             <p>
                 Many thanks to the members of the <a href="https://www.w3.org/community/browserext/">Browser Extension Community Group</a> for their detailed feedback on this specification. Thanks to the members of the <a href="http://www.w3.org/testing/browser/">Browser Testing and Tools Working Group</a> for their recommendations and feedback on WebDriver support.
             </p>
+            <p>Some sections are reproduced from MDN:</p>
+            <ul>
+                <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization</a></li>
+                <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/Locale-Specific_Message_reference">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/Locale-Specific_Message_reference</a></li>
+            </ul>
         </section>
     <script>
         function updateResolved() {
