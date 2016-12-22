@@ -1539,8 +1539,8 @@ Browser implements BrowserExtWindowsAPI;
             <p class="issue">[ISSUE] (2016.09.22) BA and PA have title property, recommend we rename to text to title<br />[RESOLVED] (2016.10.18)<br /><a href="https://github.com/browserext/browserext/issues/32">GitHub Issue 32</a></p>
             <p class="issue">[ISSUE] (2016.09.22) Title should be enough to identify extension, but may want to add an extensionId or extensionName property. Will consult BE CG<br /><a href="https://github.com/browserext/browserext/issues/31">GitHub Issue 31</a></p>
             <p class="issue">[ISSUE] (2016.09.22) radio, checkbox, checkstate, groups, enable/disable, item type (separator, submenu, item)<br /><a href="https://github.com/browserext/browserext/issues/33">GitHub Issue 33</a></p>
-            <p class="issue">[ISSUE] (2016.09.22) Add extension during session at runtime<br /><a href="https://github.com/browserext/browserext/issues/33">GitHub Issue 33</a></p>
-            <p class="issue">[ISSUE] (2016.09.22) For installing, you will need an endpoint for installing/activating at runtime<br /><a href="https://github.com/browserext/browserext/issues/34">GitHub Issue 34</a></p>
+            <p class="issue">[ISSUE] (2016.09.22) Add extension during session at runtime<br />[RESOLVED] (2016.12.22)<br /><a href="https://github.com/browserext/browserext/issues/33">GitHub Issue 33</a></p>
+            <p class="issue">[ISSUE] (2016.09.22) For installing, you will need an endpoint for installing/activating at runtime<br />[RESOLVED] (2016.12.22)<br /><a href="https://github.com/browserext/browserext/issues/34">GitHub Issue 34</a></p>
             <p class="issue">[ISSUE] (2016.09.22) Support user permissions/prompts (Need to follow up with Kris)</p>
             <p class="issue">[ISSUE] (2016.09.22) Address the lifetime of extension/browser session<br /><a href="https://github.com/browserext/browserext/issues/35">GitHub Issue 35</a></p>
             <p class="issue">[ISSUE] (2016.09.22) Both "getBrowserExtensionContextMenuItems" and "selectBrowserExtensionContextMenuItem" should be POST<br />[RESOLVED] (2106.10.18) Corrected this<br/><a href="https://github.com/browserext/browserext/issues/36">GitHub Issue 36</a></p>
@@ -1558,6 +1558,16 @@ Browser implements BrowserExtWindowsAPI;
                                 <th>Command</th>
                             </tr>
                             <tr>
+                                <td>POST</td>
+                                <td>/session/{<var>sessionId</var>}/browserext</td>
+                                <td>Install Browser Extensions</td>
+                            </tr>  
+                            <tr>
+                                <td>DELETE</td>
+                                <td>/session/{<var>sessionId</var>}/browserext/{extensionId}</td>
+                                <td>Uninstall a Browser Extension</td>
+                            </tr>                                                      
+                            <tr>
                                 <td>GET</td>
                                 <td>/session/{<var>sessionId</var>}/browserexts</td>
                                 <td>Get Browser Extensions</td>
@@ -1572,22 +1582,22 @@ Browser implements BrowserExtWindowsAPI;
                                 <td>/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/</td>
                                 <td>Take Browser Extension Action</td>
                             </tr>
-<!--                             <tr>
-                                <td>POST</td>
-                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenu</td>
-                                <td>Select Browser Extension Context Menu</td>
+                            <tr>
+                                <td>GET</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenuItems</td>
+                                <td>Get Browser Extension Context Menu Items</td>
                             </tr>
                             <tr>
                                 <td>POST</td>
-                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenu/{<var>item</var>}</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenuItem/{<var>menuitemId</var>}</td>
                                 <td>Select Browser Extension Context Menu Item</td>
-                            </tr> -->
+                            </tr>
                         </tbody>
                     </table>
                 </section>
                 <section class='informative'>
                     <h4>Handling Errors</h4>
-                    <p>In addition to the codes defined in the Handling Errors section of the WebDriver specification [[webdriver]], support support for browser extensions requires support the following additional error codes:</p>
+                    <p>In addition to the codes defined in the Handling Errors section of the WebDriver specification [[webdriver]], support for browser extensions requires support the following additional error codes:</p>
                     <table class="simple">
                         <tbody>
                             <tr>
@@ -1604,6 +1614,22 @@ Browser implements BrowserExtWindowsAPI;
                                     Description
                                 </th>
                             </tr>
+                            <tr>
+                                <td><dfn id="dfn-no-such-extension-path" data-dfn-type="dfn">no such extension path</dfn></td>
+                                <td>400</td>
+                                <td><code>no such extension path</code></td>
+                                <td>
+                                    The filepath specified does not point to a valid browser extension on disk.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><dfn id="dfn-extension-not-installable" data-dfn-type="dfn">extension not installable</dfn></td>
+                                <td>400</td>
+                                <td><code>extension not installable</code></td>
+                                <td>
+                                    The specified extension could not be installed for some reason, e.g. its manifest.json is malformed or missing
+                                </td>
+                            </tr>                                                        
                             <tr>
                                 <td><dfn id="dfn-no-such-browser-extension" data-dfn-type="dfn">no such browser extension</dfn></td>
                                 <td>400</td>
@@ -1639,13 +1665,13 @@ Browser implements BrowserExtWindowsAPI;
                     <h3>
                         Capabilities
                     </h3>
-                    <p>In addition to the Capabilities defined in the WebDriver specification [[webdriver]], support support for browser extensions requires the following additional entry on the <i>server capabilities</i> JSON object:</p>
+                    <p>In addition to the Capabilities defined in the WebDriver specification [[webdriver]], support for browser extensions requires the following additional entry on the <i>server capabilities</i> JSON object:</p>
                     <dl>
                         <dt>
                             "<code>enabledExtensions</code>"
                         </dt>
                         <dd>
-                            An array of relative paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
+                            An array of absolute paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
                         </dd>
                     </dl>
                 </section>
@@ -1654,7 +1680,81 @@ Browser implements BrowserExtWindowsAPI;
                         Browser Extensions Commands
                     </h3>
                     <p>Users interact with extensions through several means. First there are actions embedded in the chrome of the browser, which can do something directly or open a popup. If the extension uses a popup, it can contain any html content. Finally, extensions can add items to the browser's context menu. WebDriver needs to be able to emulate user actions for all three of these controls in order to completely emulate user interaction.</p>
-                    <p>In addition to the commands defined in the WebDriver specification [[webdriver]], support support for browser extensions requires the following additional commands. </p>
+                    <p>In addition to the commands defined in the WebDriver specification [[webdriver]], support for browser extensions requires the following additional commands. </p>
+                    <section>
+                        <h3><code>installBrowserExtensions()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>POST</td>
+                                    <td id="get-browser-extensions">/session/{<var>sessionId</var>}/browserext</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            This command installs any number of specified extensions from disk at runtime
+                        </p>
+                        <aside class="example">
+                            <div class="example-tite"></div>
+                            <p>
+                                To install an extension located at "/ext/" in a session with ID <i>0</i>, the local end would  
+                                POST to <code>/session/0/browserext/</code> with the request body 
+                            </p>
+                            <pre class="highlight hljs xquery">{ <span class="hljs-string">"extensionPaths"</span>: [<span class="hljs-string">"/ext/"</span>] }</pre>
+                        </aside>                        
+                        <p>
+
+                            The value of the <code>extensionPaths</code> property MUST be an array of absolute paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
+                        </p>
+                        <p>
+                            If any of the absolute paths specified in the <code>extensionPaths</code> property are invalid, a
+                            <code><a href="#dfn-no-such-extension-path">no such extension path</a></code>
+                            status code MUST be returned.
+                        </p> 
+                        <p>
+                            If the installation of any extensions specified in the <code>extensionPaths</code> property fail, an
+                            <code><a href="#dfn-extension-not-installable">extension not installable</a></code>
+                            status code MUST be returned.
+                        </p>                                                
+                    </section> 
+                    <section>
+                        <h3><code>uninstallBrowserExtensions()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>DELETE</td>
+                                    <td id="get-browser-extensions">/session/{<var>sessionId</var>}/browserext/{extensionId}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            This command uninstalls an extension in a specified browsing session.
+                        </p>
+
+                        <dl class="parameters">
+                            <dt>DOMString extensionId</dt>
+                            <dd>
+                                The unique identifier of the browser extension to be uninstalled from the session.
+                            </dd>  
+                            <p>
+                                If the extensionId specified does not correspond to a browser extension in the current sesssion, a
+                                <code><a href="#dfn-no-such-browser-extension">no such browser extension</a></code>
+                                status code MUST be returned.
+                            </p>
+                        </dl>   
+                    </section>                                       
                     <section>
                         <h3><code>getBrowserExtensions()</code></h3>
                         <table class="simple jsoncommand">
@@ -1776,18 +1876,57 @@ Browser implements BrowserExtWindowsAPI;
                             </tbody>
                         </table>
                         <p>
-                            This command causes a browser extension to be activated, as if
-                            the user had clicked the browser extension's browser action icon in the browser's chrome. Depending
-                            on the browser extension, this may cause a popup to be opened.
+                            This command causes a browser extension action to be activated. Depending on the <code>extensionActionType</code> specified, this
+                            will have one of several effects:
                         </p>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>extensionActionType</th>
+                                    <th>Effect</th>
+                                </tr>
+                                <tr>
+                                    <td>browserAction</td>
+                                    <td>
+                                        This <code>extensionActionType</code> causes a browserAction to be activated, 
+                                        as if the user had clicked the browser extension's browserAction icon in the browser's chrome. 
+                                        Depending on the browser extension, this may cause a popup to be opened. 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>pageAction</td>
+                                    <td>
+                                        This <code>extensionActionType</code> causes a pageAction to be activated, 
+                                        as if the user had clicked the browser extension's pageAction icon in the browser's address bar. 
+                                        Depending on the browser extension, this may cause a popup to be opened. 
+                                    </td>
+                                </tr> 
+                                <tr>
+                                    <td>enable</td>
+                                    <td>
+                                        This <code>extensionActionType</code> causes the specified extension to be enabled,
+                                        as if the user had turned the extension on from the browser's management UI. If the extension
+                                        is already enabled, this command has no effect. 
+                                    </td>
+                                </tr>  
+                                <tr>
+                                    <td>disable</td>
+                                    <td>
+                                        This <code>extensionActionType</code> causes the specified extension to be disabled,
+                                        as if the user had turned the extension off from the browser's management UI. If the extension
+                                        is already disabled, this command has no effect. 
+                                    </td>
+                                </tr>                                                                                             
+                            </tbody>
+                        </table>                        
                         <dl class="parameters">
                             <dt>DOMString extensionId</dt>
                             <dd>
-                                The unique identifier of the browser extension whose available actions are to be queried. 
+                                The unique identifier of the browser extension whose available actions are to be invoked. 
                                 Returned by the <code>getBrowserExtensions()</code> command.
                             </dd>  
                             <p>
-                                If the id specified does not correspond to a browser extension in the current sesssion, a
+                                If the extensionId specified does not correspond to a browser extension in the current sesssion, a
                                 <code><a href="#dfn-no-such-browser-extension">no such browser extension</a></code>
                                 status code MUST be returned.
                             </p>                                                  
@@ -1796,7 +1935,7 @@ Browser implements BrowserExtWindowsAPI;
                                 The type of the browser extension action to be taken, as returned
                                 by the <code>getBrowserExtensionActions()</code> command. This value
                                 <em class="rfc2119" title="SHOULD">SHOULD</em> be one of the following: "<code>pageAction</code>", 
-                                or "<code>browserAction</code>"
+                                "<code>browserAction</code>", "<code>enable</code>", or "<code>disable</code>"
                             </dd>
                         </dl>
                         <aside class="example">
@@ -1815,7 +1954,7 @@ Browser implements BrowserExtWindowsAPI;
                     </section>
                     <section>
                         <!-- getExtensionContextMenuItems() -->
-                        <h3><code>selectBrowserExtensionContextMenu()</code></h3>
+                        <h3><code>getExtensionContextMenuItems()</code></h3>
                         <table class="simple jsoncommand">
                             <tbody>
                                 <tr>
@@ -1824,8 +1963,8 @@ Browser implements BrowserExtWindowsAPI;
                                     <th>Notes</th>
                                 </tr>
                                 <tr>
-                                    <td>POST</td>
-                                    <td id="get-browser-extension-context-menu-items">/session/{<var>sessionId</var>}/element/{<var>elementId</var>}/browserext/contexMenu</td>
+                                    <td>GET</td>
+                                    <td id="get-browser-extension-context-menu-items">/session/{<var>sessionId</var>}/element/{<var>elementId</var>}/browserext/contexMenuItems</td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -1906,7 +2045,7 @@ Browser implements BrowserExtWindowsAPI;
                                 </tr>
                                 <tr>
                                     <td>POST</td>
-                                    <td id="get-browser-extension-context-menu-items">/session/{<var>sessionId</var>}/element/{<var>elementId</var>}/browserext/contextMenu/{<var>menuitemId</var>}</td>
+                                    <td id="get-browser-extension-context-menu-items">/session/{<var>sessionId</var>}/element/{<var>elementId</var>}/browserext/contextMenuItem/{<var>menuitemId</var>}</td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -1926,12 +2065,12 @@ Browser implements BrowserExtWindowsAPI;
                             <dt>String menuitemId</dt>
                             <dd>
                                 The context menu item id, as returned by the
-                                <code>selectBrowserExtensionContextMenu()</code>
+                                <code>getExtensionContextMenuItems()</code>
                                 command.
                             </dd>
                         </dl>
                         <p>
-                            If no popup is currently open, a
+                            If no context menu is currently open, a
                             <code><a href="#dfn-no-such-browser-extension-context-menu-item">no such extension context menu item</a></code>
                             status code MUST be returned.
                         </p>
