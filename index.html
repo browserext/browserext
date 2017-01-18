@@ -115,7 +115,7 @@
                 <section>
                     <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
                     <p>
-                        Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . The browser extension author may also override the default and specify a new CSP.
+                        Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . If the browser extension author specifies a new CSP, it will override the default CSP.
                     </p>
                     <p class="issue">Add a separate non-normative section on how content scripts interact with CSP<br /><a href="https://github.com/browserext/browserext/issues/18">GitHub Issue 18</a></p>
                     <ul>
@@ -148,7 +148,7 @@
                     <section>
                         <h5 id="availability-manifest">Table: API Availability Summary</h5>
                         <p>
-                            Some browser extension API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below. If manifest keys that are not defined in this specification are specified, other browsers may ignore those keys.
+                            Some browser extension API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below. If manifest keys that are not defined in this specification are specified, other browsers MAY elect to ignore those additional keys.
                         </p>
                         <table>
                             <tr>
@@ -234,13 +234,13 @@
                             </tr>
                         </table>
                         <div id="note1" resource="#note1">
-                            <sup>1</sup> Either <code>browserAction</code> or <code>pageAction</code> may be supported by an extension, not both
+                            <sup>1</sup> Either <code>browserAction</code> or <code>pageAction</code> is allowed at the same time, not both
                         </div>
                         <div id="note2" resource="#note2">
-                            <sup>2</sup>Extensions may use the runtime object without declaring <code>"externally_connectable"</code> in the manifest. However, an extension may only receive messages sent from hosted web pages if this key is declared. It may also be used to block messages from other extensions, except for those in the <code>"ids"</code> list.
+                            <sup>2</sup>The runtime object is available for use by extensions without declaring <code>"externally_connectable"</code> in the manifest. However, an extension will only receive messages sent from hosted web pages if this key is declared. The <code>"externally_connectable"</code> declaration will block messages from other extensions, unless the allowed extension ID is declared in the <code>"ids"</code> list.
                         </div>
                         <div id="note3" resource="#note3">
-                            <sup>3</sup>Internet-hosted web pages may send messages to extensions via runtime.sendMessage if the extension has explicitly specified the hosting site's domain in the manifest under the "externally_connectable" key.
+                            <sup>3</sup>Internet-hosted web pages that use <code>runtime.sendMessage</code> to communicate with extensions MUST be explicitly specify the hosting site's domain in the manifest under the "externally_connectable" key.
                         </div>
                         <div id="note4" resource="#note4">
                             <sup>4</sup> Use of the <code>browser.i18n</code> object does not require a manifest permission declaration. However, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code.
@@ -253,7 +253,7 @@
                     <section>
                         <h4>Attribute: <code>Exposed</code></h4>
                         <p>
-                            To express the aforementioned conditional situations in which certain APIs may or may not be available due to context, the following contexts are used:
+                            To express the aforementioned conditional situations in which certain APIs are made available due to context, the following contexts are used:
                         </p>
                         <ul>
                             <li><b>Window</b> - The primary context for most browser extension APIs. This applies to background, event, popup, options and custom contexts</li>
@@ -263,7 +263,7 @@
                     <section>
                         <h4>Extended Attribute: <code>CheckAnyPermissions</code></h4>
                         <p>
-                            To express the aforementioned conditional situations in which certain APIs may or may not be available due to expressed manifest keys or permissions, the new WebIDL extended attribute <code>"<a href="https://developer.mozilla.org/en-US/docs/Mozilla/WebIDL_bindings#CheckAnyPermissions">CheckAnyPermissions</a>"</code> is used.
+                            To express the aforementioned conditional situations in which certain APIs are made available due to expressed manifest keys or permissions, the new WebIDL extended attribute <code>"<a href="https://developer.mozilla.org/en-US/docs/Mozilla/WebIDL_bindings#CheckAnyPermissions">CheckAnyPermissions</a>"</code> is used.
                         </p>
                         <table>
                             <tr><td><b>API object</b></td><td><b>CheckAnyPermissions Value</b></td><td><b>Manifest Key or Value</b></td></tr>
@@ -528,7 +528,7 @@ dictionary BrowserExtManifest {
                 <h4 id="browserAction">The <code>browserAction</code> object</h4>
                 <section class="introductory">
                     <h4>Overview</h4>
-                    The <code>browserAction</code> object adds an always-visible button to the browser application, usually near the top of the browser application UI in the toolbar area. An extension may have either a <code>browserAction</code> or a <code>pageAction</code>, but not both.
+                    The <code>browserAction</code> object adds an always-visible button to the browser application, usually near the top of the browser application UI in the toolbar area. An extension that declares a <code>browserAction</code> cannot have a <code>pageAction</code>, and vice-versa.
                 </section>
                 <section class="introductory">
                     <h4>Manifest</h4>
@@ -655,12 +655,12 @@ Browser implements BrowserExtBrowserActionAPI;
                 <section class="introductory">
                     <h4>Overview</h4>
                     <p>
-                        The <code>contextMenus</code> object allows additional entries to be added to the browser's context menu. The menu may selectively be shown for various browser UI elements (browser action or page action button) or page elements (frame, image, link, page, selection, etc.).
+                        The <code>contextMenus</code> object allows additional entries to be added to the browser's context menu. The menu will be selectively be shown for various browser UI elements (browser action or page action button) or page elements (frame, image, link, page, selection, etc.).
                     </p>
                 </section><section class="introductory">
                     <h4>Manifest</h4>
                     <p>
-                        A <code>"contextMenus"</code> entry must be declared in the <code>"permissions"</code> key. The icon keys are optional.
+                        A <code>"contextMenus"</code> entry MUST be declared in the <code>"permissions"</code> key. The icon keys are optional.
                     </p>
 <pre>
 "permissions": [                                  // Required
@@ -813,7 +813,7 @@ Browser implements BrowserExtContextMenusAPI;
                 <section class="introductory">
                     <h4>Manifest</h4>
                     <p>
-                        When providing localized strings, you must specify a default locale using a two-character code. Codes can be found at <a href="http://www.w3.org/TR/1999/REC-html401-19991224/struct/dirlang.html">RFC1766</a> or <a href="http://www.w3.org/International/articles/language-tags/">IETF BCP47</a>. To manifest localize strings, the syntax below may be used.
+                        When providing localized strings, you MUST specify a default locale using a two-character code. Codes can be found at <a href="http://www.w3.org/TR/1999/REC-html401-19991224/struct/dirlang.html">RFC1766</a> or <a href="http://www.w3.org/International/articles/language-tags/">IETF BCP47</a>. When localizing manifest strings, the following syntax is used.
                     </p>
 <pre>
 "default_locale" : "&lt;twoCharLocaleCode&gt;",              // Required
@@ -830,7 +830,7 @@ Browser implements BrowserExtContextMenusAPI;
                 <section class="introductory">
                     <h4>Localized Strings</h4>
                     <p>
-                        Each supported locale must have its own <code>messages.json</code> file stored in the folder <code>_locales/&lt;twoCharLocaleCode&gt;</code>. The two-character codes used for directory names here the same as are used in the <code>mainfest.json</code> to specify <code>default_locale</code>.
+                        Each supported locale MUST have its own <code>messages.json</code> file stored in the folder <code>_locales/&lt;twoCharLocaleCode&gt;</code>. The two-character codes used for directory names here the same as are used in the <code>mainfest.json</code> to specify <code>default_locale</code>.
                     </p>
                 </section>
                 <section class="introductory">
@@ -883,7 +883,7 @@ Browser implements BrowserExtContextMenusAPI;
                 </section>
                 <section class="introductory">
                     <h4>Placeholders</h4>
-                    <p>A translated string may contain substrings that will not be translated or will be replaced with variable content. For example</p>
+                    <p>It is possible for a translated string to contain substrings that will not be translated or will be replaced with variable content. For example</p>
                     <pre>
 "messageExample": {
     "message": "You clicked $URL$.",
@@ -955,7 +955,7 @@ partial dictionary BrowserExtManifest {
                 <section class="introductory">
                     <h4>Overview</h4>
                     <p>
-                        The <code>pageAction</code> object adds a button to the browser application, usually within the address bar. This button typically appears only when the extension has detected that it can perform an action on the current page for the active tab. An extension may have either a <code>browserAction</code> or a <code>pageAction</code>, but not both.
+                        The <code>pageAction</code> object adds a button to the browser application, usually within the address bar. This button typically appears only when the extension has detected that it can perform an action on the current page for the active tab. An extension that declares a <code>browserAction</code> cannot have a <code>pageAction</code>, and vice-versa.
                     </p>
                 </section><section class="introductory">
                     <h4>Manifest</h4>
@@ -1046,7 +1046,7 @@ Browser implements BrowserExtPageActionAPI;
                 </section><section class="introductory">
                     <h4>Manifest</h4>
                     <p>
-                        There are no additional manifest entries required for an extension to use this object. However, an extension may only receive messages sent from hosted web pages if the “externally_connectable” key is declared. Also, an extension may block messages from other extensions by specifying only approved extensions. Note that if this key is used to allow web pages to send messages, unless <code>"ids" : ["*"]</code> is specified, all messages from other extensions will be blocked. URLs in the <code>"matches"</code> array must include a top-level domain. This list does not affect content scripts.
+                        There are no additional manifest entries required for an extension to use this object. However, an extension will only receive messages sent from hosted web pages if the “externally_connectable” key is declared. Also, an extension will block messages from other extensions by specifying only approved extensions. Note that if this key is used to allow web pages to send messages, unless <code>"ids" : ["*"]</code> is specified, all messages from other extensions will be blocked. URLs in the <code>"matches"</code> array MUST include a top-level domain. This list does not affect content scripts.
                     </p>
 <pre>
 "externally_connectable" : [
@@ -2055,7 +2055,7 @@ Browser implements BrowserExtWindowsAPI;
         <h2 id="manifest-json">Manifest Format</h2>
         <section>
             <h3>Pre-parsing</h3>
-            Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers may ignore those keys.
+            Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers MAY ignore those keys.
         </section>
         <section>
             <h3>Permissions URL patterns</h3>
@@ -2068,7 +2068,7 @@ Browser implements BrowserExtWindowsAPI;
 // the manifest.json file format for browser extensions is expected to be fully JSON compliant. 
 // Malformed JSON files are not supported.
 //
-// Other manifest keys that are well-formed JSON but are not listed here must be ignored.
+// Other manifest keys that are well-formed JSON but are not listed here MUST be ignored.
 //
 // Note that some fields marked as Optional here are required by vendor-specific distribution Stores.
 {
@@ -2095,8 +2095,8 @@ Browser implements BrowserExtWindowsAPI;
        }
   },
   "background": {                                   
-      "page": "Page URL",                           // Only one of "page" or "scripts" may be specified, but not both 
-      "scripts": [],                                // Only one of "page" or "scripts" may be specified, but not both 
+      "page": "Page URL",                           // Only one of "page" or "scripts" is supported, but not both simultaneously
+      "scripts": [],                                // Only one of "page" or "scripts" is supported, but not both simultaneously
       "persistent": false                           // Required if "background" is specified
   },
   "content_scripts": {                                                    
@@ -2111,9 +2111,8 @@ Browser implements BrowserExtWindowsAPI;
   
   "options_page": "Page URL",                            // Optional
   "manifest_version": 2,                            // Not used
-  "required_keys": [],                              // If a browser does not recognize a key in the list, it must 
+  "required_keys": [],                              // If a browser does not recognize a key in this list, it MUST 
                                                     // reject the manifest (e.g. "sidebar_action")
-                                                    // Future keys may be required to be in the list if used. 
                                                     // FEEDBACK: Rename to "required_capabilities"
   "permissions": {                                  
        "activeTab",                                                
@@ -2164,13 +2163,13 @@ Browser implements BrowserExtWindowsAPI;
         <section  >
             <h2>Testing Extensions with WebDriver</h2>
             <p>
-                Browsers vendors may choose to implement WebDriver support in their browsers to allow for the automated testing of browser extensions. To implement this support, the browser must support:
+                Browsers vendors MAY choose to implement WebDriver support in their browsers to allow for the automated testing of browser extensions. To implement this support, the browser MUST support:
             </p>
             <ul>
                 <li>The base functionality as defined in the WebDriver specification [[webdriver]] </li>
                 <li>Additional functionality required to support browser extensions, defined below in the Browser Extensions specification</li>
             </ul>
-            <p class="issue">[ISSUE] (2016.09.22) ##31## Title should be enough to identify extension, but may want to add an extensionId or extensionName property. Will consult BE CG<br />  </p>
+            <p class="issue">[ISSUE] (2016.09.22) ##31## Title should be enough to identify extension, but do we want to add an extensionId or extensionName property? Will consult BE CG<br />  </p>
             <p class="issue">[ISSUE] (2016.09.22) ##33## Add extension during session at runtime<br /></p>
             <p class="issue">[ISSUE] (2016.09.22) ##34## For installing, you will need an endpoint for installing/activating at runtime<br /> </p>
             <p class="issue">[ISSUE] (2016.09.22) Support user permissions/prompts (Need to follow up with Kris)</p>
@@ -2367,7 +2366,7 @@ Browser implements BrowserExtWindowsAPI;
                         <p>
                             This command causes a browser extension to be activated, as if
                             the user had clicked the browser extension's browser action icon in the browser's chrome. Depending
-                            on the browser extension, this may cause a popup to be opened.
+                            on the browser extension, this could cause a popup to be opened.
                         </p>
                         <dl class="parameters">
                             <dt>DOMString browserExtActionId</dt>
@@ -2477,7 +2476,7 @@ Browser implements BrowserExtWindowsAPI;
                                                 <code>radio</code>
                                             </td>
                                             <td>
-                                                A radio element. Within a radio group, only one menuItem may have a value of <code>true</code>
+                                                A radio element. Within a radio group, only one menuItem will have a value of <code>true</code>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2494,7 +2493,7 @@ Browser implements BrowserExtWindowsAPI;
                             <li>
                                 <p>
                                     Set the property <code>itemChecked</code> on <var>menuitem</var> to a boolean value indicating
-                                    state of the item according to the following table. This applies only to items of itemType <code>checkbox</code> or <code>radio</code>. Within a radio group, only one menuItem may have a value of <code>true</code>.
+                                    state of the item according to the following table. This applies only to items of itemType <code>checkbox</code> or <code>radio</code>. Within a radio group, only one menuItem will have a value of <code>true</code>.
                                 </p>
                                 <table class="simple">
                                     <tbody>
@@ -2593,7 +2592,7 @@ Browser implements BrowserExtWindowsAPI;
             <section class='informative'>
                 <h2>Packaging</h2>
                 <p>
-                    Browser extensions may be distributed and subsequently loaded as individual files or via a container, such as a *.zip archive. Regardless of the packaging format, these containers must contain the following:
+                    Browser extensions MAY be distributed and subsequently loaded as individual files or via a container, such as a *.zip archive. Regardless of the packaging format, these containers must contain the following:
                 </p>
                 <ul>
                     <li>manifest.json</li>
