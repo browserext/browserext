@@ -84,13 +84,11 @@
         </p>
     </section>
 
-    <section >
+    <section class='informative'>
         <h2>Core APIs</h2>
         <p>
             The goal for these core APIs is to provide functionality that extension authors need for: 
         </p>
-        <p class="issue">Need to correct use of keywords from RFC 2119 https://dev.w3.org/2008/video/mediaann/ReSpec.js/documentation.html (MUST, MAY, SHALL, etc)<br/><a href="https://github.com/browserext/browserext/issues/15">GitHub Issue 15</a></p>
-        <p class="issue">Need to update &lt;section&gt; tags with appropriate class='informative' ("This section is non-normative.") usage. Some sections ARE normative, but the class tag remains due to cut-and-paste without appropriate clean-up by the Editor afterwards.<br /><a href="https://github.com/browserext/browserext/issues/16">GitHub Issue 16</a></p>
         <ul>
             <li>page modification for web site content</li>
             <li>UI augmentation for web browsers (host apps)</li>
@@ -100,31 +98,35 @@
             <li>accessing user settings such as cookies</li>
         </ul>
         <p class="issue">Need to resolve ID issue before we can address messaging ('passing data')<br />GitHub Issues <a href="https://github.com/browserext/browserext/issues/14">14</a>&nbsp;&amp;&nbsp;<a href="https://github.com/browserext/browserext/issues/17">17</a></p>
-        <section class='informative'>
+        <section  >
             <h3 id="apiavailability">API Availability</h3>
-            <p>
-                Browser extensions are authored primarily with JavaScript. In addition to the usual <a href="https://www.w3.org/standards/webdesign/script">JavaScript Web APIs</a>, additional APIs are available exclusively to extensions via the <code>browser</code> object. However, the specific APIs that are available to an extension from the <code>browser</code> object are dependent upon:
-            </p>
-            <ul>
-                <li>Execution context (e.g. background/event, popup, options, content, extension page)
-                <li>Keys declared in the manifest (e.g. browser_action, page_action)
-                <li>Permissions declared in the manifest (e.g. contextMenu, tabs, webNavigation, webRequest)
-                <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
-            </ul>
-            <section>
-                <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
+            <section class='informative'>
+                <h3>Overview</h3>
                 <p>
-                    Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . The browser extension author may also override the default and specify a new CSP.</p>
-                <p class="issue">Add a separate non-normative section on how content scripts interact with CSP<br/><a href="https://github.com/browserext/browserext/issues/18">GitHub Issue 18</a></p>
+                    Browser extensions are authored primarily with JavaScript. In addition to the usual <a href="https://www.w3.org/standards/webdesign/script">JavaScript Web APIs</a>, additional APIs are available exclusively to extensions via the <code>browser</code> object. However, the specific APIs that are available to an extension from the <code>browser</code> object are dependent upon:
+                </p>
                 <ul>
-                    <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
-                    <li>Only script from the extension's package can be executed</li>
-                    <li>Executing script from the web is not allowed</li>
+                    <li>Execution context (e.g. background/event, popup, options, content, extension page)
+                    <li>Keys declared in the manifest (e.g. browser_action, page_action)
+                    <li>Permissions declared in the manifest (e.g. contextMenu, tabs, webNavigation, webRequest)
+                    <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
                 </ul>
-            </section>
+                </section>
+                <section>
+                    <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
+                    <p>
+                        Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . If the browser extension author specifies a new CSP, it will override the default CSP.
+                    </p>
+                    <p class="issue">Add a separate non-normative section on how content scripts interact with CSP<br /><a href="https://github.com/browserext/browserext/issues/18">GitHub Issue 18</a></p>
+                    <ul>
+                        <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
+                        <li>Only script from the extension's package can be executed</li>
+                        <li>Executing script from the web is not allowed</li>
+                    </ul>
+                </section>
 
-            <section class="informative">
-                <h4>Execution Context and Manifest Restrictions</h4>
+                <section class="informative">
+                    <h4>Execution Context and Manifest Restrictions</h4>
                     <p>
                         Browser extension pages and their corresponding scripts are executed in one of the following contexts. The manifest declarations required to create each specific type of page are described below.
                     </p>
@@ -143,160 +145,160 @@
                         <li><b>Internet-hosted web page context</b> - Messaging APIs can be used to send messages from hosted web site pages such as https://en.wikipedia.org/wiki/Main_Page/index.html or https://w3c.github.io/html/index.html to extensions
                     </ul>
 
-                <section class="informative">
-                    <h5 id="availability-manifest">Table: API Availability Summary</h5>
-                    <p>
-                        Some browser extension API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below. If manifest keys that are not defined in this specification are specified, other browsers may ignore those keys.
-                    </p>
-                    <table>
-                        <tr>
-                            <th rowspan=2>API object</th>
-                            <th colspan=3>Execution Context</th>
-                            <th colspan=1>Required Declaration</th>
-                        </tr>
-                        <tr>
-                            <th>Background page,Event page,Popup page,Options page,Custom page</th>
-                            <th>Content script page</th>
-                            <th>Internet-hosted web page</th>
-                            <th>Manifest key</th>
-                        </tr>
-                        <tr>
-                            <th><code>browserAction</code></th>
-                            <td>Y<sup><a href="#note1">1</a></sup></td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"browser_action"<sup><a href="#note1">1</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>contextMenus</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["context_menus"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>extension</code></th>
-                            <td>Y</td>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                        </tr>
-                        <tr>
-                            <th><code>i18n</code></th>
-                            <td>Y</td>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td>"default_lang" : "&lt;lang&gt;"<sup><a href="#note4">4</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>pageAction</code></th>
-                            <td>Y<sup><a href="#note1">1</a></sup></td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"page_action"<sup><a href="#note1">1</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>runtime</code></th>
-                            <td>Y</td>
-                            <td>Y</td>
-                            <td>Y<sup><a href="#note3">3</a></sup></td>
-                            <td>“externally_connectable”:[...] <sup><a href="#note2">2</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>tabs</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["tabs","activeTab"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>webNavigation</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["webNavigation"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>webRequest</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["webRequest"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>windows</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                        </tr>
-                    </table>
-                    <div id="note1" resource="#note1">
-                        <sup>1</sup> Either <code>browserAction</code> or <code>pageAction</code> may be supported by an extension, not both
-                    </div>
-                    <div id="note2" resource="#note2">
-                        <sup>2</sup>Extensions may use the runtime object without declaring <code>"externally_connectable"</code> in the manifest. However, an extension may only receive messages sent from hosted web pages if this key is declared. It may also be used to block messages from other extensions, except for those in the <code>"ids"</code> list.
-                    </div>
-                    <div id="note3" resource="#note3">
-                        <sup>3</sup>Internet-hosted web pages may send messages to extensions via runtime.sendMessage if the extension has explicitly specified the hosting site's domain in the manifest under the "externally_connectable" key.
-                    </div>
-                    <div id="note4" resource="#note4">
-                        <sup>4</sup> Use of the <code>browser.i18n</code> object does not require a manifest permission declaration. However, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code.
-                    </div>
-                </section>
-            </section>
-            <section >
-                <h4 id="webidl">Expressing Availability in WebIDL</h4>
-                <p>This specification uses WebIDL [[webidl]] to describe the Browser Extensions API.</p>
-                <section>
-                    <h4>Attribute: <code>Exposed</code></h4>
-                    <p>
-                        To express the aforementioned conditional situations in which certain APIs may or may not be available due to context, the following contexts are used:
-                    </p>
-                    <ul>
-                        <li><b>Window</b> - The primary context for most browser extension APIs. This applies to background, event, popup, options and custom contexts</li>
-                        <li><b>ContentScript</b> - Applies to content script context</li>
-                    </ul>
-                </section>
-                <section>
-                    <h4>Extended Attribute: <code>CheckAnyPermissions</code></h4>
-                    <p>
-                        To express the aforementioned conditional situations in which certain APIs may or may not be available due to expressed manifest keys or permissions, the new WebIDL extended attribute <code>"<a href="https://developer.mozilla.org/en-US/docs/Mozilla/WebIDL_bindings#CheckAnyPermissions">CheckAnyPermissions</a>"</code> is used.
-                    </p>
-                    <table>
-                        <tr><td><b>API object</b></td><td><b>CheckAnyPermissions Value</b></td><td><b>Manifest Key or Value</b></td></tr>
-                        <tr><td>browser</td><td>"browserExt"</td><td>N/A</td></tr>
-                        <tr><td>browser.browserAction</td><td>"browserExtBrowserAction"</td><td>"browserAction":[...]</td></tr>
-                        <tr><td>browser.contextMenu</td><td>"browserExtContextMenus"</td><td>"permissions":["contextMenus"]</td></tr>
-                        <tr><td>browser.extension</td><td>"browserExt"</td><td><p></p></td></tr>
-                        <tr><td>i18n</td><td>"browserExt"</td><td>"default_language": "&lt;code&gt;"</td></tr>
-                        <tr><td>pageAction</td><td>"browserExtPageAction"</td><td>"pageAction":[...]</td></tr>
-                        <tr><td>runtime</td><td>"browserExt"</td><td><p></p></td></tr>
-                        <tr><td>tabs</td><td>"browserExtTabs"</td><td>"permissions":["tabs"] or<br/>"permissions":["activeTab"]</td></tr>
-                        <tr><td>webNavigation</td><td>"browserExtWebNavigation"</td><td>"permissions":["webNavigation"]</td></tr>
-                        <tr><td>webRequest</td><td>"browserExtWebRequest"</td><td>"permissions":["webRequest"]</td></tr>
-                        <tr><td>windows</td><td>"browserExt"</td><td><p></p></td></tr>
-
-                    </table>
-                </section>
-                <section class="example">
-                    <h4>Example: <code>browser.i18n</code></h4>
+                    <section>
+                        <h5 id="availability-manifest">Table: API Availability Summary</h5>
                         <p>
-                            In this example, the <code>i18n</code> API should be made available to both browser host scripts (background, event, popup, options, etc.) and content scripts. Use of this API does not require a manifest permission declaration. Additionally, however, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code. This is expressed as a <code>BrowserExtensionManifest</code> dictionary.
+                            Some browser extension API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below. If manifest keys that are not defined in this specification are specified, other browsers MAY elect to ignore those additional keys.
                         </p>
-                    <ol>
-                        <li>
-                            First, declare the methods for the <code>browser.i18n</code> object.
+                        <table>
+                            <tr>
+                                <th rowspan=2>API object</th>
+                                <th colspan=3>Execution Context</th>
+                                <th colspan=1>Required Declaration</th>
+                            </tr>
+                            <tr>
+                                <th>Background page,Event page,Popup page,Options page,Custom page</th>
+                                <th>Content script page</th>
+                                <th>Internet-hosted web page</th>
+                                <th>Manifest key</th>
+                            </tr>
+                            <tr>
+                                <th><code>browserAction</code></th>
+                                <td>Y<sup><a href="#note1">1</a></sup></td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"browser_action"<sup><a href="#note1">1</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>contextMenus</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["context_menus"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>extension</code></th>
+                                <td>Y</td>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                            </tr>
+                            <tr>
+                                <th><code>i18n</code></th>
+                                <td>Y</td>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td>"default_lang" : "&lt;lang&gt;"<sup><a href="#note4">4</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>pageAction</code></th>
+                                <td>Y<sup><a href="#note1">1</a></sup></td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"page_action"<sup><a href="#note1">1</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>runtime</code></th>
+                                <td>Y</td>
+                                <td>Y</td>
+                                <td>Y<sup><a href="#note3">3</a></sup></td>
+                                <td>“externally_connectable”:[...] <sup><a href="#note2">2</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>tabs</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["tabs","activeTab"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>webNavigation</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["webNavigation"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>webRequest</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["webRequest"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>windows</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                            </tr>
+                        </table>
+                        <div id="note1" resource="#note1">
+                            <sup>1</sup> Either <code>browserAction</code> or <code>pageAction</code> is allowed at the same time, not both
+                        </div>
+                        <div id="note2" resource="#note2">
+                            <sup>2</sup>The runtime object is available for use by extensions without declaring <code>"externally_connectable"</code> in the manifest. However, an extension will only receive messages sent from hosted web pages if this key is declared. The <code>"externally_connectable"</code> declaration will block messages from other extensions, unless the allowed extension ID is declared in the <code>"ids"</code> list.
+                        </div>
+                        <div id="note3" resource="#note3">
+                            <sup>3</sup>Internet-hosted web pages that use <code>runtime.sendMessage</code> to communicate with extensions MUST be explicitly specify the hosting site's domain in the manifest under the "externally_connectable" key.
+                        </div>
+                        <div id="note4" resource="#note4">
+                            <sup>4</sup> Use of the <code>browser.i18n</code> object does not require a manifest permission declaration. However, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code.
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <h4 id="webidl">Expressing Availability in WebIDL</h4>
+                    <p>This specification uses WebIDL [[webidl]] to describe the Browser Extensions API.</p>
+                    <section>
+                        <h4>Attribute: <code>Exposed</code></h4>
+                        <p>
+                            To express the aforementioned conditional situations in which certain APIs are made available due to context, the following contexts are used:
+                        </p>
+                        <ul>
+                            <li><b>Window</b> - The primary context for most browser extension APIs. This applies to background, event, popup, options and custom contexts</li>
+                            <li><b>ContentScript</b> - Applies to content script context</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>Extended Attribute: <code>CheckAnyPermissions</code></h4>
+                        <p>
+                            To express the aforementioned conditional situations in which certain APIs are made available due to expressed manifest keys or permissions, the new WebIDL extended attribute <code>"<a href="https://developer.mozilla.org/en-US/docs/Mozilla/WebIDL_bindings#CheckAnyPermissions">CheckAnyPermissions</a>"</code> is used.
+                        </p>
+                        <table>
+                            <tr><td><b>API object</b></td><td><b>CheckAnyPermissions Value</b></td><td><b>Manifest Key or Value</b></td></tr>
+                            <tr><td>browser</td><td>"browserExt"</td><td>N/A</td></tr>
+                            <tr><td>browser.browserAction</td><td>"browserExtBrowserAction"</td><td>"browserAction":[...]</td></tr>
+                            <tr><td>browser.contextMenu</td><td>"browserExtContextMenus"</td><td>"permissions":["contextMenus"]</td></tr>
+                            <tr><td>browser.extension</td><td>"browserExt"</td><td><p></p></td></tr>
+                            <tr><td>i18n</td><td>"browserExt"</td><td>"default_language": "&lt;code&gt;"</td></tr>
+                            <tr><td>pageAction</td><td>"browserExtPageAction"</td><td>"pageAction":[...]</td></tr>
+                            <tr><td>runtime</td><td>"browserExt"</td><td><p></p></td></tr>
+                            <tr><td>tabs</td><td>"browserExtTabs"</td><td>"permissions":["tabs"] or<br />"permissions":["activeTab"]</td></tr>
+                            <tr><td>webNavigation</td><td>"browserExtWebNavigation"</td><td>"permissions":["webNavigation"]</td></tr>
+                            <tr><td>webRequest</td><td>"browserExtWebRequest"</td><td>"permissions":["webRequest"]</td></tr>
+                            <tr><td>windows</td><td>"browserExt"</td><td><p></p></td></tr>
+
+                        </table>
+                    </section>
+                    <section class="example">
+                        <h4>Example: <code>browser.i18n</code></h4>
+                        <p>
+                            In this example, the <code>i18n</code> API should be made available to both browser host scripts (background, event, popup, options, etc.) and content scripts. Use of this API does not require a manifest permission declaration. Additionally, however, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code. This is expressed as a <code>BrowserExtManifest</code> dictionary.
+                        </p>
+                        <ol>
+                            <li>
+                                First, declare the methods for the <code>browser.i18n</code> object.
 
 <pre class="def idl">
 [NoInterfaceObject]
 interface BrowserI18n {
-    DOMString getMessage(DOMString messageName, sequence&lt;DOMString&gt;? substitutions);
+    DOMString getMessage(DOMString messageName, sequence&lt;DOMString?&gt; substitutions);
 };
 </pre>
-                        </li>
-                        <li>
-                            Next, we specify the available contexts ("Window" for background/event/popup/options...) and "ContentScript" for the content context.
+                            </li>
+                            <li>
+                                Next, we specify the available contexts ("Window" for background/event/popup/options...) and "ContentScript" for the content context.
 
 <pre class="def idl">
 [NoInterfaceObject, Exposed=(Window,ContentScript)] 
@@ -304,28 +306,36 @@ interface BrowserI18nAPI {
     readonly attribute BrowserI18n i18n;
 };
                         </pre>
-                        </li>
-                        <li>
-                            Connect the <code>i18n</code> object to the <code>browser.*</code> object.
+                            </li>
+                            <li>
+                                Connect the <code>i18n</code> object to the <code>browser.*</code> object.
 
 <pre class="def idl">
 Browser implements BrowserI18nAPI;
 </pre>
-                        </li>
-                        <li>
-                            Finally, we express the locale from manifest.json. For example <code>"default_locale": "en"</code>
-                        
+                            </li>
+                            <li>
+                                Finally, we express the locale from manifest.json. For example <code>"default_locale": "en"</code>
+
 <pre class="def idl">
-partial dictionary BrowserExtensionManifest {
-    DOMString? defaultLocale;
+partial dictionary BrowserExtManifest {
+    DOMString? defaultLocaleCode;
 };
 </pre>
-                        </li>
-                    </ol>
-                </section>
-            </section>
+                            </li>
+                        </ol>
 
-        </section>
+                        <p> Definitions</p>
+                        <p> <dfn>BrowserI18n</dfn> is TBD_define_here</p>
+                        <p> <dfn data-dfn-for="BrowserI18n">getMessage</dfn> returns TBD_define_here</p>
+                        <p> <dfn>BrowserI18nAPI</dfn> is TBD_define_here</p>
+                        <p> <dfn data-dfn-for="BrowserI18nAPI">i18n</dfn> is TBD_define_here</p>
+                        <p> <dfn data-dfn-for="BrowserExtManifest">defaultLocaleCode</dfn> is TBD_define_here</p>
+
+                    </section>
+                </section>
+
+            </section>
 
         <section>
             <h3>Events</h3>
@@ -351,6 +361,18 @@ interface BrowserExtEvent {
     boolean hasListeners();
 };
 </pre>
+<p> Definitions</p>
+<p> <dfn>BrowserExtRule</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRule">id</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRule">tags</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRule">conditions</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRule">actions</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRule">priority</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtEvent</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtEvent">addListener</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtEvent">removeListener</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtEvent">hasListener</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtEvent">hasListeners</dfn> is TBD_define_here</p>
             </section>
         </section>
 
@@ -385,6 +407,7 @@ interface BrowserExtEvent {
                 <p>
                     A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                 </p>
+
 <pre class="def idl">
 [CheckAnyPermissions_browserExt_]
 interface BrowserExtGlobal {
@@ -404,7 +427,7 @@ dictionary BrowserExtDeveloper {
     DOMString? url;
 };
 dictionary BrowserExtBrowserOrPageAction {
-    BrowserExtensionIcon defaultIcon; 
+    BrowserExtIcon defaultIcon; 
     DOMString defaultPopup;
     DOMString defaultTitle;
 };
@@ -431,7 +454,7 @@ dictionary BrowserExtContentScripts {
 };
 dictionary BrowserExtManifest {
     BrowserExtBackground background;
-    BrowserExtBrowserAction browserAction;
+    BrowserExtBrowserOrPageAction browserAction;
     BrowserExtBrowserSpecificSettings browserSpecificSettings;
     BrowserExtContentScripts contentScripts;
     DOMString contentSecurityPolicy;
@@ -439,9 +462,9 @@ dictionary BrowserExtManifest {
     DOMString? description;
     BrowserExtDeveloper developer;
     BrowserExtIconArray icons;
-    DOMString optionsPage;
     unsigned short manifestVersion;
     DOMString name;
+    DOMString optionsPage;
     BrowserExtBrowserOrPageAction pageAction;
     sequence&lt;DOMString&gt; permissions;
     sequence&lt;DOMString&gt; requiredKeys;
@@ -449,13 +472,63 @@ dictionary BrowserExtManifest {
     sequence&lt;DOMString&gt; webAccessibleResources;
 };
 </pre>
+<p> Definitions</p>
+<p> <dfn>BrowserExtGlobal</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtGlobal">browser</dfn> is TBD_define_here</p>
+<p> <dfn>Browser</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtIcon</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtIcon">path</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtIcon">size</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtIconArray</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtDeveloper</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtDeveloper">name</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtDeveloper">url</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBrowserOrPageAction</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserOrPageAction">defaultIcon</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserOrPageAction">defaultPopup</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserOrPageAction">defaultTitle</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtKeyValue</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtKeyValue">key</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtKeyValue">value</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBrowserSpecificSettings</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserSpecificSettings">browserName</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserSpecificSettings">keyValue</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBackroundOrEvent</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBackroundOrEvent">page</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBackroundOrEvent">persistent</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBackroundOrEvent">scripts</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtContentScripts</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContentScripts">allFrames</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContentScripts">css</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContentScripts">excludeMatches</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContentScripts">js</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContentScripts">matches</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContentScripts">runAt</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtManifest</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">background</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">browserAction</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">browserSpecificSettings</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">contentScripts</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">contentSecurityPolicy</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">defaultLocale</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">description</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">developer</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">icons</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">manifestVersion</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">name</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">optionsPage</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">pageAction</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">permissions</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">requiredKeys</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">version</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">webAccessibleResources</dfn> is TBD_define_here</p>
             </section>
 
             <section>
                 <h4 id="browserAction">The <code>browserAction</code> object</h4>
                 <section class="introductory">
                     <h4>Overview</h4>
-                    The <code>browserAction</code> object adds an always-visible button to the browser application, usually near the top of the browser application UI in the toolbar area. An extension may have either a <code>browserAction</code> or a <code>pageAction</code>, but not both.
+                    The <code>browserAction</code> object adds an always-visible button to the browser application, usually near the top of the browser application UI in the toolbar area. An extension that declares a <code>browserAction</code> cannot have a <code>pageAction</code>, and vice-versa.
                 </section>
                 <section class="introductory">
                     <h4>Manifest</h4>
@@ -480,6 +553,11 @@ dictionary BrowserExtManifest {
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
                     <p class="issue">Need to find all strings that support null and add ? to DOMString (DOMString?).<br /><a href="https://github.com/browserext/browserext/issues/21">GitHub Issue 21</a></p>
+
+
+
+
+
 <pre class="def idl">
 dictionary BrowserExtBrowserActionDefaults {
     BrowserExtIconArray defaultIcon;
@@ -487,7 +565,7 @@ dictionary BrowserExtBrowserActionDefaults {
     DOMString  defaultTitle;
 };
 partial dictionary BrowserExtManifest {
-    BrowsereExtBrowserActionDefaults? browserAction;
+    BrowsereExtBrowserActionDefaults? browserActionDefaults;
 };
 typedef sequence&lt;unsigned short&gt; BrowserExtColorArray;
 dictionary BrowserExtTabIdDetails {
@@ -497,13 +575,13 @@ dictionary BrowserExtBadgeColorArrayTabId {
     ColorArray color;
     unsigned short tabId;
 };
-dictionary BrowserExtBadgeTextTabId {
-    unsigned short tabId;
-    DOMString text;
-};
 dictionary BrowserExtBadgePathTabId {
     DOMString path;
     unsigned short tabId;
+};
+dictionary BrowserExtBadgeTextTabId {
+    unsigned short tabId;
+    DOMString text;
 };
 dictionary BrowserExtBadgeTabIdPopup {
     DOMString popupHTMLFileName;
@@ -512,7 +590,7 @@ dictionary BrowserExtBadgeTabIdPopup {
 
 
 
-callback BrowserExtBrowserActionOnClickedCallback = void (TabsTab tab);
+callback BrowserExtBrowserActionOnClickedCallback = void (BrowserExtTabsTab tab);
 
 [NoInterfaceObject]
 interface BrowserExtBrowserAction {
@@ -533,6 +611,41 @@ interface BrowserExtBrowserActionAPI {
 };
 Browser implements BrowserExtBrowserActionAPI;
 </pre>
+<p> <dfn>BrowserExtBrowserActionDefaults</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserActionDefaults">defaultIcon</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserActionDefaults">defaultPopup</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserActionDefaults">defaultTitle</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">browserActionDefaults</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtColorArray</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtTabIdDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabIdDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBadgeColorArrayTabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgeColorArrayTabId">color</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgeColorArrayTabId">tabId</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBadgePathTabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgePathTabId">path</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgePathTabId">tabId</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBadgeTextTabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgeTextTabId">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgeTextTabId">text</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBadgeTabIdPopup</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgeTabIdPopup">popupHTMLFileName</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgeTabIdPopup">tabId</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBrowserActionOnClickedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBrowserAction</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">disable</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">enable</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">getBadgeBackgroundColor</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">getBadgeText</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">getPopup</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">onClicked</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">setBadgeBackgroundColor</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">setBadgeText</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">setIcon</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserAction">setPopup</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBrowserActionAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserActionAPI">browserAction</dfn> is TBD_define_here</p>
+
                 </section>
             </section>
 
@@ -542,12 +655,12 @@ Browser implements BrowserExtBrowserActionAPI;
                 <section class="introductory">
                     <h4>Overview</h4>
                     <p>
-                        The <code>contextMenus</code> object allows additional entries to be added to the browser's context menu. The menu may selectively be shown for various browser UI elements (browser action or page action button) or page elements (frame, image, link, page, selection, etc.).
+                        The <code>contextMenus</code> object allows additional entries to be added to the browser's context menu. The menu will be selectively be shown for various browser UI elements (browser action or page action button) or page elements (frame, image, link, page, selection, etc.).
                     </p>
                 </section><section class="introductory">
                     <h4>Manifest</h4>
                     <p>
-                        A <code>"contextMenus"</code> entry must be declared in the <code>"permissions"</code> key. The icon keys are optional.
+                        A <code>"contextMenus"</code> entry MUST be declared in the <code>"permissions"</code> key. The icon keys are optional.
                     </p>
 <pre>
 "permissions": [                                  // Required
@@ -568,16 +681,16 @@ Browser implements BrowserExtBrowserActionAPI;
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
 <pre class="def idl">
-    enum BrowserExtContextType { "all", "audio", "browser_action", "editable", "frame", "image", "link", "page", "page_action", "selection", "video" };
+enum BrowserExtContextType { "all", "audio", "browser_action", "editable", "frame", "image", "link", "page", "page_action", "selection", "video" };
 enum BrowserExtItemType { "checkbox","normal","radio","separator" };
-    dictionary BrowserExtContextMenuCreateDetails {
+dictionary BrowserExtContextMenuCreateDetails {
     boolean checked;
-    boolean enabled;
-    sequence&lt;DOMString&gt; documentUrlPatterns;
     sequence&lt;ContextType&gt; contexts;
+    sequence&lt;DOMString&gt; documentUrlPatterns;
+    boolean enabled;
     DOMString id;
-    (unsigned short or DOMString) parentId;
     Function onclick;
+    (unsigned short or DOMString) parentId;
     sequence&lt;DOMString&gt; targetUrlPatterns;
     DOMString title;
     DOMString type;
@@ -608,11 +721,11 @@ dictionary BrowserExtContextMenuOnClickedDetails {
     boolean wasChecked;
 };
 
-callback BrowserExtContextMenuOnClickedCallback = void (BrowserExtContextMenuOnClickedDetails details, TabsTab tab);
+callback BrowserExtContextMenuOnClickedCallback = void (BrowserExtContextMenuOnClickedDetails details, BrowserExtTabsTab tab);
 [NoInterfaceObject]
 interface BrowserExtContextMenus {
     Promise&lt;unsigned short&gt; create(BrowserExtContextMenuCreateDetails details);
-    object onClicked(Function callback);
+    BrowserExtEvent onClicked_TBD(BrowserExtContextMenuOnClickedCallback callback);
 	Promise&lt;void&gt; remove((unsigned short or DOMString) itemId);
     Promise&lt;void&gt;  removeAll();
     Promise&lt;void&gt;  update((unsigned short or DOMString) itemId, BrowserExtContextMenuUpdateDetails details);
@@ -623,6 +736,68 @@ interface BrowserExtContextMenusAPI {
 };
 Browser implements BrowserExtContextMenusAPI;
 </pre>
+<p> <dfn>BrowserExtContextType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">all</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">audio</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">browser_action</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">editable</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">frame</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">image</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">link</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">page</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">page_action</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">selection</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextType">video</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtItemType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtItemType">checkbox</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtItemType">normal</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtItemType">radio</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtItemType">separator</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtContextMenuCreateDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">checked</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">contexts</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">documentUrlPatterns</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">enabled</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">id</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">onclick</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">parentId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">targetUrlPatterns</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">title</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">type</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtContextMenuUpdateDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">checked</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">contexts</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">documentUrlPatterns</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">enabled</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">onclick</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">parentId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">targetUrlPatterns</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">title</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">type</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtContextMenuOnClickedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">checked</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">editable</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">frameUrl</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">linkUrl</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">mediaType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">menuItemId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">pageUrl</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">parentMenuItemId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">selectionText</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">srcUrl</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">wasChecked</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtContextMenuOnClickedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtContextMenus</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenus">create</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenus">onClicked_TBD</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenus">remove</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenus">removeAll</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenus">update</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtContextMenusAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtContextMenusAPI">contextMenus</dfn> is TBD_define_here</p>
+
+
                 </section>
             </section>
 
@@ -638,7 +813,7 @@ Browser implements BrowserExtContextMenusAPI;
                 <section class="introductory">
                     <h4>Manifest</h4>
                     <p>
-                        When providing localized strings, you must specify a default locale using a two-character code. Codes can be found at <a href="http://www.w3.org/TR/1999/REC-html401-19991224/struct/dirlang.html">RFC1766</a> or <a href="http://www.w3.org/International/articles/language-tags/">IETF BCP47</a>. To manifest localize strings, the syntax below may be used.
+                        When providing localized strings, you MUST specify a default locale using a two-character code. Codes can be found at <a href="http://www.w3.org/TR/1999/REC-html401-19991224/struct/dirlang.html">RFC1766</a> or <a href="http://www.w3.org/International/articles/language-tags/">IETF BCP47</a>. When localizing manifest strings, the following syntax is used.
                     </p>
 <pre>
 "default_locale" : "&lt;twoCharLocaleCode&gt;",              // Required
@@ -655,7 +830,7 @@ Browser implements BrowserExtContextMenusAPI;
                 <section class="introductory">
                     <h4>Localized Strings</h4>
                     <p>
-                        Each supported locale must have its own <code>messages.json</code> file stored in the folder <code>_locales/&lt;twoCharLocaleCode&gt;</code>. The two-character codes used for directory names here the same as are used in the <code>mainfest.json</code> to specify <code>default_locale</code>.
+                        Each supported locale MUST have its own <code>messages.json</code> file stored in the folder <code>_locales/&lt;twoCharLocaleCode&gt;</code>. The two-character codes used for directory names here the same as are used in the <code>mainfest.json</code> to specify <code>default_locale</code>.
                     </p>
                 </section>
                 <section class="introductory">
@@ -708,7 +883,7 @@ Browser implements BrowserExtContextMenusAPI;
                 </section>
                 <section class="introductory">
                     <h4>Placeholders</h4>
-                    <p>A translated string may contain substrings that will not be translated or will be replaced with variable content. For example</p>
+                    <p>It is possible for a translated string to contain substrings that will not be translated or will be replaced with variable content. For example</p>
                     <pre>
 "messageExample": {
     "message": "You clicked $URL$.",
@@ -754,7 +929,7 @@ Browser implements BrowserExtContextMenusAPI;
 <pre class="def idl">    
 [NoInterfaceObject]
 interface BrowserExtI18n {
-    DOMString getMessage(DOMString messageName, sequence&lt;DOMString&gt;? substitutions);
+    DOMString getMessage_TBD(DOMString messageName, sequence&lt;DOMString?&gt; substitutions);
 };
 [NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_] 
 interface BrowserExtI18nAPI {
@@ -762,9 +937,16 @@ interface BrowserExtI18nAPI {
 };
 Browser implements BrowserExtI18nAPI;
 partial dictionary BrowserExtManifest {
-    DOMString? defaultLocale;
+    DOMString? defaultLocaleValue;
 };
 </pre>
+<p> <dfn>BrowserExtI18n</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtI18n">getMessage_TBD</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtI18nAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtI18nAPI">i18n</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">defaultLocaleValue</dfn> is TBD_define_here</p>
+
+
                     </section>
                 </section>
 
@@ -773,7 +955,7 @@ partial dictionary BrowserExtManifest {
                 <section class="introductory">
                     <h4>Overview</h4>
                     <p>
-                        The <code>pageAction</code> object adds a button to the browser application, usually within the address bar. This button typically appears only when the extension has detected that it can perform an action on the current page for the active tab. An extension may have either a <code>browserAction</code> or a <code>pageAction</code>, but not both.
+                        The <code>pageAction</code> object adds a button to the browser application, usually within the address bar. This button typically appears only when the extension has detected that it can perform an action on the current page for the active tab. An extension that declares a <code>browserAction</code> cannot have a <code>pageAction</code>, and vice-versa.
                     </p>
                 </section><section class="introductory">
                     <h4>Manifest</h4>
@@ -807,21 +989,21 @@ dictionary BrowserExtPageActionDefaults {
     DOMString  defaultTitle;
 };
 partial dictionary BrowserExtManifest {
-    BrowserExtPageActionDefaults? pageAction;
+    BrowserExtPageActionDefaults? pageActionDefaults;
 };
 dictionary BrowserExtBadgePath {
     DOMString path;
 };
 
-callback BrowserExtPageActionOnClickedCallback = void (TabsTab tab);
+callback BrowserExtPageActionOnClickedCallback = void (BrowserExtTabsTab tab);
 
 interface BrowserExtPageAction {
-    Promise&lt;DOMString&gt; getPopup(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString&gt; getPopup_TBD(BrowserExtTabIdDetails details);
     Promise&lt;DOMString&gt; getTitle(BrowserExtTabIdDetails details);
     void hide(unsigned short tabId);
-    BrowserExtensionEvent onClicked(BrowserExtPageActionOnClickedCallback callback);
-    Promise&lt;void&gt; setIcon(BrowserExtBadgePath path);
-    void setPopup(BrowserExtBadgePathTabId details);
+    BrowserExtEvent onClicked_TBD2(BrowserExtPageActionOnClickedCallback callback);
+    Promise&lt;void&gt; setIcon_TBD(BrowserExtBadgePath path);
+    void setPopup_TBD(BrowserExtBadgePathTabId details);
     void setTitle(BrowserExtBadgeTextTabId details);
     void show(unsigned short tabId);
 };
@@ -831,6 +1013,26 @@ interface BrowserExtPageActionAPI {
 };
 Browser implements BrowserExtPageActionAPI;
 </pre>
+<p> <dfn>BrowserExtPageActionDefaults</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageActionDefaults">defaultIcon</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageActionDefaults">defaultPopup</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageActionDefaults">defaultTitle</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtManifest">pageActionDefaults</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBadgePath</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBadgePath">path</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtPageActionOnClickedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtPageAction</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">getPopup_TBD</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">getTitle</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">hide</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">onClicked_TBD2</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">setIcon_TBD</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">setPopup_TBD</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">setTitle</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageAction">show</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtPageActionAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtPageActionAPI">pageAction</dfn> is TBD_define_here</p>
+
                 </section>
             </section>
 
@@ -844,7 +1046,7 @@ Browser implements BrowserExtPageActionAPI;
                 </section><section class="introductory">
                     <h4>Manifest</h4>
                     <p>
-                        There are no additional manifest entries required for an extension to use this object. However, an extension may only receive messages sent from hosted web pages if the “externally_connectable” key is declared. Also, an extension may block messages from other extensions by specifying only approved extensions. Note that if this key is used to allow web pages to send messages, unless <code>"ids" : ["*"]</code> is specified, all messages from other extensions will be blocked. URLs in the <code>"matches"</code> array must include a top-level domain. This list does not affect content scripts.
+                        There are no additional manifest entries required for an extension to use this object. However, an extension will only receive messages sent from hosted web pages if the “externally_connectable” key is declared. Also, an extension will block messages from other extensions by specifying only approved extensions. Note that if this key is used to allow web pages to send messages, unless <code>"ids" : ["*"]</code> is specified, all messages from other extensions will be blocked. URLs in the <code>"matches"</code> array MUST include a top-level domain. This list does not affect content scripts.
                     </p>
 <pre>
 "externally_connectable" : [
@@ -864,6 +1066,7 @@ Browser implements BrowserExtPageActionAPI;
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
+
 <pre class="def idl">
 enum BrowserExtRuntimeOnInstalledReason {"browser_update", "extension_install", "extension_update"};
 
@@ -878,7 +1081,7 @@ dictionary BrowserExtRuntimePort {
     object onDisconnect;
     object onMessage;
     Function postMessage;
-    MessageSender sender;
+    BrowserExtRuntimeMessageSender sender;
 };
 dictionary BrowserExtRuntimeMessageSender {
     DOMString id;
@@ -900,8 +1103,8 @@ interface BrowserExtBrowserRuntime {
     void onInstalled(BrowserExtRuntimeOnInstalledCallback callback);
     void onMessage(BrowserExtRuntimeOnMessageCallback callback);
     Promise&lt;any&gt; sendMessage(optional DOMString extensionId, any message);
-    attribute RuntimePort Port;
-    attribute RuntimeMessageSender MessageSender;
+    attribute BrowserExtRuntimePort Port;
+    attribute BrowserExtRuntimeMessageSender MessageSender;
 };
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExt_]
 interface BrowserExtRuntimeAPI {
@@ -909,6 +1112,43 @@ interface BrowserExtRuntimeAPI {
 };
 Browser implements BrowserExtRuntimeAPI;
 </pre>
+<p> <dfn>BrowserExtRuntimeOnInstalledReason</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledReason">browser_update</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledReason">extension_install</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledReason">extension_update</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtRuntimeOnInstalledDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledDetails">reason</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledDetails">previousVersion</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledDetails">id</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtRuntimePort</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimePort">disconnect</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimePort">name</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimePort">onDisconnect</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimePort">onMessage</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimePort">postMessage</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimePort">sender</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtRuntimeMessageSender</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">id</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">tab</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtRuntimeOnConnectCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtRuntimeOnInstalledCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtRuntimeOnMessageCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBrowserRuntime</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">getManifest</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">getURL</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">id</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">onConnect</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">onInstalled</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">onMessage</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">sendMessage</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">Port</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserRuntime">MessageSender</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtRuntimeAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRuntimeAPI">runtime</dfn> is TBD_define_here</p>
                 </section>
             </section>
 
@@ -944,8 +1184,9 @@ Browser implements BrowserExtRuntimeAPI;
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
-                    <pre class="def idl">
 
+
+                    <pre class="def idl">
 enum BrowserExtTabMutedReasonDetails { "user", "capture", "extension" };
 enum BrowserExtRunAt { "document_end", "document_idle", "document_start" };
 enum BrowserExtTabStatus { "complete", "loading" };
@@ -1054,7 +1295,7 @@ dictionary BrowserExtTabsOnUpdatedChangeDetails {
 callback BrowserExtTabsOnActivatedCallback = void (BrowserExtTabIdWindowId activeDetails);
 callback BrowserExtTabsOnCreatedCallback = void (BrowserExtTabTab tab);
 callback BrowserExtTabsOnRemovedCallback = void (BrowserExtTabsWindowIdIsWindowClosing removeDetails);
-callback BrowserExtTabsOnUpdatedCallback = void (unsigned short tabId, BrowserExtTabsOnUpdatedChangeDetails details, TabsTab tab);
+callback BrowserExtTabsOnUpdatedCallback = void (unsigned short tabId, BrowserExtTabsOnUpdatedChangeDetails details, BrowserExtTabsTab tab);
 
 [NoInterfaceObject]
 interface BrowserExtBrowserTabs {
@@ -1072,7 +1313,7 @@ interface BrowserExtBrowserTabs {
     Promise&lt;BrowserExtTabsTab&gt; query(BrowserExtTabQueryDetails queryDetails);
     Promise&lt;void&gt; reload(BrowserExtTabReloadDetails details);
     Promise&lt;void&gt; remove((unsigned short or sequence&lt;unsigned short&gt;) tabIds);
-    Promise&lt;any&gt;sendMessage(unsigned short tabId, any message, optional BrowserExtTabSendMessageOptions details);
+    Promise&lt;any&gt; sendMessage_TBD(unsigned short tabId, any message, optional BrowserExtTabSendMessageOptions details);
     Promise&lt;BrowserExtTabsTab&gt; update(optional unsigned short tabId, BrowserExtTabUpdateDetails details);
 };
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtTabs_]
@@ -1081,6 +1322,149 @@ readonly attribute BrowserExtTabs tabs;
 };
 Browser implements BrowserExtTabsAPI;
 </pre>
+<p> <dfn>BrowserExtTabMutedReasonDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabMutedReasonDetails">user</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabMutedReasonDetails">capture</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabMutedReasonDetails">extension</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtRunAt</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRunAt">document_end</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRunAt">document_idle</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtRunAt">document_start</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabStatus</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabStatus">complete</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabStatus">loading</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWindowTypes</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowTypes">app</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowTypes">normal</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowTypes">panel</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowTypes">popup</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabsCaptureVisibleTabFormat</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabFormat">jpeg</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabFormat">png</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabsTab</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">active</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">audible</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">favIconUrl</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">highlighted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">height</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">id</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">incognito</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">index</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">mutedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">openerTabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">pinned</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">sessionId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">status</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">title</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">url</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">width</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsTab">windowId</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabMutedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabMutedDetails">extensionId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabMutedDetails">muted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabMutedDetails">reason</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabConnectDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabConnectDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabConnectDetails">name</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabCreateDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabCreateDetails">active</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabCreateDetails">index</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabCreateDetails">openerTabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabCreateDetails">pinned</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabCreateDetails">url</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabCreateDetails">windowId</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabScriptAndCSSDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">allFrames</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">code</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">file</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">matchAboutBlank</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">runAt</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabsCaptureVisibleTabDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabDetails">imageCaptureormat</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabDetails">jpegQuality</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabQueryDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">active</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">audible</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">currentWindow</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">highlighted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">index</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">lastFocusedWindow</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">muted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">pinned</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">status</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">title</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">url</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">windowId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabQueryDetails">windowType</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabReloadDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabReloadDetails">bypassCache</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabSendMessageDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabSendMessageDetails">frameId</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabUpdateDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabUpdateDetails">active</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabUpdateDetails">highlighted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabUpdateDetails">muted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabUpdateDetails">openerTabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabUpdateDetails">pinned</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabUpdateDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabIdWindowId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabIdWindowId">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabIdWindowId">windowId</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabsWindowIdIsWindowClosing</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsWindowIdIsWindowClosing">isWindowClosing</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsWindowIdIsWindowClosing">tabId</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabsOnUpdatedChangeDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">audible</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">favIconUrl</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">mutedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">pinned</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">status</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">title</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtTabsOnActivatedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtTabsOnCreatedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtTabsOnRemovedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtTabsOnUpdatedCallback</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtBrowserTabs</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">captureVisibleTab</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">connect</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">create</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">executeScript</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">get</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">getCurrent</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">insertCSS</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">onActivated</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">onCreated</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">onRemoved</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">onUpdated</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">query</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">reload</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">remove</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">sendMessage_TBD</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserTabs">update</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtTabsAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTabsAPI">tabs</dfn> is TBD_define_here</p>
+
                 </section>
             </section>
 
@@ -1115,7 +1499,12 @@ Browser implements BrowserExtTabsAPI;
                     <h4>WebIDL Definition</h4>
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
-                    </p>
+            </p>
+
+
+
+
+
 
 <pre class="def idl">
 enum BrowserExtTransitionType { "link", "typed" };
@@ -1185,7 +1574,72 @@ interface BrowserExtWebNavigationAPI {
 };
 Browser implements BrowserExtWebNavigationAPI;
 </pre>
-                </section>
+<p> <dfn>BrowserExtTransitionType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTransitionType">link</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtTransitionType">typed</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebNavigationOnBeforeNavigateDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">parentFrameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebNavigationOnCommittedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">processId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">transitionType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebNavigationOnCompletedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">processId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebNavigationOnDOMContentLoadedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">processId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebNavigationOnErrorOccurredDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">error</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">processId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">transitionType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebNavigationOnBeforeNavigateCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebNavigationOnCommittedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebNavigationOnCompletedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebNavigationOnDOMContentLoadedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebNavigationOnErrorOccurredCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebNavigationOnReferenceFragmentUpdated</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtBrowserWebNavigation</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onBeforeNavigate</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onCommitted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onCompleted</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onDOMContentLoaded</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onErrorOccurred</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onReferenceFragmentUpdated</dfn> is TBD</p>
+<p> <dfn>BrowserExtWebNavigationAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebNavigationAPI">webNavigation</dfn> is TBD_define_here</p>
+
+</section>
             </section>
 
 
@@ -1226,8 +1680,11 @@ Browser implements BrowserExtWebNavigationAPI;
                         <code>unsigned short</code> was used in many places in this spec to represent both unsigned integers and signed integers. Need to go back and find the places where negative numbers are allowed and changed from unsigned short to short.<br />
                         NOTE: Frame ID can be 64-bit (long), ask Kris about others<br /> 
 </p>
+
+
+
 <pre class="def idl">
-enum BrowserExtResourceType { "main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "other" };
+enum BrowserExtResourceType { "font", "image", "main_frame", "object", "other", "ping", "script", "stylesheet", "sub_frame", "xmlhttprequest" };
 dictionary BrowserExtWebRequestUploadDetails {
     any bytes;
     DOMString file;
@@ -1255,6 +1712,8 @@ dictionary BrowserExtWebRequestOnBeforeRequestDetails {
     BrowserExtResourceType type;
     DOMString url;
 };
+
+
 dictionary BrowserExtWebRequestOnBeforeSendHeadersDetails {
     unsigned short frameId;
     DOMString method;
@@ -1265,6 +1724,8 @@ dictionary BrowserExtWebRequestOnBeforeSendHeadersDetails {
     BrowserExtResourceType type;
     DOMString url;
 };
+
+
 dictionary BrowserExtWebRequestOnCompletedDetails {
     unsigned short frameId;
     boolean fromCache;
@@ -1280,12 +1741,14 @@ dictionary BrowserExtWebRequestOnCompletedDetails {
     BrowserExtResourceType type;
     DOMString url;
 }; 
+
+
 dictionary BrowserExtWebRequestOnHeadersReceivedDetails {
     unsigned short frameId;
     DOMString method;
     unsigned short parentFrameId;
-    BrowserExtWebRequestHttpHeaders responseHeaders;
     DOMString requestId;
+    BrowserExtWebRequestHttpHeaders responseHeaders;
     unsigned short statusCode;
     DOMString statusLine;
     unsigned short tabId;
@@ -1304,6 +1767,7 @@ dictionary BrowserExtWebRequestOnSendHeadersDetails {
     BrowserExtResourceType type;
     DOMString url;
 };
+
 callback BrowserExtWebRequestOnBeforeRequestCallback = void (BrowserExtWebRequestOnBeforeRequestDetails details);
 callback BrowserExtWebRequestOnBeforeSendHeadersCallback = void (BrowserExtWebRequestOnBeforeSendHeadersDetails details);
 callback BrowserExtWebRequestOnCompletedCallback = void (BrowserExtWebRequestOnCompletedDetails details);
@@ -1313,7 +1777,7 @@ callback BrowserExtWebRequestOnSendHeadersCallback = void (BrowserExtWebRequestO
 interface BrowserExtBrowserWebRequest {
     void onBeforeRequest(BrowserExtWebRequestOnBeforeRequestCallback callback);
     void onBeforeSendHeaders(BrowserExtWebRequestOnBeforeSendHeadersCallback callback);
-    void onCompleted(BrowserExtWebRequestOnCompletedCallback callback);
+    void onCompleted_TBD(BrowserExtWebRequestOnCompletedCallback callback);
     void onHeadersReceived(BrowserExtWebRequestOnHeadersReceivedCallback callback);
     void onSendHeaders(Function callback);
 };
@@ -1323,6 +1787,108 @@ interface BrowserExtWebRequestAPI {
 };
 Browser implements BrowserWebRequestAPI;
 </pre>
+
+<p> <dfn>BrowserExtResourceType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">font</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">image</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">main_frame</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">object</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">other</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">ping</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">script</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">stylesheet</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">sub_frame</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtResourceType">xmlhttprequest</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestUploadDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestUploadDetails">bytes</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestUploadDetails">file</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestRequestBody</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestRequestBody">error</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestRequestBody">formData</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestRequestBody">rawData</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestHttpHeader</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestHttpHeader">keyName</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestHttpHeader">value</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestHttpHeaders</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestHttpHeaders">data</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestOnBeforeRequestDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">method</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">parentFrameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">requestBody</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">requestId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">type</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestOnBeforeSendHeadersDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">method</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">parentFrameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">requestId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">type</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestOnCompletedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">fromCache</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">method</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">parentFrameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">requestId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">responseHeaders</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">serverIP</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">statusCode</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">statusLine</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">type</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestOnHeadersReceivedDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">method</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">parentFrameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">requestId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">responseHeaders</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">statusCode</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">statusLine</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">type</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">url</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWebRequestOnSendHeadersDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">frameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">method</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">parentFrameId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">requestHeaders</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">requestId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">timeStamp</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">type</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">url</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebRequestOnBeforeRequestCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebRequestOnBeforeSendHeadersCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebRequestOnCompletedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebRequestOnHeadersReceivedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebRequestOnSendHeadersCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtBrowserWebRequest</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onBeforeRequest</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onBeforeSendHeaders</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onCompleted_TBD</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onHeadersReceived</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onSendHeaders</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWebRequestAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWebRequestAPI">webRequest</dfn> is TBD_define_here</p>
+
                 </section>
             </section>
 
@@ -1359,16 +1925,16 @@ dictionary BrowserExtCreateWindowDetails {
     unsigned short height;
     boolean incognito;
     unsigned short left;
+    BrowserExtWindowsWindowState state;
     unsigned short tabId;
     unsigned short top;
     (DOMString or sequence&lt;DOMString&gt;) url;
-    BrowserExtWindowsWindowState state;
     unsigned short width;
     BrowserExtWindowsWindowType windowType;
 };
 dictionary BrowserExtGetWindowDetails {
     boolean populate;
-    sequence&lt;BrowserExtWindowTypes&gt; windowTypes;
+    sequence&lt;BrowserExtWindowType&gt; windowTypes;
 };
 dictionary BrowserExtWindowUpdateDetails {
     boolean drawAttention;
@@ -1379,29 +1945,29 @@ dictionary BrowserExtWindowUpdateDetails {
     unsigned short width;
     BrowserExtWindowState windowState;
 };
-    dictionary BrowserExtWindowsWindow {
+dictionary BrowserExtWindowsWindow {
     boolean alwaysOnTop;
     boolean focused;
     unsigned short height;
     unsigned short id;
     boolean incognito;
     unsigned short left;
-    sequence&lt;TabsTab&gt; tabs;
+    sequence&lt;BrowserExtTabsTab&gt; tabs;
     unsigned short top;
     DOMString sessionId;
     BrowserExtWindowsWindowState state;
     unsigned short width;
     BrowserExtWindowsWindowType windowType;
 };
-callback BrowserExtWindowsOnFocusChangedCallback = void ( windowId);
+callback BrowserExtWindowsOnFocusChangedCallback = void (unsigned short windowId);
 [NoInterfaceObject]
 interface BrowserExtWindows {
     Promise&lt;BrowserExtWindowsWindow&gt; create(CreateWindowDetails details);
     Promise&lt;BrowserExtWindowsWindow&gt; get(unsigned short windowId, optional BrowserExtGetWindowDetails details);
     Promise&lt;sequence&lt;BrowserExtWindowsWindow&gt;&gt; getAll(optional BrowserExtGetWindowDetail details);
-    Promise&lt;BrowserExtWindowsWindow&gt; getCurrent(optional BrowserExtGetWindowDetail details);
+    Promise&lt;BrowserExtWindowsWindow&gt; getCurrent_TBD(optional BrowserExtGetWindowDetail details);
     Promise&lt;BrowserExtWindowsWindow&gt; getLastFocused(optional BrowserExtGetWindowDetail details);
-    onFocusChanged(BrowserExtWindowsOnFocusChangedCallback callback);
+    void onFocusChanged(BrowserExtWindowsOnFocusChangedCallback callback);
     Promise&lt;BrowserExtWindowsWindow&gt; update(unsigned short windowId, optional BrowserExtWindowUpdateDetails details);
 };
     
@@ -1411,6 +1977,70 @@ readonly attribute BrowserExtWindows windows;
 };
 Browser implements BrowserExtWindowsAPI;
 </pre>
+<p> <dfn>BrowserExtWindowsWindowType</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowType">detached_panel</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowType">normal</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowType">panel</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowType">popup</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWindowsWindowState</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowState">docked</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowState">fullscreen</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowState">maximized</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowState">minimized</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindowState">normal</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtCreateWindowDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">focused</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">height</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">incognito</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">left</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">state</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">tabId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">top</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">url</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">width</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtCreateWindowDetails">windowType</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtGetWindowDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtGetWindowDetails">populate</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtGetWindowDetails">windowTypes</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWindowUpdateDetails</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">drawAttention</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">focused</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">height</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">left</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">top</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">width</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">windowState</dfn> is TBD_define_here</p>
+
+<p> <dfn>BrowserExtWindowsWindow</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">alwaysOnTop</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">focused</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">height</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">id</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">incognito</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">left</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">tabs</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">top</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">sessionId</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">state</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">width</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsWindow">windowType</dfn> is TBD_define_here</p>
+
+
+<p> <dfn>BrowserExtWindowsOnFocusChangedCallback</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWindows</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindows">create</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindows">get</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindows">getAll</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindows">getCurrent_TBD</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindows">getLastFocused</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindows">onFocusChanged</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindows">update</dfn> is TBD_define_here</p>
+<p> <dfn>BrowserExtWindowsAPI</dfn> is TBD_define_here</p>
+<p> <dfn data-dfn-for="BrowserExtWindowsAPI">windows</dfn> is TBD_define_here</p>
+
                 </section>
             </section>
         </section>
@@ -1421,38 +2051,36 @@ Browser implements BrowserExtWindowsAPI;
         </section>
 
 </section>
-    <section class='informative'>
+    <section >
         <h2 id="manifest-json">Manifest Format</h2>
         <section>
             <h3>Pre-parsing</h3>
-            Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers may ignore those keys.
+            Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers MAY ignore those keys.
         </section>
         <section>
             <h3>Permissions URL patterns</h3>
             <p class="issue">##28## Define how and where permission patterns are used<br /> </p>
         </section>
-        <section>
+        <section class='informative'>
             <h3>Full Example</h3>
 <pre>
 // Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, 
 // the manifest.json file format for browser extensions is expected to be fully JSON compliant. 
 // Malformed JSON files are not supported.
 //
-// Other manifest keys that are well-formed JSON but are not listed here must be ignored.
+// Other manifest keys that are well-formed JSON but are not listed here MUST be ignored.
 //
 // Note that some fields marked as Optional here are required by vendor-specific distribution Stores.
 {
   "name": "The Name of Your Extension",             // Required
   "version": "Your Extension Version",              // Required
   "default_locale": "en",                           // Required if locales are used. Otherwise, not allowed
-
   "description": "Description for Your Extensions",   
   "icons": {...},                                    
   "developer": {                                    
        "name": "Your Name or Company",              
        "url": "Company Website"                      
   }
-
   // Note: Some browsers require an extension to use either browser_action or page_action, but not both simultaneously
   "browser_action": {  
       "default_icon": {...},                        // Same format as "icons"
@@ -1466,13 +2094,11 @@ Browser implements BrowserExtWindowsAPI;
             "&lt;key&gt;": "&lt;value&gt;"                      // Examples "strict_min_version": "42.0", "id": "addon@example.com"
        }
   },
-
   "background": {                                   
-      "page": "Page URL",                           // Only one of "page" or "scripts" may be specified, but not both 
-      "scripts": [],                                // Only one of "page" or "scripts" may be specified, but not both 
+      "page": "Page URL",                           // Only one of "page" or "scripts" is supported, but not both simultaneously
+      "scripts": [],                                // Only one of "page" or "scripts" is supported, but not both simultaneously
       "persistent": false                           // Required if "background" is specified
   },
-
   "content_scripts": {                                                    
       "all_frames": false,                          
       "css": [],                                   
@@ -1481,14 +2107,12 @@ Browser implements BrowserExtWindowsAPI;
       "matches": [],                                
       "run_at" : "document_start"                   // Also "document_end", "document_idle"
   }
-
   "content_security_policy": "&lt;policy-string&gt;",     
   
   "options_page": "Page URL",                            // Optional
   "manifest_version": 2,                            // Not used
-  "required_keys": [],                              // If a browser does not recognize a key in the list, it must 
+  "required_keys": [],                              // If a browser does not recognize a key in this list, it MUST 
                                                     // reject the manifest (e.g. "sidebar_action")
-                                                    // Future keys may be required to be in the list if used. 
                                                     // FEEDBACK: Rename to "required_capabilities"
   "permissions": {                                  
        "activeTab",                                                
@@ -1500,9 +2124,7 @@ Browser implements BrowserExtWindowsAPI;
        "webRequestBlocking",                        
        "&lt;url-pattern&gt;"                              // Examples "http://*/*", "&lt;all_urls&gt;"
   },
-
   "web_accessible_resources": [...]    
-
   "externally_connectable" : [
        "ids":[...], // Identifiers for other extensions that are allowed to send messages
        "matches":[...] // URL patterns for hosted web pages allowed to send messages 
@@ -1511,7 +2133,7 @@ Browser implements BrowserExtWindowsAPI;
 </pre>
         </section>
     </section>
-    <section class='informative'>
+    <section >
         <h2>Extension Resources</h2>
         <section>
             <h3>The <code>browserext://</code> protocol</h3>
@@ -1533,28 +2155,29 @@ Browser implements BrowserExtWindowsAPI;
             </p>
         </section>
     </section>
-    <section class='informative'>
+    <section  >
         <h2>Content Security Polity (CSP)</h2>
         The default CSP is discussed in the specification [[CSP3]] . 
         <p class="issue">##29## Complete this section, discussing special considerations for extensions and CSP.<br />  </p>
     </section>
-        <section class='informative'>
+        <section  >
             <h2>Testing Extensions with WebDriver</h2>
             <p>
-                Browsers vendors may choose to implement WebDriver support in their browsers to allow for the automated testing of browser extensions. To implement this support, the browser must support:
+                Browsers vendors MAY choose to implement WebDriver support in their browsers to allow for the automated testing of browser extensions. To implement this support, the browser MUST support:
             </p>
             <ul>
                 <li>The base functionality as defined in the WebDriver specification [[webdriver]] </li>
                 <li>Additional functionality required to support browser extensions, defined below in the Browser Extensions specification</li>
             </ul>
+
             <p class="issue">[ISSUE] (2016.09.22) ##31## Title should be enough to identify extension, but may want to add an extensionId or extensionName property. Will consult BE CG<br />  </p>
             <p class="issue">[ISSUE] (2016.09.22) ##33## Add extension during session at runtime<br />[RESOLVED]</p>
             <p class="issue">[ISSUE] (2016.09.22) ##34## For installing, you will need an endpoint for installing/activating at runtime<br />[RESOLVED]</p>
             <p class="issue">[ISSUE] (2016.09.22) Support user permissions/prompts (Need to follow up with Kris)</p>
             <p class="issue">[ISSUE] (2016.09.22) Should be overlap with Permissions API – chat with them (need to discuss, not sure what this means)</p>
-            <section class="informative">
+            <section  >
                 <h3>Protocol</h3>
-                <section class='informative'>
+                <section  >
                     <h4>List of Endpoints</h4>
                     <p>In addition to the endpoints defined in the WebDriver specification [[webdriver]], support for browser extensions requires these additional endpoints.</p>
                     <table class="simple">
@@ -1602,7 +2225,7 @@ Browser implements BrowserExtWindowsAPI;
                         </tbody>
                     </table>
                 </section>
-                <section class='informative'>
+                <section  >
                     <h4>Handling Errors</h4>
                     <p>In addition to the codes defined in the Handling Errors section of the WebDriver specification [[webdriver]], support for browser extensions requires support the following additional error codes:</p>
                     <table class="simple">
@@ -1668,7 +2291,7 @@ Browser implements BrowserExtWindowsAPI;
                     </table>
                 </section>
                 </section>
-                <section class='informative'>
+                <section >
                     <h3>
                         Capabilities
                     </h3>
@@ -1681,12 +2304,12 @@ Browser implements BrowserExtWindowsAPI;
                             An array of absolute paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
                         </dd>
                     </dl>
-                    <section class='informative'>
+                    <section  >
                         <h4>Extension Lifetime</h4>
                         <p>No browser extension will be installed or pre-loaded during a WebDriver session unless it is explicitly specified in the <code>enabledExtensions</code> array. Browser extensions loaded during the session will not be available to other active instances of the browser that are not part of the WebDriver session. When the session ends, the array of browser extensions are unloaded and uninstalled.</p>
                     </section>
                 </section>
-                <section class='informative'>
+                <section  >
                     <h3>
                         Browser Extensions Commands
                     </h3>
@@ -1795,7 +2418,7 @@ Browser implements BrowserExtWindowsAPI;
                             </li>
                     </section>                    
                     <section>
-                        <h3><code>getBrowserExtensionActions()</code></h3>
+                        <h3><code>getBrowserExtActions()</code></h3>
                         <table class="simple jsoncommand">
                             <tbody>
                                 <tr>
@@ -1871,7 +2494,7 @@ Browser implements BrowserExtWindowsAPI;
                         <p></p>
                     </section>
                     <section>
-                        <h3><code>takeBrowserExtensionAction()</code></h3>
+                        <h3><code>takeBrowserExtAction()</code></h3>
                         <table class="simple jsoncommand">
                             <tbody>
                                 <tr>
@@ -1881,7 +2504,7 @@ Browser implements BrowserExtWindowsAPI;
                                 </tr>
                                 <tr>
                                     <td>POST</td>
-                                    <td id="take-browser-extension-action">/session/{<var>sessionId</var>}/browserext/{<var>extensionId</var>}/action/</td>
+                                    <td id="take-browser-extension-action">/session/{<var>sessionId</var>}/browserext/action/{<var>browserExtActionId</var>}</td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -1931,7 +2554,7 @@ Browser implements BrowserExtWindowsAPI;
                             </tbody>
                         </table>                        
                         <dl class="parameters">
-                            <dt>DOMString extensionId</dt>
+                            <dt>DOMString browserExtId</dt>
                             <dd>
                                 The unique identifier of the browser extension whose available actions are to be invoked. 
                                 Returned by the <code>getBrowserExtensions()</code> command.
@@ -1965,7 +2588,8 @@ Browser implements BrowserExtWindowsAPI;
                     </section>
                     <section>
                         <!-- getExtensionContextMenuItems() -->
-                        <h3><code>getExtensionContextMenuItems()</code></h3>
+                        <h3><code>getBrowserExtContextMenuItems()</code></h3>
+
                         <table class="simple jsoncommand">
                             <tbody>
                                 <tr>
@@ -2057,7 +2681,7 @@ Browser implements BrowserExtWindowsAPI;
                                                 <code>radio</code>
                                             </td>
                                             <td>
-                                                A radio element. Within a radio group, only one menuItem may have a value of <code>true</code>
+                                                A radio element. Within a radio group, only one menuItem will have a value of <code>true</code>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2074,7 +2698,7 @@ Browser implements BrowserExtWindowsAPI;
                             <li>
                                 <p>
                                     Set the property <code>itemChecked</code> on <var>menuitem</var> to a boolean value indicating
-                                    state of the item according to the following table. This applies only to items of itemType <code>checkbox</code> or <code>radio</code>. Within a radio group, only one menuItem may have a value of <code>true</code>.
+                                    state of the item according to the following table. This applies only to items of itemType <code>checkbox</code> or <code>radio</code>. Within a radio group, only one menuItem will have a value of <code>true</code>.
                                 </p>
                                 <table class="simple">
                                     <tbody>
@@ -2128,7 +2752,7 @@ Browser implements BrowserExtWindowsAPI;
                     </section>
                     <section>
                         <!-- selectExtensionContextMenuItem() -->
-                        <h3><code>selectBrowserExtensionContextMenuItem()</code></h3>
+                        <h3><code>selectBrowserExtContextMenuItem()</code></h3>
                         <table class="simple jsoncommand">
                             <tbody>
                                 <tr>
@@ -2157,8 +2781,8 @@ Browser implements BrowserExtWindowsAPI;
                         <dl class="parameters">
                             <dt>String menuitemId</dt>
                             <dd>
-                                The context menu item id, as returned by the
-                                <code>getExtensionContextMenuItems()</code>
+                                The context menu item id, as returned by th
+                                <code>getBrowserExtContextMenuItems()</code>
                                 command.
                             </dd>
                         </dl>
@@ -2173,7 +2797,7 @@ Browser implements BrowserExtWindowsAPI;
             <section class='informative'>
                 <h2>Packaging</h2>
                 <p>
-                    Browser extensions may be distributed and subsequently loaded as individual files or via a container, such as a *.zip archive. Regardless of the packaging format, these containers must contain the following:
+                    Browser extensions MAY be distributed and subsequently loaded as individual files or via a container, such as a *.zip archive. Regardless of the packaging format, these containers must contain the following:
                 </p>
                 <ul>
                     <li>manifest.json</li>
@@ -2271,3 +2895,4 @@ Browser implements BrowserExtWindowsAPI;
     </script>
 </body>
 </html>
+
