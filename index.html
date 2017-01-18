@@ -84,13 +84,11 @@
         </p>
     </section>
 
-    <section >
+    <section class='informative'>
         <h2>Core APIs</h2>
         <p>
             The goal for these core APIs is to provide functionality that extension authors need for: 
         </p>
-        <p class="issue">Need to correct use of keywords from RFC 2119 https://dev.w3.org/2008/video/mediaann/ReSpec.js/documentation.html (MUST, MAY, SHALL, etc)<br/><a href="https://github.com/browserext/browserext/issues/15">GitHub Issue 15</a></p>
-        <p class="issue">Need to update &lt;section&gt; tags with appropriate class='informative' ("This section is non-normative.") usage. Some sections ARE normative, but the class tag remains due to cut-and-paste without appropriate clean-up by the Editor afterwards.<br /><a href="https://github.com/browserext/browserext/issues/16">GitHub Issue 16</a></p>
         <ul>
             <li>page modification for web site content</li>
             <li>UI augmentation for web browsers (host apps)</li>
@@ -100,31 +98,35 @@
             <li>accessing user settings such as cookies</li>
         </ul>
         <p class="issue">Need to resolve ID issue before we can address messaging ('passing data')<br />GitHub Issues <a href="https://github.com/browserext/browserext/issues/14">14</a>&nbsp;&amp;&nbsp;<a href="https://github.com/browserext/browserext/issues/17">17</a></p>
-        <section class='informative'>
+        <section  >
             <h3 id="apiavailability">API Availability</h3>
-            <p>
-                Browser extensions are authored primarily with JavaScript. In addition to the usual <a href="https://www.w3.org/standards/webdesign/script">JavaScript Web APIs</a>, additional APIs are available exclusively to extensions via the <code>browser</code> object. However, the specific APIs that are available to an extension from the <code>browser</code> object are dependent upon:
-            </p>
-            <ul>
-                <li>Execution context (e.g. background/event, popup, options, content, extension page)
-                <li>Keys declared in the manifest (e.g. browser_action, page_action)
-                <li>Permissions declared in the manifest (e.g. contextMenu, tabs, webNavigation, webRequest)
-                <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
-            </ul>
-            <section>
-                <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
+            <section class='informative'>
+                <h3>Overview</h3>
                 <p>
-                    Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . The browser extension author may also override the default and specify a new CSP.</p>
-                <p class="issue">Add a separate non-normative section on how content scripts interact with CSP<br/><a href="https://github.com/browserext/browserext/issues/18">GitHub Issue 18</a></p>
+                    Browser extensions are authored primarily with JavaScript. In addition to the usual <a href="https://www.w3.org/standards/webdesign/script">JavaScript Web APIs</a>, additional APIs are available exclusively to extensions via the <code>browser</code> object. However, the specific APIs that are available to an extension from the <code>browser</code> object are dependent upon:
+                </p>
                 <ul>
-                    <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
-                    <li>Only script from the extension's package can be executed</li>
-                    <li>Executing script from the web is not allowed</li>
+                    <li>Execution context (e.g. background/event, popup, options, content, extension page)
+                    <li>Keys declared in the manifest (e.g. browser_action, page_action)
+                    <li>Permissions declared in the manifest (e.g. contextMenu, tabs, webNavigation, webRequest)
+                    <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
                 </ul>
-            </section>
+                </section>
+                <section>
+                    <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
+                    <p>
+                        Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . The browser extension author may also override the default and specify a new CSP.
+                    </p>
+                    <p class="issue">Add a separate non-normative section on how content scripts interact with CSP<br /><a href="https://github.com/browserext/browserext/issues/18">GitHub Issue 18</a></p>
+                    <ul>
+                        <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
+                        <li>Only script from the extension's package can be executed</li>
+                        <li>Executing script from the web is not allowed</li>
+                    </ul>
+                </section>
 
-            <section class="informative">
-                <h4>Execution Context and Manifest Restrictions</h4>
+                <section class="informative">
+                    <h4>Execution Context and Manifest Restrictions</h4>
                     <p>
                         Browser extension pages and their corresponding scripts are executed in one of the following contexts. The manifest declarations required to create each specific type of page are described below.
                     </p>
@@ -143,150 +145,150 @@
                         <li><b>Internet-hosted web page context</b> - Messaging APIs can be used to send messages from hosted web site pages such as https://en.wikipedia.org/wiki/Main_Page/index.html or https://w3c.github.io/html/index.html to extensions
                     </ul>
 
-                <section class="informative">
-                    <h5 id="availability-manifest">Table: API Availability Summary</h5>
-                    <p>
-                        Some browser extension API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below. If manifest keys that are not defined in this specification are specified, other browsers may ignore those keys.
-                    </p>
-                    <table>
-                        <tr>
-                            <th rowspan=2>API object</th>
-                            <th colspan=3>Execution Context</th>
-                            <th colspan=1>Required Declaration</th>
-                        </tr>
-                        <tr>
-                            <th>Background page,Event page,Popup page,Options page,Custom page</th>
-                            <th>Content script page</th>
-                            <th>Internet-hosted web page</th>
-                            <th>Manifest key</th>
-                        </tr>
-                        <tr>
-                            <th><code>browserAction</code></th>
-                            <td>Y<sup><a href="#note1">1</a></sup></td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"browser_action"<sup><a href="#note1">1</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>contextMenus</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["context_menus"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>extension</code></th>
-                            <td>Y</td>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                        </tr>
-                        <tr>
-                            <th><code>i18n</code></th>
-                            <td>Y</td>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td>"default_lang" : "&lt;lang&gt;"<sup><a href="#note4">4</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>pageAction</code></th>
-                            <td>Y<sup><a href="#note1">1</a></sup></td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"page_action"<sup><a href="#note1">1</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>runtime</code></th>
-                            <td>Y</td>
-                            <td>Y</td>
-                            <td>Y<sup><a href="#note3">3</a></sup></td>
-                            <td>“externally_connectable”:[...] <sup><a href="#note2">2</a></sup></td>
-                        </tr>
-                        <tr>
-                            <th><code>tabs</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["tabs","activeTab"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>webNavigation</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["webNavigation"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>webRequest</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td>"permissions":["webRequest"]</td>
-                        </tr>
-                        <tr>
-                            <th><code>windows</code></th>
-                            <td>Y</td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                            <td><p></p></td>
-                        </tr>
-                    </table>
-                    <div id="note1" resource="#note1">
-                        <sup>1</sup> Either <code>browserAction</code> or <code>pageAction</code> may be supported by an extension, not both
-                    </div>
-                    <div id="note2" resource="#note2">
-                        <sup>2</sup>Extensions may use the runtime object without declaring <code>"externally_connectable"</code> in the manifest. However, an extension may only receive messages sent from hosted web pages if this key is declared. It may also be used to block messages from other extensions, except for those in the <code>"ids"</code> list.
-                    </div>
-                    <div id="note3" resource="#note3">
-                        <sup>3</sup>Internet-hosted web pages may send messages to extensions via runtime.sendMessage if the extension has explicitly specified the hosting site's domain in the manifest under the "externally_connectable" key.
-                    </div>
-                    <div id="note4" resource="#note4">
-                        <sup>4</sup> Use of the <code>browser.i18n</code> object does not require a manifest permission declaration. However, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code.
-                    </div>
-                </section>
-            </section>
-            <section >
-                <h4 id="webidl">Expressing Availability in WebIDL</h4>
-                <p>This specification uses WebIDL [[webidl]] to describe the Browser Extensions API.</p>
-                <section>
-                    <h4>Attribute: <code>Exposed</code></h4>
-                    <p>
-                        To express the aforementioned conditional situations in which certain APIs may or may not be available due to context, the following contexts are used:
-                    </p>
-                    <ul>
-                        <li><b>Window</b> - The primary context for most browser extension APIs. This applies to background, event, popup, options and custom contexts</li>
-                        <li><b>ContentScript</b> - Applies to content script context</li>
-                    </ul>
+                    <section>
+                        <h5 id="availability-manifest">Table: API Availability Summary</h5>
+                        <p>
+                            Some browser extension API require a specific manifest key or specific permission. If the key or permission are not declared or not granted, the object will not be available for scripting. These requirements are summarized in the table below. If manifest keys that are not defined in this specification are specified, other browsers may ignore those keys.
+                        </p>
+                        <table>
+                            <tr>
+                                <th rowspan=2>API object</th>
+                                <th colspan=3>Execution Context</th>
+                                <th colspan=1>Required Declaration</th>
+                            </tr>
+                            <tr>
+                                <th>Background page,Event page,Popup page,Options page,Custom page</th>
+                                <th>Content script page</th>
+                                <th>Internet-hosted web page</th>
+                                <th>Manifest key</th>
+                            </tr>
+                            <tr>
+                                <th><code>browserAction</code></th>
+                                <td>Y<sup><a href="#note1">1</a></sup></td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"browser_action"<sup><a href="#note1">1</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>contextMenus</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["context_menus"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>extension</code></th>
+                                <td>Y</td>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                            </tr>
+                            <tr>
+                                <th><code>i18n</code></th>
+                                <td>Y</td>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td>"default_lang" : "&lt;lang&gt;"<sup><a href="#note4">4</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>pageAction</code></th>
+                                <td>Y<sup><a href="#note1">1</a></sup></td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"page_action"<sup><a href="#note1">1</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>runtime</code></th>
+                                <td>Y</td>
+                                <td>Y</td>
+                                <td>Y<sup><a href="#note3">3</a></sup></td>
+                                <td>“externally_connectable”:[...] <sup><a href="#note2">2</a></sup></td>
+                            </tr>
+                            <tr>
+                                <th><code>tabs</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["tabs","activeTab"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>webNavigation</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["webNavigation"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>webRequest</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td>"permissions":["webRequest"]</td>
+                            </tr>
+                            <tr>
+                                <th><code>windows</code></th>
+                                <td>Y</td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                                <td><p></p></td>
+                            </tr>
+                        </table>
+                        <div id="note1" resource="#note1">
+                            <sup>1</sup> Either <code>browserAction</code> or <code>pageAction</code> may be supported by an extension, not both
+                        </div>
+                        <div id="note2" resource="#note2">
+                            <sup>2</sup>Extensions may use the runtime object without declaring <code>"externally_connectable"</code> in the manifest. However, an extension may only receive messages sent from hosted web pages if this key is declared. It may also be used to block messages from other extensions, except for those in the <code>"ids"</code> list.
+                        </div>
+                        <div id="note3" resource="#note3">
+                            <sup>3</sup>Internet-hosted web pages may send messages to extensions via runtime.sendMessage if the extension has explicitly specified the hosting site's domain in the manifest under the "externally_connectable" key.
+                        </div>
+                        <div id="note4" resource="#note4">
+                            <sup>4</sup> Use of the <code>browser.i18n</code> object does not require a manifest permission declaration. However, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code.
+                        </div>
+                    </section>
                 </section>
                 <section>
-                    <h4>Extended Attribute: <code>CheckAnyPermissions</code></h4>
-                    <p>
-                        To express the aforementioned conditional situations in which certain APIs may or may not be available due to expressed manifest keys or permissions, the new WebIDL extended attribute <code>"<a href="https://developer.mozilla.org/en-US/docs/Mozilla/WebIDL_bindings#CheckAnyPermissions">CheckAnyPermissions</a>"</code> is used.
-                    </p>
-                    <table>
-                        <tr><td><b>API object</b></td><td><b>CheckAnyPermissions Value</b></td><td><b>Manifest Key or Value</b></td></tr>
-                        <tr><td>browser</td><td>"browserExt"</td><td>N/A</td></tr>
-                        <tr><td>browser.browserAction</td><td>"browserExtBrowserAction"</td><td>"browserAction":[...]</td></tr>
-                        <tr><td>browser.contextMenu</td><td>"browserExtContextMenus"</td><td>"permissions":["contextMenus"]</td></tr>
-                        <tr><td>browser.extension</td><td>"browserExt"</td><td><p></p></td></tr>
-                        <tr><td>i18n</td><td>"browserExt"</td><td>"default_language": "&lt;code&gt;"</td></tr>
-                        <tr><td>pageAction</td><td>"browserExtPageAction"</td><td>"pageAction":[...]</td></tr>
-                        <tr><td>runtime</td><td>"browserExt"</td><td><p></p></td></tr>
-                        <tr><td>tabs</td><td>"browserExtTabs"</td><td>"permissions":["tabs"] or<br/>"permissions":["activeTab"]</td></tr>
-                        <tr><td>webNavigation</td><td>"browserExtWebNavigation"</td><td>"permissions":["webNavigation"]</td></tr>
-                        <tr><td>webRequest</td><td>"browserExtWebRequest"</td><td>"permissions":["webRequest"]</td></tr>
-                        <tr><td>windows</td><td>"browserExt"</td><td><p></p></td></tr>
+                    <h4 id="webidl">Expressing Availability in WebIDL</h4>
+                    <p>This specification uses WebIDL [[webidl]] to describe the Browser Extensions API.</p>
+                    <section>
+                        <h4>Attribute: <code>Exposed</code></h4>
+                        <p>
+                            To express the aforementioned conditional situations in which certain APIs may or may not be available due to context, the following contexts are used:
+                        </p>
+                        <ul>
+                            <li><b>Window</b> - The primary context for most browser extension APIs. This applies to background, event, popup, options and custom contexts</li>
+                            <li><b>ContentScript</b> - Applies to content script context</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>Extended Attribute: <code>CheckAnyPermissions</code></h4>
+                        <p>
+                            To express the aforementioned conditional situations in which certain APIs may or may not be available due to expressed manifest keys or permissions, the new WebIDL extended attribute <code>"<a href="https://developer.mozilla.org/en-US/docs/Mozilla/WebIDL_bindings#CheckAnyPermissions">CheckAnyPermissions</a>"</code> is used.
+                        </p>
+                        <table>
+                            <tr><td><b>API object</b></td><td><b>CheckAnyPermissions Value</b></td><td><b>Manifest Key or Value</b></td></tr>
+                            <tr><td>browser</td><td>"browserExt"</td><td>N/A</td></tr>
+                            <tr><td>browser.browserAction</td><td>"browserExtBrowserAction"</td><td>"browserAction":[...]</td></tr>
+                            <tr><td>browser.contextMenu</td><td>"browserExtContextMenus"</td><td>"permissions":["contextMenus"]</td></tr>
+                            <tr><td>browser.extension</td><td>"browserExt"</td><td><p></p></td></tr>
+                            <tr><td>i18n</td><td>"browserExt"</td><td>"default_language": "&lt;code&gt;"</td></tr>
+                            <tr><td>pageAction</td><td>"browserExtPageAction"</td><td>"pageAction":[...]</td></tr>
+                            <tr><td>runtime</td><td>"browserExt"</td><td><p></p></td></tr>
+                            <tr><td>tabs</td><td>"browserExtTabs"</td><td>"permissions":["tabs"] or<br />"permissions":["activeTab"]</td></tr>
+                            <tr><td>webNavigation</td><td>"browserExtWebNavigation"</td><td>"permissions":["webNavigation"]</td></tr>
+                            <tr><td>webRequest</td><td>"browserExtWebRequest"</td><td>"permissions":["webRequest"]</td></tr>
+                            <tr><td>windows</td><td>"browserExt"</td><td><p></p></td></tr>
 
-                    </table>
-                </section>
-                <section class="example">
-                    <h4>Example: <code>browser.i18n</code></h4>
+                        </table>
+                    </section>
+                    <section class="example">
+                        <h4>Example: <code>browser.i18n</code></h4>
                         <p>
                             In this example, the <code>i18n</code> API should be made available to both browser host scripts (background, event, popup, options, etc.) and content scripts. Use of this API does not require a manifest permission declaration. Additionally, however, the manifest does require a value (<code>default_locale</code>) that is necessary and cannot be specified by the extension author in script code. This is expressed as a <code>BrowserExtManifest</code> dictionary.
                         </p>
-                    <ol>
-                        <li>
-                            First, declare the methods for the <code>browser.i18n</code> object.
+                        <ol>
+                            <li>
+                                First, declare the methods for the <code>browser.i18n</code> object.
 
 <pre class="def idl">
 [NoInterfaceObject]
@@ -294,9 +296,9 @@ interface BrowserI18n {
     DOMString getMessage(DOMString messageName, sequence&lt;DOMString?&gt; substitutions);
 };
 </pre>
-                        </li>
-                        <li>
-                            Next, we specify the available contexts ("Window" for background/event/popup/options...) and "ContentScript" for the content context.
+                            </li>
+                            <li>
+                                Next, we specify the available contexts ("Window" for background/event/popup/options...) and "ContentScript" for the content context.
 
 <pre class="def idl">
 [NoInterfaceObject, Exposed=(Window,ContentScript)] 
@@ -304,36 +306,36 @@ interface BrowserI18nAPI {
     readonly attribute BrowserI18n i18n;
 };
                         </pre>
-                        </li>
-                        <li>
-                            Connect the <code>i18n</code> object to the <code>browser.*</code> object.
+                            </li>
+                            <li>
+                                Connect the <code>i18n</code> object to the <code>browser.*</code> object.
 
 <pre class="def idl">
 Browser implements BrowserI18nAPI;
 </pre>
-                        </li>
-                        <li>
-                            Finally, we express the locale from manifest.json. For example <code>"default_locale": "en"</code>
-                        
+                            </li>
+                            <li>
+                                Finally, we express the locale from manifest.json. For example <code>"default_locale": "en"</code>
+
 <pre class="def idl">
 partial dictionary BrowserExtManifest {
     DOMString? defaultLocaleCode;
 };
 </pre>
-                        </li>
-                    </ol>
+                            </li>
+                        </ol>
 
-<p> Definitions</p>
-<p> <dfn>BrowserI18n</dfn> is TBD_define_here</p>
-<p> <dfn data-dfn-for="BrowserI18n">getMessage</dfn> returns TBD_define_here</p>
-<p> <dfn>BrowserI18nAPI</dfn> is TBD_define_here</p>
-<p> <dfn data-dfn-for="BrowserI18nAPI">i18n</dfn> is TBD_define_here</p>
-<p> <dfn data-dfn-for="BrowserExtManifest">defaultLocaleCode</dfn> is TBD_define_here</p>
+                        <p> Definitions</p>
+                        <p> <dfn>BrowserI18n</dfn> is TBD_define_here</p>
+                        <p> <dfn data-dfn-for="BrowserI18n">getMessage</dfn> returns TBD_define_here</p>
+                        <p> <dfn>BrowserI18nAPI</dfn> is TBD_define_here</p>
+                        <p> <dfn data-dfn-for="BrowserI18nAPI">i18n</dfn> is TBD_define_here</p>
+                        <p> <dfn data-dfn-for="BrowserExtManifest">defaultLocaleCode</dfn> is TBD_define_here</p>
 
+                    </section>
                 </section>
-            </section>
 
-        </section>
+            </section>
 
         <section>
             <h3>Events</h3>
@@ -2049,7 +2051,7 @@ Browser implements BrowserExtWindowsAPI;
         </section>
 
 </section>
-    <section class='informative'>
+    <section >
         <h2 id="manifest-json">Manifest Format</h2>
         <section>
             <h3>Pre-parsing</h3>
@@ -2059,7 +2061,7 @@ Browser implements BrowserExtWindowsAPI;
             <h3>Permissions URL patterns</h3>
             <p class="issue">##28## Define how and where permission patterns are used<br /> </p>
         </section>
-        <section>
+        <section class='informative'>
             <h3>Full Example</h3>
 <pre>
 // Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, 
@@ -2073,14 +2075,12 @@ Browser implements BrowserExtWindowsAPI;
   "name": "The Name of Your Extension",             // Required
   "version": "Your Extension Version",              // Required
   "default_locale": "en",                           // Required if locales are used. Otherwise, not allowed
-
   "description": "Description for Your Extensions",   
   "icons": {...},                                    
   "developer": {                                    
        "name": "Your Name or Company",              
        "url": "Company Website"                      
   }
-
   // Note: Some browsers require an extension to use either browser_action or page_action, but not both simultaneously
   "browser_action": {  
       "default_icon": {...},                        // Same format as "icons"
@@ -2094,13 +2094,11 @@ Browser implements BrowserExtWindowsAPI;
             "&lt;key&gt;": "&lt;value&gt;"                      // Examples "strict_min_version": "42.0", "id": "addon@example.com"
        }
   },
-
   "background": {                                   
       "page": "Page URL",                           // Only one of "page" or "scripts" may be specified, but not both 
       "scripts": [],                                // Only one of "page" or "scripts" may be specified, but not both 
       "persistent": false                           // Required if "background" is specified
   },
-
   "content_scripts": {                                                    
       "all_frames": false,                          
       "css": [],                                   
@@ -2109,7 +2107,6 @@ Browser implements BrowserExtWindowsAPI;
       "matches": [],                                
       "run_at" : "document_start"                   // Also "document_end", "document_idle"
   }
-
   "content_security_policy": "&lt;policy-string&gt;",     
   
   "options_page": "Page URL",                            // Optional
@@ -2128,9 +2125,7 @@ Browser implements BrowserExtWindowsAPI;
        "webRequestBlocking",                        
        "&lt;url-pattern&gt;"                              // Examples "http://*/*", "&lt;all_urls&gt;"
   },
-
   "web_accessible_resources": [...]    
-
   "externally_connectable" : [
        "ids":[...], // Identifiers for other extensions that are allowed to send messages
        "matches":[...] // URL patterns for hosted web pages allowed to send messages 
@@ -2139,7 +2134,7 @@ Browser implements BrowserExtWindowsAPI;
 </pre>
         </section>
     </section>
-    <section class='informative'>
+    <section >
         <h2>Extension Resources</h2>
         <section>
             <h3>The <code>browserext://</code> protocol</h3>
@@ -2161,12 +2156,12 @@ Browser implements BrowserExtWindowsAPI;
             </p>
         </section>
     </section>
-    <section class='informative'>
+    <section  >
         <h2>Content Security Polity (CSP)</h2>
         The default CSP is discussed in the specification [[CSP3]] . 
         <p class="issue">##29## Complete this section, discussing special considerations for extensions and CSP.<br />  </p>
     </section>
-        <section class='informative'>
+        <section  >
             <h2>Testing Extensions with WebDriver</h2>
             <p>
                 Browsers vendors may choose to implement WebDriver support in their browsers to allow for the automated testing of browser extensions. To implement this support, the browser must support:
@@ -2180,9 +2175,9 @@ Browser implements BrowserExtWindowsAPI;
             <p class="issue">[ISSUE] (2016.09.22) ##34## For installing, you will need an endpoint for installing/activating at runtime<br /> </p>
             <p class="issue">[ISSUE] (2016.09.22) Support user permissions/prompts (Need to follow up with Kris)</p>
             <p class="issue">[ISSUE] (2016.09.22) Should be overlap with Permissions API – chat with them (need to discuss, not sure what this means)</p>
-            <section class="informative">
+            <section  >
                 <h3>Protocol</h3>
-                <section class='informative'>
+                <section  >
                     <h4>List of Endpoints</h4>
                     <p>In addition to the endpoints defined in the WebDriver specification [[webdriver]], support for browser extensions requires these additional endpoints.</p>
                     <table class="simple">
@@ -2215,7 +2210,7 @@ Browser implements BrowserExtWindowsAPI;
                         </tbody>
                     </table>
                 </section>
-                <section class='informative'>
+                <section  >
                     <h4>Handling Errors</h4>
                     <p>In addition to the codes defined in the Handling Errors section of the WebDriver specification [[webdriver]], support support for browser extensions requires support the following additional error codes:</p>
                     <table class="simple">
@@ -2265,7 +2260,7 @@ Browser implements BrowserExtWindowsAPI;
                     </table>
                 </section>
                 </section>
-                <section class='informative'>
+                <section >
                     <h3>
                         Capabilities
                     </h3>
@@ -2278,12 +2273,12 @@ Browser implements BrowserExtWindowsAPI;
                             An array of relative paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
                         </dd>
                     </dl>
-                    <section class='informative'>
+                    <section  >
                         <h4>Extension Lifetime</h4>
                         <p>No browser extension will be installed or pre-loaded during a WebDriver session unless it is explicitly specified in the <code>enabledExtensions</code> array. Browser extensions loaded during the session will not be available to other active instances of the browser that are not part of the WebDriver session. When the session ends, the array of browser extensions are unloaded and uninstalled.</p>
                     </section>
                 </section>
-                <section class='informative'>
+                <section  >
                     <h3>
                         Browser Extensions Commands
                     </h3>
