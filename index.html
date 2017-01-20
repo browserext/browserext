@@ -427,9 +427,9 @@ dictionary BrowserExtDeveloper {
     DOMString? url;
 };
 dictionary BrowserExtBrowserOrPageAction {
-    BrowserExtIcon defaultIcon; 
-    DOMString defaultPopup;
-    DOMString defaultTitle;
+    BrowserExtIcon? defaultIcon; 
+    DOMString? defaultPopup;
+    DOMString? defaultTitle;
 };
 dictionary BrowserExtKeyValue {
     DOMString key;
@@ -440,35 +440,35 @@ dictionary BrowserExtBrowserSpecificSettings {
     sequence&lt;KeyValue&gt; keyValue;
 };
 dictionary BrowserExtBackroundOrEvent {
-    DOMString page;
+    DOMString? page;
     boolean persistent;
-    sequence&lt;DOMString&gt; scripts;
+    sequence&lt;DOMString&gt;? scripts;
 };
 dictionary BrowserExtContentScripts {
     boolean allFrames;
-    sequence&lt;DOMString&gt; css;
-    sequence&lt;DOMString&gt; excludeMatches;
-    sequence&lt;DOMString&gt; js;
+    sequence&lt;DOMString&gt;? css;
+    sequence&lt;DOMString&gt;? excludeMatches;
+    sequence&lt;DOMString&gt;? js;
     sequence&lt;DOMString&gt; matches;
-    DOMString runAt;
+    DOMString? runAt;
 };
 dictionary BrowserExtManifest {
-    BrowserExtBackground background;
-    BrowserExtBrowserOrPageAction browserAction;
-    BrowserExtBrowserSpecificSettings browserSpecificSettings;
-    BrowserExtContentScripts contentScripts;
-    DOMString contentSecurityPolicy;
-    DOMString defaultLocale;
+    BrowserExtBackground? background;
+    BrowserExtBrowserOrPageAction? browserAction;
+    BrowserExtBrowserSpecificSettings? browserSpecificSettings;
+    BrowserExtContentScripts? contentScripts;
+    DOMString? contentSecurityPolicy;
+    DOMString? defaultLocale;
     DOMString? description;
-    BrowserExtDeveloper developer;
-    BrowserExtIconArray icons;
+    BrowserExtDeveloper? developer;
+    BrowserExtIconArray? icons;
     unsigned short manifestVersion;
     DOMString name;
-    DOMString optionsPage;
-    BrowserExtBrowserOrPageAction pageAction;
-    sequence&lt;DOMString&gt; permissions;
-    sequence&lt;DOMString&gt; requiredKeys;
-    DOMString version;
+    DOMString? optionsPage;
+    BrowserExtBrowserOrPageAction? pageAction;
+    sequence&lt;DOMString&gt;? permissions;
+    sequence&lt;DOMString&gt;? requiredKeys;
+    DOMString? version;
     sequence&lt;DOMString&gt; webAccessibleResources;
 };
 </pre>
@@ -552,7 +552,7 @@ dictionary BrowserExtManifest {
                     <p>
                         A description of the special <a href="#webidl">WebIDL syntax considerations</a> for browser extensions are defined elsewhere in this document.
                     </p>
-                    <p class="issue">Need to find all strings that support null and add ? to DOMString (DOMString?).<br /><a href="https://github.com/browserext/browserext/issues/21">GitHub Issue 21</a></p>
+                    
 
 
 
@@ -560,9 +560,9 @@ dictionary BrowserExtManifest {
 
 <pre class="def idl">
 dictionary BrowserExtBrowserActionDefaults {
-    BrowserExtIconArray defaultIcon;
+    BrowserExtIconArray? defaultIcon;
     DOMString? defaultPopup;
-    DOMString  defaultTitle;
+    DOMString?  defaultTitle;
 };
 partial dictionary BrowserExtManifest {
     BrowsereExtBrowserActionDefaults? browserActionDefaults;
@@ -597,12 +597,12 @@ interface BrowserExtBrowserAction {
     void disable(unsigned short tabId);
     void enable(unsigned short tabId);
     Promise&lt;ColorArray&gt; getBadgeBackgroundColor(BrowserExtTabIdDetails details);
-    Promise&lt;DOMString&gt; getBadgeText(BrowserExtTabIdDetails details);
-    Promise&lt;DOMString&gt; getPopup(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString?&gt; getBadgeText(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString?&gt; getPopup(BrowserExtTabIdDetails details);
     BrowserExtEvent onClicked(BrowserExtBrowserActionOnClickedCallback callback);
     void setBadgeBackgroundColor(BrowserExtBadgeColorArrayTabId details);
     void setBadgeText(BrowserExtBadgeTextTabId details);
-    Promise&lt;void&gt; setIcon(BadgePathTabId details);
+    Promise&lt;void&gt; setIcon(BrowserExtBadgePathTabId details);
     void setPopup(BrowserExtBadgeTabIdPopup details);
 };
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtBrowserAction_]
@@ -685,39 +685,39 @@ enum BrowserExtContextType { "all", "audio", "browser_action", "editable", "fram
 enum BrowserExtItemType { "checkbox","normal","radio","separator" };
 dictionary BrowserExtContextMenuCreateDetails {
     boolean checked;
-    sequence&lt;ContextType&gt; contexts;
-    sequence&lt;DOMString&gt; documentUrlPatterns;
+    sequence&lt;ContextType&gt;? contexts;
+    sequence&lt;DOMString&gt;? documentUrlPatterns;
     boolean enabled;
-    DOMString id;
+    DOMString? id;
     Function onclick;
-    (unsigned short or DOMString) parentId;
-    sequence&lt;DOMString&gt; targetUrlPatterns;
-    DOMString title;
-    DOMString type;
+    (unsigned short or DOMString?) parentId;
+    sequence&lt;DOMString&gt;? targetUrlPatterns;
+    DOMString? title;
+    DOMString? type;
 };
 dictionary BrowserExtContextMenuUpdateDetails {
     boolean checked;
-    sequence&lt;BrowserExtContextType&gt; contexts;
-    sequence&lt;DOMString&gt; documentUrlPatterns;
+    sequence&lt;BrowserExtContextType&gt;? contexts;
+    sequence&lt;DOMString&gt;? documentUrlPatterns;
     boolean enabled;
     Function onclick;
     unsigned short parentId;
-    sequence&lt;DOMString&gt; targetUrlPatterns;
-    DOMString title;
-    ItemType type;
+    sequence&lt;DOMString&gt;? targetUrlPatterns;
+    DOMString? title;
+    ItemType? type;
 };
 dictionary BrowserExtContextMenuOnClickedDetails {
     boolean checked;
     boolean editable;
     unsigned short frameId;
-    DOMString frameUrl;
-    DOMString linkUrl;
-    DOMString mediaType;
+    DOMString? frameUrl;
+    DOMString? linkUrl;
+    DOMString? mediaType;
     (unsigned short or DOMString) menuItemId;
-    DOMString pageUrl;
-    (unsigned short or DOMString) parentMenuItemId;             
-    DOMString selectionText;
-    DOMString srcUrl;
+    DOMString? pageUrl;
+    (unsigned short or DOMString?) parentMenuItemId;             
+    DOMString? selectionText;
+    DOMString? srcUrl;
     boolean wasChecked;
 };
 
@@ -929,7 +929,7 @@ Browser implements BrowserExtContextMenusAPI;
 <pre class="def idl">    
 [NoInterfaceObject]
 interface BrowserExtI18n {
-    DOMString getMessage_TBD(DOMString messageName, sequence&lt;DOMString?&gt; substitutions);
+    DOMString getMessage_TBD(DOMString messageName, sequence&lt;DOMString?&gt;? substitutions);
 };
 [NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_] 
 interface BrowserExtI18nAPI {
@@ -984,9 +984,9 @@ partial dictionary BrowserExtManifest {
 
 <pre class="def idl">
 dictionary BrowserExtPageActionDefaults {
-    BrowserExtIconArray defaultIcon;
+    BrowserExtIconArray? defaultIcon;
     DOMString? defaultPopup;
-    DOMString  defaultTitle;
+    DOMString?  defaultTitle;
 };
 partial dictionary BrowserExtManifest {
     BrowserExtPageActionDefaults? pageActionDefaults;
@@ -998,8 +998,8 @@ dictionary BrowserExtBadgePath {
 callback BrowserExtPageActionOnClickedCallback = void (BrowserExtTabsTab tab);
 
 interface BrowserExtPageAction {
-    Promise&lt;DOMString&gt; getPopup_TBD(BrowserExtTabIdDetails details);
-    Promise&lt;DOMString&gt; getTitle(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString?&gt; getPopup_TBD(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString?&gt; getTitle(BrowserExtTabIdDetails details);
     void hide(unsigned short tabId);
     BrowserExtEvent onClicked_TBD2(BrowserExtPageActionOnClickedCallback callback);
     Promise&lt;void&gt; setIcon_TBD(BrowserExtBadgePath path);
@@ -1072,8 +1072,8 @@ enum BrowserExtRuntimeOnInstalledReason {"browser_update", "extension_install", 
 
 dictionary BrowserExtRuntimeOnInstalledDetails {
     BrowserExtRuntimeOnInstalledReason reason;
-    DOMString previousVersion;
-    DOMString id;
+    DOMString? previousVersion;
+    DOMString? id;
 };
 dictionary BrowserExtRuntimePort {
     Function disconnect;
@@ -1081,13 +1081,13 @@ dictionary BrowserExtRuntimePort {
     object onDisconnect;
     object onMessage;
     Function postMessage;
-    BrowserExtRuntimeMessageSender sender;
+    BrowserExtRuntimeMessageSender? sender;
 };
 dictionary BrowserExtRuntimeMessageSender {
-    DOMString id;
+    DOMString? id;
     unsigned short frameId;
-    BrowserExtTabsTab tab;
-    DOMString url;
+    BrowserExtTabsTab? tab;
+    DOMString? url;
 };
 
 callback BrowserExtRuntimeOnConnectCallback = void (BrowserExtRuntimePort port);
@@ -1196,49 +1196,49 @@ enum BrowserExtTabsCaptureVisibleTabFormat { "jpeg", "png" };
 dictionary BrowserExtTabsTab {
     boolean active;
     boolean audible;
-    DOMString favIconUrl;
+    DOMString? favIconUrl;
     boolean highlighted;
     unsigned short height;
     unsigned short id;
     boolean incognito;
     unsigned short index;
-    TabMutedDetails mutedDetails;
+    TabMutedDetails? mutedDetails;
     unsigned short openerTabId;
     boolean pinned;
-    DOMString sessionId;
-    DOMString status;
-    DOMString title;
-    DOMString url;
+    DOMString? sessionId;
+    DOMString? status;
+    DOMString? title;
+    DOMString? url;
     unsigned short width;
     unsigned short windowId;
 };
 
 dictionary BrowserExtTabMutedDetails {
-    DOMString extensionId;
+    DOMString? extensionId;
     boolean muted;
-    TabMutedReasonDetails reason;
+    TabMutedReasonDetails? reason;
 };
-    dictionary BrowserExtTabConnectDetails {
+dictionary BrowserExtTabConnectDetails {
     unsigned short frameId;
-    DOMString name;
+    DOMString? name;
 };
 dictionary BrowserExtTabCreateDetails {
     boolean active;
     unsigned short index;
     unsigned short openerTabId;
     boolean pinned;
-    DOMString url;
+    DOMString? url;
     unsigned short windowId;
 };
 
 
 dictionary BrowserExtTabScriptAndCSSDetails {
     boolean allFrames;
-    DOMString code;
-    DOMString file;
+    DOMString? code;
+    DOMString? file;
     unsigned short frameId;
     boolean matchAboutBlank;
-    BrowserExtRunAt runAt;
+    BrowserExtRunAt? runAt;
 };
 
 
@@ -1255,11 +1255,11 @@ dictionary BrowserExtTabQueryDetails {
     boolean lastFocusedWindow;
     boolean muted;
     boolean pinned;
-    TabStatus status;
-    DOMString title;
-    (DOMString or sequence&lt;DOMString&gt;) url;
+    TabStatus? status;
+    DOMString? title;
+    (DOMString? or sequence&lt;DOMString&gt;?) url;
     unsigned short windowId;
-    WindowType windowType;
+    WindowType? windowType;
 };
 dictionary BrowserExtTabReloadDetails {
     boolean bypassCache;
@@ -1273,7 +1273,7 @@ dictionary BrowserExtTabUpdateDetails {
     boolean muted;
     unsigned short openerTabId;
     boolean pinned;
-    DOMString url;
+    DOMString? url;
 };
 dictionary BrowserExtTabIdWindowId {
     unsigned short tabId;
@@ -1285,12 +1285,12 @@ dictionary BrowserExtTabsWindowIdIsWindowClosing {
 };
 dictionary BrowserExtTabsOnUpdatedChangeDetails {
     boolean audible;    
-    DOMString favIconUrl;
-    TabMutedDetails mutedDetails;
+    DOMString? favIconUrl;
+    TabMutedDetails? mutedDetails;
     boolean pinned;
-    DOMString status;
-    DOMString title;
-    DOMString url;
+    DOMString? status;
+    DOMString? title;
+    DOMString? url;
 };
 callback BrowserExtTabsOnActivatedCallback = void (BrowserExtTabIdWindowId activeDetails);
 callback BrowserExtTabsOnCreatedCallback = void (BrowserExtTabTab tab);
@@ -1687,12 +1687,12 @@ Browser implements BrowserExtWebNavigationAPI;
 enum BrowserExtResourceType { "font", "image", "main_frame", "object", "other", "ping", "script", "stylesheet", "sub_frame", "xmlhttprequest" };
 dictionary BrowserExtWebRequestUploadDetails {
     any bytes;
-    DOMString file;
+    DOMString? file;
 };
 dictionary BrowserExtWebRequestRequestBody {
-    DOMString error;
-    object formData;
-    sequence&lt;BrowserExtWebRequestUploadData&gt; rawData;
+    DOMString? error;
+    object? formData;
+    sequence&lt;BrowserExtWebRequestUploadData&gt;? rawData;
 };
 dictionary BrowserExtWebRequestHttpHeader {
     DOMString keyName;
@@ -1705,7 +1705,7 @@ dictionary BrowserExtWebRequestOnBeforeRequestDetails {
     unsigned short frameId;
     DOMString method;
     unsigned short parentFrameId;
-    BrowserExtWebRequestRequestBody requestBody;
+    BrowserExtWebRequestRequestBody? requestBody;
     DOMString requestId;
     unsigned short tabId;
     double timeStamp;
@@ -1718,6 +1718,7 @@ dictionary BrowserExtWebRequestOnBeforeSendHeadersDetails {
     unsigned short frameId;
     DOMString method;
     unsigned short parentFrameId;
+    BrowserExtWebRequestHttpHeaders? requestHeaders;
     DOMString requestId;
     unsigned short tabId;
     double timeStamp;
@@ -1732,8 +1733,8 @@ dictionary BrowserExtWebRequestOnCompletedDetails {
     DOMString method;
     unsigned short parentFrameId;
     DOMString requestId;
-    BrowserExtWebRequestHttpHeaders responseHeaders;
-    DOMString serverIP;
+    BrowserExtWebRequestHttpHeaders? responseHeaders;
+    DOMString? serverIP;
     unsigned short statusCode;
     DOMString statusLine;
     unsigned short tabId;
@@ -1748,7 +1749,7 @@ dictionary BrowserExtWebRequestOnHeadersReceivedDetails {
     DOMString method;
     unsigned short parentFrameId;
     DOMString requestId;
-    BrowserExtWebRequestHttpHeaders responseHeaders;
+    BrowserExtWebRequestHttpHeaders? responseHeaders;
     unsigned short statusCode;
     DOMString statusLine;
     unsigned short tabId;
@@ -1760,7 +1761,7 @@ dictionary BrowserExtWebRequestOnSendHeadersDetails {
     unsigned short frameId;
     DOMString method;
     unsigned short parentFrameId;
-    BrowserExtWebRequestHttpHeaders requestHeaders;
+    BrowserExtWebRequestHttpHeaders? requestHeaders;
     DOMString requestId;
     unsigned short tabId;
     double timeStamp;   
@@ -1925,16 +1926,16 @@ dictionary BrowserExtCreateWindowDetails {
     unsigned short height;
     boolean incognito;
     unsigned short left;
-    BrowserExtWindowsWindowState state;
+    BrowserExtWindowsWindowState? state;
     unsigned short tabId;
     unsigned short top;
-    (DOMString or sequence&lt;DOMString&gt;) url;
+    (DOMString? or sequence&lt;DOMString&gt;?) url;
     unsigned short width;
-    BrowserExtWindowsWindowType windowType;
+    BrowserExtWindowsWindowType? windowType;
 };
 dictionary BrowserExtGetWindowDetails {
     boolean populate;
-    sequence&lt;BrowserExtWindowType&gt; windowTypes;
+    sequence&lt;BrowserExtWindowType&gt;? windowTypes;
 };
 dictionary BrowserExtWindowUpdateDetails {
     boolean drawAttention;
@@ -1943,7 +1944,7 @@ dictionary BrowserExtWindowUpdateDetails {
     unsigned short left;
     unsigned short top;
     unsigned short width;
-    BrowserExtWindowState windowState;
+    BrowserExtWindowState? windowState;
 };
 dictionary BrowserExtWindowsWindow {
     boolean alwaysOnTop;
@@ -1952,12 +1953,12 @@ dictionary BrowserExtWindowsWindow {
     unsigned short id;
     boolean incognito;
     unsigned short left;
-    sequence&lt;BrowserExtTabsTab&gt; tabs;
+    sequence&lt;BrowserExtTabsTab&gt;? tabs;
     unsigned short top;
-    DOMString sessionId;
-    BrowserExtWindowsWindowState state;
+    DOMString? sessionId;
+    BrowserExtWindowsWindowState? state;
     unsigned short width;
-    BrowserExtWindowsWindowType windowType;
+    BrowserExtWindowsWindowType? windowType;
 };
 callback BrowserExtWindowsOnFocusChangedCallback = void (unsigned short windowId);
 [NoInterfaceObject]
