@@ -636,7 +636,7 @@ dictionary BrowserExtBrowserActionDefaults {
     DOMString?  defaultTitle;
 };
 partial dictionary BrowserExtManifest {
-    BrowsereExtBrowserActionDefaults? browserActionDefaults;
+        BrowserExtBrowserActionDefaults? browserActionDefaults;
 };
 typedef sequence&lt;byte&gt; BrowserExtColorArray;
 dictionary BrowserExtTabIdDetails {
@@ -682,73 +682,73 @@ Browser implements BrowserExtBrowserActionAPI;
                             <h4> Definitions</h4>
                             <dl>
                                 <dt> <dfn>BrowserExtBrowserActionDefaults</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Represents the initial state of the BrowserAction button, as specified by values in the <code>manifest.json</code> file.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserActionDefaults">defaultIcon</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The initial image to be displayed for the BrowserAction button in the browser UI, as specified by values in the <code>manifest.json</code> file. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserActionDefaults">defaultPopup</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The relative path to the page to be displayed when the BrowserAction button is clicked, as specified by values in the <code>manifest.json</code> file.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserActionDefaults">defaultTitle</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The initial text string to be displayed with the BrowserAction button in the browser UI, as specified by values in the <code>manifest.json</code> file.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtManifest">browserActionDefaults</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Object that represents the initial state of the BrowserAction button, as specified by values in the <code>manifest.json</code> file.</dd>
                                 <dt> <dfn>BrowserExtColorArray</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>RGBA for the BrowserAction button's color.</dd>
                                 <dt> <dfn>BrowserExtTabIdDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>An object that is passed as a parameter to many <code>browser.browserAction</code> methods. The object encapsulates the information needed to execute the associated method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabIdDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The numeric integer ID representing the tab of interest.</dd>
                                 <dt> <dfn>BrowserExtBadgeColorArrayTabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> An object that is returned as a Promise from calls to the <code>browser.getBadgeBackgroundColor</code> methods.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgeColorArrayTabId">color</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The RGBA color of the BrowserAction button's background.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgeColorArrayTabId">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The numeric integer ID for the associated tab.</dd>
                                 <dt> <dfn>BrowserExtBadgePathTabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>An object that is passed as a parameter to the <code>browserAction.setIcon()</code> method. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgePathTabId">path</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The relative path to the image to be displayed in the BrowserAction button in the UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgePathTabId">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The numeric integer ID for the associated tab.</dd>
                                 <dt> <dfn>BrowserExtBadgeTextTabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> An object that is passed as a parameter to the <code>browserAction.setBadgeText()</code> method. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgeTextTabId">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The numeric integer ID for the associated tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgeTextTabId">text</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>The text string to be displayed in the BrowserAction button in the UI.</dd>
                                 <dt> <dfn>BrowserExtBadgeTabIdPopup</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> An object that is passed as a parameter to the <code>browserAction.setPopup()</code> method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgeTabIdPopup">popupHTMLFileName</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The relative path to the page to be displayed when the BrowserAction button in the UI is activated.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBadgeTabIdPopup">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The numeric integer ID for the associated tab.</dd>
                                 <dt> <dfn>BrowserExtBrowserActionOnClickedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>This callback handles the <code>browserAction.onClicked()</code> event.</dd>
                                 <dt> <dfn>BrowserExtBrowserAction</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The definition for the <code>browser.browserAction</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">disable</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Indicates that the browser should alter the BrowserAction button in the browser UI so that it cannot be activated, typically visually changing the UI as well to indicate this state to users. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">enable</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Indicates that the browser should alter the BrowserAction button in the browser UI so that it can be activated, typically visually changing the UI as well to indicate this state to users. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">getBadgeBackgroundColor</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Returns the color of background for the BrowserAction button in the UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">getBadgeText</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Returns the UI string for the BrowserAction button badge text.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">getPopup</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Returns the relative path to the page to be displayed when the user actives the BrowserAction in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">onClicked</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The event that fires when the user activates the BrowserAction button.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setBadgeBackgroundColor</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Specifies a new color to be displayed in the as the background for the BrowserAction button in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setBadgeText</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Specifies a new text string to be displayed in the BrowserAction button in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setIcon</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Specifies a new image to be displayed in the BrowserAction button in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setPopup</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Specifies the relative path to the page to be displayed when the user actives the BrowserAction in the browser UI.</dd>
                                 <dt> <dfn>BrowserExtBrowserActionAPI</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The interface for the <code>browser.browserAction</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserActionAPI">browserAction</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>browser.browserAction</code> object.</dd>
                             </dl>
                         </section>
                     </section>
