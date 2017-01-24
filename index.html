@@ -844,125 +844,130 @@ Browser implements BrowserExtContextMenusAPI;
         <h4> Definitions</h4>
         <dl>
             <dt> <dfn>BrowserExtContextType</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Specifies whether a context menu item is displayed for certain conditions. </dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">all</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies in any of the contexts.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">audio</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks an audio element.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">browser_action</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks the BrowserAction button in the browser UI.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">editable</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks an editable element in the active tab, like a textarea.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">frame</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks in a nested iframe in the active tab.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">image</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks an image in the active tab.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">link</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks on a link in the active tab.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">page</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks in the page in the active tab, but none of the other page contexts apply (for example, the click is not on an image or a nested iframe or a link).</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">page_action</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks the PageAction button in the browser UI.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">selection</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when part of the page in the active tab is selected.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextType">video</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Applies when the user context-clicks a video element in the active tab.</dd>
             <dt> <dfn>BrowserExtItemType</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Defines the UI control type to be associated with menu item text.</dd>
             <dt> <dfn data-dfn-for="BrowserExtItemType">checkbox</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> A context menu item that represents a binary state. It displays a checkmark next to the label. Clicking the item toggles the checkmark. The contextMenus.onClicked listener will be passed two extra properties: "checked", indicating whether the item is checked now, and "wasChecked", indicating whether the item was checked before the click event.</dd>
             <dt> <dfn data-dfn-for="BrowserExtItemType">normal</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> A context menu item that just displays a label.</dd>
             <dt> <dfn data-dfn-for="BrowserExtItemType">radio</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> A context menu item that represents one of a group of choices. Just like a checkbox, this also displays a checkmark next to the label, and its contextMenus.onClicked listener is passed "checked" and "wasChecked". However, if you create more than one radio item, then the items function as a group of radio items: only one item in the group can be checked, and clicking an item makes it the checked item.</dd>
             <dt> <dfn data-dfn-for="BrowserExtItemType">separator</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> A line separating a group of items.</dd>
             <dt> <dfn>BrowserExtContextMenuCreateDetails</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Details for the new context menu item.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">checked</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> boolean. The initial state of a checkbox or radio item: true for selected and false for unselected. Only one radio item can be selected at a time in a given group of radio items.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">contexts</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> array of contextMenus.ContextType. Array of contexts in which this menu item will appear. Defaults to ['page'] if not specified.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">documentUrlPatterns</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> array of string. Similar to documentUrlPatterns, but lets you filter based on the src attribute of img/audio/video tags and the href of anchor tags.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">enabled</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> boolean. Whether this context menu item is enabled or disabled. Defaults to true.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">id</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. The unique ID to assign to this item. Mandatory for event pages. Cannot be the same as another ID for this add-on.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">onclick</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> function. A function that will be called when the menu item is clicked. Event pages cannot use this: instead, they should register a listener for contextMenus.onClicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">parentId</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> integer or string. The ID of a parent menu item; this makes the item a child of a previously added item.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">targetUrlPatterns</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> array of string. Similar to documentUrlPatterns, but lets you filter based on the src attribute of img/audio/video tags and the href of anchor tags.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">title</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> istring. The text to be displayed in the item. Mandatory unless type is "separator".
+You can use "%s" in the string. If you do this, and some text is selected in the page when the context menu is shown, then the selected text will be interpolated into the title. For example, if title is "Translate '%s' to Pig Latin" and the user selects the word "cool", then activates the context menu, then the context menu item's title will be: "Translate 'cool' to Pig Latin".</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">type</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> contextMenus.ItemType. The type of menu item: "normal", "checkbox", "radio", "separator". Defaults to "normal".</dd>
             <dt> <dfn>BrowserExtContextMenuUpdateDetails</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> The details to update. Accepts the same values as create().</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">checked</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> boolean. The initial state of a checkbox or radio item: true for selected and false for unselected. Only one radio item can be selected at a time in a given group of radio items.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">contexts</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> array of contextMenus.ContextType. Array of contexts in which this menu item will appear. Defaults to ['page'] if not specified.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">documentUrlPatterns</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> array of string. Lets you restrict the item to apply only to documents whose URL matches one of the given match patterns. This applies to frames as well.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">enabled</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> boolean. Whether this context menu item is enabled or disabled. Defaults to true.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">onclick</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> function. A function that will be called when the menu item is clicked. Event pages cannot use this: instead, they should register a listener for contextMenus.onClicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">parentId</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> integer or string.  The ID of a parent menu item; this makes the item a child of a previously added item. Note: You cannot change an item to be a child of one of its own descendants.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">targetUrlPatterns</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> array of string. Similar to documentUrlPatterns, but lets you filter based on the src attribute of img/audio/video tags and the href of anchor tags.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">title</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. The text to be displayed in the item; this is mandatory unless type is "separator".</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuUpdateDetails">type</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> contextMenus.ItemType. The type of menu item: "normal", "checkbox", "radio", "separator". Defaults to "normal".</dd>
             <dt> <dfn>BrowserExtContextMenuOnClickedDetails</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Information sent when a context menu item is clicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">checked</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> boolean. A flag indicating whether a checkbox or radio item was checked after it was clicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">editable</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> boolean. A flag indicating whether the element is editable: for example, if it is a textarea.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">frameId</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> integer or string. The ID of the frame that was clicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">frameUrl</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. The URL of the frame of the element where the context menu was clicked, if it was in a frame.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">linkUrl</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. If the element is a link, the URL it points to.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">mediaType</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. One of "image", "video", or "audio" if the context menu was activated on one of these types of elements.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">menuItemId</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> integer or string. The ID of the menu item that was clicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">pageUrl</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. The URL of the page in which the menu item was clicked. This property is not present if the click occured in a context where there is no current page, such as on a browser action.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">parentMenuItemId</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> integer or string. The parent ID, if any, for the item clicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">selectionText</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. If some text was selected in the page, this contains the selected text./dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">srcUrl</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> string. Will be present for elements with a "src" URL.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuOnClickedDetails">wasChecked</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> boolean. A flag indicating whether a checkbox or radio item was checked before it was clicked.</dd>
             <dt> <dfn>BrowserExtContextMenuOnClickedCallback</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> The callback for the <code>browser.contextMenus</code> object.</dd>
             <dt> <dfn>BrowserExtContextMenus</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Defines the <code>browser.contextMenus</code> object.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">create</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Creates a new context menu item, given an options object defining properties for the item.
+Unlike other asynchronous functions, this one does not return a promise, but uses an optional callback to communicate success or failure. This is because its return value is the ID of the new item.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">onClicked_TBD</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Fired when a context menu item is clicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">remove</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Removes a context menu item.
+This is an asynchronous function that returns a Promise.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">removeAll</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Removes all context menu items added by this add-on.
+This is an asynchronous function that returns a Promise.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">update</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> Updates a previously created context menu item.
+This is an asynchronous function that returns a Promise.</dd>
             <dt> <dfn>BrowserExtContextMenusAPI</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> The interface for the <code>browser.contextMenus</code> object.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenusAPI">contextMenus</dfn></dt>
-            <dd> is TBD_define_here</dd>
+            <dd> The <code>browser.contextMenus</code> object.</dd>
         </dl>
     </section>
 
