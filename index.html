@@ -1946,126 +1946,125 @@ Browser implements BrowserExtWebNavigationAPI;
                             <h4> Definitions</h4>
                             <dl>
                                 <dt> <dfn>BrowserExtTransitionType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Cause of the navigation. For example, the user clicked a link or typed an address.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTransitionType">link</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The user clicked a link in another page.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTransitionType">typed</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The user typed the URL into the address bar. This is also used if the user started typing into the address bar, then selected a URL from the suggestions it offered.</dd>
 
                                 <dt> <dfn>BrowserExtWebNavigationOnBeforeNavigateDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>webNavigation.onBeforeNavigate</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Frame in which the navigation is about to occur. 0 indicates that navigation happens in the tab's top-level browsing context, not in a nested iframe. A positive value indicates that navigation happens in a nested iframe. Frame IDs are unique for a given tab and process.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">parentFrameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of this frame's parent. Set to -1 if this is a top-level frame.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab in which the navigation is about to occur.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time when the browser is about to start the navigation, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnBeforeNavigateDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL to which the given frame will navigate.</dd>
 
                                 <dt> <dfn>BrowserExtWebNavigationOnCommittedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>webNavigation.onCommitted</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Frame in which the navigation will occur. 0 indicates that navigation happens in the tab's top-level browsing context, not in a nested iframe. A positive value indicates that navigation happens in a nested iframe. Frame IDs are unique for a given tab and process.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">processId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the process in which this tab is being rendered.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab in which the navigation is about to occur.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time that the navigation was committed, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">transitionType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The reason for the navigation: for example, "link" if the user clicked a link, or "reload" if the user reloaded the page.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCommittedDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL to which the given frame will navigate.</dd>
 
                                 <dt> <dfn>BrowserExtWebNavigationOnCompletedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>webNavigation.onCompleted</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Frame in which the navigation has occurred. 0 indicates that navigation happened in the tab's top-level browsing context, not in a nested iframe. A positive value indicates that navigation happened in a nested iframe. Frame IDs are unique for a given tab and process.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">processId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the process in which this tab is being rendered.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab in which the navigation has occurred.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time at which the page finished loading, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnCompletedDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL to which the given frame has navigated.</dd>
 
                                 <dt> <dfn>BrowserExtWebNavigationOnDOMContentLoadedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>webNavigation.onDOMContentLoaded</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Frame in which the navigation is occurring. 0 indicates that navigation happens in the tab's top-level browsing context, not in a nested iframe. A positive value indicates that navigation happens in a nested iframe. Frame IDs are unique for a given tab and process.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">processId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the process in which this tab is being rendered.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab in which the navigation has occurred.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time at which DOMContentLoaded was fired, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnDOMContentLoadedDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL to which the given frame has navigated.</dd>
 
                                 <dt> <dfn>BrowserExtWebNavigationOnErrorOccurredDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>webNavigation.onErrorOccurred</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">error</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>  string. The error code. This is an internal error code, and is not guaranteed to stay the same or be consistent from one browser to another.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                               <dd> integer. Frame in which the navigation is occurring. 0 indicates that navigation happens in the tab's top-level browsing context, not in a nested iframe. A positive value indicates that navigation happens in a nested iframe. Frame IDs are unique for a given tab and process.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab in which the navigation has occurred.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time at which DOMContentLoaded was fired, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnErrorOccurredDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL to which the given frame has navigated.</dd>
 
                                 <dt> <dfn>BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>webNavigation.onReferenceFragmentUpdated</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Frame in which the navigation will occur. 0 indicates that navigation happens in the tab's top-level browsing context, not in a nested iframe. A positive value indicates that navigation happens in a nested iframe. Frame IDs are unique for a given tab and process.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">processId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the process in which this tab is being rendered.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab in which the navigation is about to occur.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time that the navigation was committed, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">transitionType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> transitionType. The reason for the navigation: for example, "link" if the user clicked a link</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationOnReferenceFragmentUpdatedDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL to which the given frame will navigate.</dd>
 
                                 <dt> <dfn>BrowserExtWebNavigationOnBeforeNavigateCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webNavigation.onBeforeNavigate</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebNavigationOnCommittedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webNavigation.onCommittedCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebNavigationOnCompletedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webNavigation.onCompletedCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebNavigationOnDOMContentLoadedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webNavigation.onDOMContentLoadedCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebNavigationOnErrorOccurredCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webNavigation.onErrorOccurredCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebNavigationOnReferenceFragmentUpdated</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webNavigation.onReferenceFragmentUpdated</code> callback.</dd>
 
                                 <dt> <dfn>BrowserExtBrowserWebNavigation</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The definition for the <code>browser.webNavigation</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onBeforeNavigate</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Fired when the browser is about to start a navigation event.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onCommitted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when a navigation is committed. At least part of the new document has been received from the server and the browser has decided to switch to the new document.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onCompleted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when a document, including the resources it refers to, is completely loaded and initialized. This is equivalent to the DOM load event.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onDOMContentLoaded</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when the <code>DOMContentLoaded</code> event is fired in the page. At this point the document is loaded and parsed, and the DOM is fully constructed, but linked resources such as images, stylesheets and subframes may not yet be loaded.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onErrorOccurred</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when an error occurs and the navigation is aborted. This can happen if either a network error occurred, or the user aborted the navigation.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onReferenceFragmentUpdated</dfn></dt>
-                                <dd>
-                                    is TBD</p>
+                                <dd>Fired if the fragment identifier for a page is changed. For example, if a page implements a table of contents using fragments, and the user clicks an entry in the table of contents, this event will fire. All future events for this frame will use the updated URL.</p>
                                 <dt> <dfn>BrowserExtWebNavigationAPI</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The interface for the <code>browser.webNavigation</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebNavigationAPI">webNavigation</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>browser.webNavigation</code> object.</dd>
                                 </dl>
                             </section>
                         </section>
@@ -2859,7 +2858,7 @@ Browser implements BrowserExtWindowsAPI;
                     <h3>
                         Browser Extensions Commands
                     </h3>
-                    <p>Users interact with extensions through several means. First there are actions embedded in the chrome of the browser, which can do something directly or open a popup. If the extension uses a popup, it can contain any html content. Finally, extensions can add items to the browser's context menu. WebDriver needs to be able to emulate user actions for all three of these controls in order to completely emulate user interaction.</p>
+                    <p>Users interact with extensions through several means. First there are actions embedded in the UI of the browser, which can do something directly or open a popup. If the extension uses a popup, it can contain any html content. Finally, extensions can add items to the browser's context menu. WebDriver needs to be able to emulate user actions for all three of these controls in order to completely emulate user interaction.</p>
                     <p>In addition to the commands defined in the WebDriver specification [[webdriver]], support support for browser extensions requires the following additional commands. </p>
                     <section>
                         <h3><code>getBrowserExtActions()</code></h3>
@@ -2943,7 +2942,7 @@ Browser implements BrowserExtWindowsAPI;
                         </table>
                         <p>
                             This command causes a browser extension to be activated, as if
-                            the user had clicked the browser extension's browser action icon in the browser's chrome. Depending
+                            the user had clicked the browser extension's browser action icon in the browser's UI. Depending
                             on the browser extension, this could cause a popup to be opened.
                         </p>
                         <dl class="parameters">
