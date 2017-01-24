@@ -888,7 +888,7 @@ Browser implements BrowserExtContextMenusAPI;
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">enabled</dfn></dt>
             <dd> boolean. Whether this context menu item is enabled or disabled. Defaults to true.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">id</dfn></dt>
-            <dd> string. The unique ID to assign to this item. Mandatory for event pages. Cannot be the same as another ID for this add-on.</dd>
+            <dd> string. The unique ID to assign to this item. Mandatory for event pages. Cannot be the same as another ID for this extension.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">onclick</dfn></dt>
             <dd> function. A function that will be called when the menu item is clicked. Event pages cannot use this: instead, they should register a listener for contextMenus.onClicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenuCreateDetails">parentId</dfn></dt>
@@ -959,7 +959,7 @@ Unlike other asynchronous functions, this one does not return a promise, but use
             <dd> Removes a context menu item.
 This is an asynchronous function that returns a Promise.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">removeAll</dfn></dt>
-            <dd> Removes all context menu items added by this add-on.
+            <dd> Removes all context menu items added by this extension.
 This is an asynchronous function that returns a Promise.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">update</dfn></dt>
             <dd> Updates a previously created context menu item.
@@ -1820,7 +1820,7 @@ Browser implements BrowserExtTabsAPI;
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">remove</dfn></dt>
                                 <dd> Closes one or more tabs. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">sendMessage_TBD</dfn></dt>
-                                <dd> Sends a single message from the add-on's background scripts (or other privileged scripts, such as popup scripts or options page scripts) and any content scripts that belong to this extension and are running in the specified tab.
+                                <dd> Sends a single message from the extension's background scripts (or other privileged scripts, such as popup scripts or options page scripts) and any content scripts that belong to this extension and are running in the specified tab.
 The message will be received in the content scripts by any listeners to the runtime.onMessage event. Listeners may then optionally send a response back to the background script using the sendResponse argument.
 This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">update</dfn></dt>
@@ -2211,198 +2211,198 @@ Browser implements BrowserWebRequestAPI;
                             <dl>
 
                                 <dt> <dfn>BrowserExtResourceType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>This type is a string, which represents a particular kind of resource fetched in a web request. It's used to filter the requests you listen to using the webRequest API. For example: you can listen to requests only for images, or only for scripts.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">font</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for font requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">image</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for image requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">main_frame</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for main frame requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">object</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for object requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">other</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for requests of a type not declared here.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">ping</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for ping requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">script</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for script requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">stylesheet</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for stylesheet requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">sub_frame</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for subframe requests.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtResourceType">xmlhttprequest</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fire <code>browser.webRequest</code> events for xmlhttprequest requests.</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestUploadDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Contains data uploaded in a URL request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestUploadDetails">bytes</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> any. An ArrayBuffer with a copy of the data.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestUploadDetails">file</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>string. A string with the file's path and name</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestRequestBody</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> object. Contains the HTTP request body data.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestRequestBody">error</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. This is set if any errors were encountered when obtaining request body data.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestRequestBody">formData</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> object. This object is present if the request method is POST and the body is a sequence of key-value pairs encoded in UTF-8 as either "multipart/form-data" or "application/x-www-form-urlencoded".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestRequestBody">rawData</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> array of webRequest.UploadData. If the request method is PUT or POST, and the body is not already parsed in formData, then this array contains the unparsed request body elements.</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestHttpHeader</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Each header is represented as an object with two properties: name and value.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestHttpHeader">keyName</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Name of the HTTP header.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestHttpHeader">value</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Value of the HTTP header if it can be represented by UTF-8. </dd>
 
                                 <dt> <dfn>BrowserExtWebRequestHttpHeaders</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> An array of HTTP headers. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestHttpHeaders">data</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The HTTP header data.</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestOnBeforeRequestDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information about the request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Zero if the request happens in the main frame; a positive value is the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (type is main_frame or sub_frame), frameId indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">method</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Standard HTTP method: for example, "GET" or "POST".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">parentFrameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the frame that contains the frame which sent the request. Set to -1 if no parent frame exists.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">requestBody</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Contains the HTTP request body data.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">requestId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The ID of the request. Request IDs are unique within a browser session, so you can use them to relate different events associated with the same request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time when this event fired, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">type</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of resource being requested: for example, "image", "script", "stylesheet".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeRequestDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. URL of the resource that triggered this request. Note that this may not be the same as the URL of the page into which the requested resource will be loaded. For example, if a document triggers a load in a different window through the target attribute of a link, or a CSS document includes an image using the url() functional notation, then this will be the URL of the original document or of the CSS document, respectively.</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestOnBeforeSendHeadersDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information about the request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Zero if the request happens in the main frame; a positive value is the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (type is main_frame or sub_frame), frameId indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">method</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Standard HTTP method: for example, "GET" or "POST".e</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">parentFrameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the frame that contains the frame which sent the request. Set to -1 if no parent frame exists.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">requestHeaders</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The HTTP request headers that will be sent with this request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">requestId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The ID of the request. Request IDs are unique within a browser session, so you can use them to relate different events associated with the same request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time when this event fired, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">type</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of resource being requested: for example, "image", "script", "stylesheet".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnBeforeSendHeadersDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Target of the request.</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestOnCompletedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information about the request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Zero if the request happens in the main frame; a positive value is the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (type is main_frame or sub_frame), frameId indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">fromCache</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Indicates if this response was fetched from disk cache.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">method</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Standard HTTP method: for example, "GET" or "POST".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">parentFrameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the frame that contains the frame which sent the request. Set to -1 if no parent frame exists.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">requestId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The ID of the request. Request IDs are unique within a browser session, so you can use them to relate different events associated with the same request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">responseHeaders</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The HTTP response headers that were received along with this response.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">serverIP</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">statusCode</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Standard HTTP status code returned by the server.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">statusLine</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. HTTP status line of the response or the 'HTTP/0.9 200 OK' string for HTTP/0.9 responses (i.e., responses that lack a status line) or an empty string if there are no headers.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time when this event fired, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">type</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of resource being requested: for example, "image", "script", "stylesheet".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnCompletedDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Target of the request.</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestOnHeadersReceivedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information about the request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Zero if the request happens in the main frame; a positive value is the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (type is main_frame or sub_frame), frameId indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">method</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Standard HTTP method: for example, "GET" or "POST".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">parentFrameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the frame that contains the frame which sent the request. Set to -1 if no parent frame exists.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">requestId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The ID of the request. Request IDs are unique within a browser session, so you can use them to relate different events associated with the same request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">responseHeaders</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The HTTP response headers that were received for this request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">statusCode</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Standard HTTP status code returned by the server.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">statusLine</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. HTTP status line of the response or the 'HTTP/0.9 200 OK' string for HTTP/0.9 responses (that is, responses that lack a status line).</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time when this event fired, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">type</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of resource being requested: for example, "image", "script", "stylesheet".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnHeadersReceivedDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Target of the request.</dd>
 
                                 <dt> <dfn>BrowserExtWebRequestOnSendHeadersDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information about the request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Zero if the request happens in the main frame; a positive value is the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (type is main_frame or sub_frame), frameId indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">method</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Standard HTTP method: for example, "GET" or "POST".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">parentFrameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the frame that contains the frame which sent the request. Set to -1 if no parent frame exists.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">requestHeaders</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The HTTP request headers that have been sent out with this request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">requestId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The ID of the request. Request IDs are unique within a browser session, so you can use them to relate different events associated with the same request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">timeStamp</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> number. The time when this event fired, in milliseconds since the epoch.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">type</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of resource being requested: for example, "image", "script", "stylesheet".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestOnSendHeadersDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> URL of the resource that triggered this request. Note that this may not be the same as the URL of the page into which the requested resource will be loaded. For example, if a document triggers a load in a different window through the target attribute of a link, or a CSS document includes an image using the url() functional notation, then this will be the URL of the original document or of the CSS document, respectively.</dd>
                                 <dt> <dfn>BrowserExtWebRequestOnBeforeRequestCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webRequest.onBeforeRequestCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebRequestOnBeforeSendHeadersCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webRequest.onBeforeSendHeadersCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebRequestOnCompletedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webRequest.onCompletedCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebRequestOnHeadersReceivedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webRequest.onHeadersReceivedCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWebRequestOnSendHeadersCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>webRequest.onSendHeadersCallback</code> callback.</dd>
                                 <dt> <dfn>BrowserExtBrowserWebRequest</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The description for the <code>browser.webRequest</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onBeforeRequest</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> This event is triggered when a request is about to be made, and before headers are available. This is a good place to listen if you want to cancel or redirect the request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onBeforeSendHeaders</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> This event is triggered before sending any HTTP data, but after all HTTP headers are available. This is a good place to listen if you want to modify HTTP request headers.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onCompleted_TBD</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when a request has completed.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onHeadersReceived</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when the HTTP response headers associated with a request have been received. You can use this event to modify HTTP response headers.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onSendHeaders</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> This event is fired just before sending headers. If your extension or some other extension modified headers in onBeforeSendHeaders, you'll see the modified version here.</dd>
                                 <dt> <dfn>BrowserExtWebRequestAPI</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The interface for the <code>browser.webRequest</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWebRequestAPI">webRequest</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>browser.webRequest</code> object.</dd>
                                 </dl>
                             </section>
                         </section>
