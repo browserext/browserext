@@ -1214,7 +1214,7 @@ Browser implements BrowserExtPageActionAPI;
                                 <dt> <dfn>BrowserExtPageActionOnClickedCallback</dfn></dt>
                                 <dd> This callback handles the <code>pageAction.onClicked()</code> event.</dd>
                                 <dt> <dfn>BrowserExtPageAction</dfn></dt>
-                                <dd> The definition for the <cdode>browser.pageAction</cdode> object.</dd>
+                                <dd> The definition for the <code>browser.pageAction</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtPageAction">getPopup_TBD</dfn></dt>
                                 <dd> Returns the relative path to the page to be displayed when the user actives the PageAction in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtPageAction">getTitle</dfn></dt>
@@ -1367,7 +1367,7 @@ Browser implements BrowserExtRuntimeAPI;
                                 <dt> <dfn>BrowserExtRuntimeOnMessageCallback</dfn></dt>
                                 <dd> The callback used to listen for messages from another part of your browser extension.  </dd>
                                 <dt> <dfn>BrowserExtBrowserRuntime</dfn></dt>
-                                <dd> The definition for the <code>browser.pageAction</code> object.</dd>
+                                <dd> The definition for the <code>browser.runtime</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">getManifest</dfn></dt>
                                 <dd> Get the complete <code>manifest.json</code> file, serialized to a JSON object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">getURL</dfn></dt>
@@ -1481,7 +1481,7 @@ dictionary BrowserExtTabScriptAndCSSDetails {
     BrowserExtRunAt? runAt;
 };
 dictionary BrowserExtTabsCaptureVisibleTabDetails {
-    BrowserExtTabsCaptureVisibleTabFormat imageCaptureormat;
+    BrowserExtTabsCaptureVisibleTabFormat imageCaptureFormat;
     long jpegQuality;
 };
 dictionary BrowserExtTabQueryDetails {
@@ -1519,7 +1519,7 @@ dictionary BrowserExtTabIdWindowId {
 };
 dictionary BrowserExtTabsWindowIdIsWindowClosing {
     boolean isWindowClosing;
-    long tabId;
+    long windowId;
 };
 dictionary BrowserExtTabsOnUpdatedChangeDetails {
     boolean audible;    
@@ -1532,7 +1532,7 @@ dictionary BrowserExtTabsOnUpdatedChangeDetails {
 };
 callback BrowserExtTabsOnActivatedCallback = void (BrowserExtTabIdWindowId activeDetails);
 callback BrowserExtTabsOnCreatedCallback = void (BrowserExtTabTab tab);
-callback BrowserExtTabsOnRemovedCallback = void (BrowserExtTabsWindowIdIsWindowClosing removeDetails);
+callback BrowserExtTabsOnRemovedCallback = void (long tabId, BrowserExtTabsWindowIdIsWindowClosing removeDetails);
 callback BrowserExtTabsOnUpdatedCallback = void (long tabId, BrowserExtTabsOnUpdatedChangeDetails details, BrowserExtTabsTab tab);
 [NoInterfaceObject]
 interface BrowserExtBrowserTabs {
@@ -1563,270 +1563,274 @@ Browser implements BrowserExtTabsAPI;
                             <h4> Definitions</h4>
                             <dl>
                                 <dt> <dfn>BrowserExtTabMutedReasonDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Specifies the reason a tab was muted or unmuted.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabMutedReasonDetails">user</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The user set the muted state.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabMutedReasonDetails">capture</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Tab capture started, forcing a muted state change.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabMutedReasonDetails">extension</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> An extension set the muted state. If this is the reason, extensionId in <code>tabs.mutedInfo</code> will contain the ID of the extension responsible.</dd>
 
                                 <dt> <dfn>BrowserExtRunAt</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The soonest that the code will be injected into the tab. Defaults to <code>"document_idle"</code>.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRunAt">document_end</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Corresponds to <code>interactive</code>. The DOM has finished loading, but resources such as scripts and images may still be loading.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRunAt">document_idle</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Corresponds to <code>complete</code>. The document and all its resources have finished loading.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRunAt">document_start</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Corresponds to <CODE>loading</CODE>. The DOM is still loading.</dd>
 
                                 <dt> <dfn>BrowserExtTabStatus</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The status of the tab. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabStatus">complete</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Tab is finished loading.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabStatus">loading</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Tab is not finished loading.</dd>
 
                                 <dt> <dfn>BrowserExtWindowTypes</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of window that hosts this tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowTypes">app</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Application host window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowTypes">normal</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Normal host window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowTypes">panel</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Panel host window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowTypes">popup</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Popup host window.</dd>
 
                                 <dt> <dfn>BrowserExtTabsCaptureVisibleTabFormat</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The format of an image.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabFormat">jpeg</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> JPEG image format.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabFormat">png</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> PNG image format.</dd>
 
                                 <dt> <dfn>BrowserExtTabsTab</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Contains information about a tab. This provides access to information about what content is in the tab, how large the content is, what special states or restrictions are in effect, and so forth.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">active</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab is active in its window. This may be true even if the tab's window is not currently focused.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">audible</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. If the tab is not muted: whether the tab is producing sound. If the tab is muted: whether the tab would be producing sound, if it were not muted.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">favIconUrl</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL of the tab's favicon. Only present if the extension has the "tabs" permission. It may also be an empty string if the tab is loading.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">highlighted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab is highlighted.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">height</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The height of the tab in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">id</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The tab's ID. Tab IDs are unique within a browser session. The tab ID may also be set to <code>tabs.TAB_ID_NONE</code> for browser windows that don't host content tabs (for example, devtools windows).</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">incognito</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab is in a private browsing window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">index</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The zero-based index of the tab within its window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">mutedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The current muted state for the tab and the reason for the last state change.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">openerTabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab that opened this tab, if any. This property is only present if the opener tab still exists.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">pinned</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab is pinned.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">sessionId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The session ID used to uniquely identify a Tab obtained from the <code>sessions</code> API.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">status</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Either <i>loading</i> or <i>complete</i>.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">title</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>string. The title of the tab. Only present if the extension has the "tabs" permission.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL of the document that the tab is displaying. Only present if the extension has the "tabs" permission.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">width</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The width of the tab in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsTab">windowId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the window that hosts this tab.</dd>
 
                                 <dt> <dfn>BrowserExtTabMutedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> This object contains a boolean indicating whether the tab is muted, and the reason for the last state change.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabMutedDetails">extensionId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The ID of the extension that last changed the muted state. Not set if an extension was not the reason the muted state last changed.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabMutedDetails">muted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab is currently muted. Equivalent to whether the muted audio indicator is showing.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabMutedDetails">reason</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The reason the tab was muted or unmuted. Not set if the tab's muted state has never been changed.</dd>
 
                                 <dt> <dfn>BrowserExtTabConnectDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.connect()</code> method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabConnectDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Open a port to a specific frame identified by frameId instead of all frames in the tab</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabConnectDetails">name</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Will be passed into <code>runtime.onConnect</code> event listeners in content scripts belonging to this extension and running in the specified tab.</dd>
 
                                 <dt> <dfn>BrowserExtTabCreateDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.create()</code> method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabCreateDetails">active</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab should become the active tab in the window. Does not affect whether the window is focused. Defaults to true.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabCreateDetails">index</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The position the tab should take in the window. The provided value will be clamped to between zero and the number of tabs in the window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabCreateDetails">openerTabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab that opened this tab. If specified, the opener tab must be in the same window as the newly created tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabCreateDetails">pinned</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab should be pinned. Defaults to false.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabCreateDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL to navigate the tab to initially. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabCreateDetails">windowId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The window to create the new tab in. Defaults to the current window.</dd>
 
                                 <dt> <dfn>BrowserExtTabScriptAndCSSDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.executeScript()</code> and <code>tab.insertCSS()</code> methods.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">allFrames</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. If true, the code will be injected into all frames of the current page. If true and frameId is set, then the code will be injected into the specified frame and all its child frames. If it is false, code is only injected into the top frame. Defaults to false.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">code</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Code to inject, as a text string.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">file</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Path to a file containing the code to inject. To work cross-browser, specify the path as an absolute URL, starting at the extension's root, like this: "/path/to/script.js".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The frame where the code should be injected. Defaults to 0 (the top-level frame).</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">matchAboutBlank</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. If true, the code will be injected into blank frames. Defaults to false.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabScriptAndCSSDetails">runAt</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The soonest that the code will be injected into the tab. Defaults to "document_idle".</dd>
 
                                 <dt> <dfn>BrowserExtTabsCaptureVisibleTabDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabDetails">imageCaptureormat</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.captureVisibleTab()</code> method.</dd>
+                                <dt> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabDetails">imageCaptureFormat</dfn></dt>
+                                <dd> The format of the resulting image. Default is "jpeg".</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsCaptureVisibleTabDetails">jpegQuality</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. When format is "jpeg", this controls the quality of the resulting image. It is a number between 0 and 100. If is is omitted, 92 is used. As quality is decreased, the resulting image will have more visual artifacts, and the number of bytes needed to store it will decrease. This value is ignored for PNG images.</dd>
 
                                 <dt> <dfn>BrowserExtTabQueryDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.query()</code> method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">active</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tabs are active in their windows.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">audible</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tabs are audible.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">currentWindow</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tabs are in the current window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">highlighted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tabs are highlighted.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">index</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The position of the tabs within their windows.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">lastFocusedWindow</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tabs are in the last focused window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">muted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tabs are muted.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">pinned</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tabs are pinned.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">status</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Whether the tabs have completed loading.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">title</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Match page titles against a pattern.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string or array of string. Match tabs against one or more match patterns. Note that fragment identifiers are not matched.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">windowId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the parent window, or <code>windows.WINDOW_ID_CURRENT</code> for the current window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabQueryDetails">windowType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of window the tabs are in.</dd>
 
                                 <dt> <dfn>BrowserExtTabReloadDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.reload()</code> method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabReloadDetails">bypassCache</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Bypass the local web cache. Default is false.</dd>
 
                                 <dt> <dfn>BrowserExtTabSendMessageDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.sendMessage()</code> method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabSendMessageDetails">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. Sends the message to a specific frame identified by frameId instead of all frames in the tab.</dd>
 
                                 <dt> <dfn>BrowserExtTabUpdateDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.update()</code> method.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabUpdateDetails">active</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab should be active. Does not affect whether the window is focused </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabUpdateDetails">highlighted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Adds or removes the tab from the current selection.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabUpdateDetails">muted</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab should be muted.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabUpdateDetails">openerTabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab that opened this tab. If specified, the opener tab must be in the same window as this tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabUpdateDetails">pinned</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the tab should be pinned.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabUpdateDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. A URL to navigate the tab to. </dd>
 
                                 <dt> <dfn>BrowserExtTabIdWindowId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.onActivated()</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabIdWindowId">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab that has become active.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabIdWindowId">windowId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab's window.</dd>
 
                                 <dt> <dfn>BrowserExtTabsWindowIdIsWindowClosing</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.onRemoved()</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsWindowIdIsWindowClosing">isWindowClosing</dfn></dt>
-                                <dd> is TBD_define_here</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtTabsWindowIdIsWindowClosing">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. true if the tab is being closed because its window is being closed.</dd>
+                                <dt> <dfn data-dfn-for="BrowserExtTabsWindowIdIsWindowClosing">windowId</dfn></dt>
+                                <dd> integer. The window whose tab is closed.</dd>
 
                                 <dt> <dfn>BrowserExtTabsOnUpdatedChangeDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information provided to the <code>tabs.onUpdated()</code> callback.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">audible</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. The tab's new audible state.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">favIconUrl</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The tab's new favicon URL.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">mutedDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The tab's new muted state and the reason for the change.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">pinned</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. The tab's new pinned state.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">status</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The status of the tab. Can be either loading or complete.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">title</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The page's title text string.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsOnUpdatedChangeDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The tab's URL if it has changed.</dd>
 
                                 <dt> <dfn>BrowserExtTabsOnActivatedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Callback for the <code>tabs.onActivated()</code> event.</dd>
                                 <dt> <dfn>BrowserExtTabsOnCreatedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Callback for the <code>tabs.onCreated()</code> event.</dd>
                                 <dt> <dfn>BrowserExtTabsOnRemovedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Callback for the <code>tabs.onRemoved()</code> event.</dd>
                                 <dt> <dfn>BrowserExtTabsOnUpdatedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Callback for the <code>tabs.onUpdated()</code> event.</dd>
 
                                 <dt> <dfn>BrowserExtBrowserTabs</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>  The definition for the <code>browser.tabs</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">captureVisibleTab</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Creates a data URI encoding an image of the visible area of the currently active tab in the specified window. You must have the &lt;all_urls&gt; permission to use this method. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">connect</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Call this function to set up a connection between the extension's background scripts (or other privileged scripts, such as popup scripts or options page scripts) and any content scripts that belong to this extension and are running in the specified tab. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">create</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Creates a new tab. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">executeScript</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Injects JavaScript code into a page. To use this API you must have the permission for the page's URL, either explicitly as a host permission, or using the activeTab permission.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">get</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Given a tab ID, get the tab's details as a <code>tabs.Tab</code> object. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">getCurrent</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Get a <code>tabs.Tab</code> containing information about the tab that this script is running in. You can call this function in contexts where there is a browser tab, such as an options page. If you call it from a background script or a popup, it will return undefined. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">insertCSS</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Injects CSS into a page. To use this API you must have the permission for the page's URL, either explicitly as a host permission, or using the activeTab permission. You can only inject CSS into pages whose URL can be expressed using a match pattern: meaning, its scheme must be one of "http", "https", "file", "ftp". The inserted CSS may be removed again by calling tabs.removeCSS().This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">onActivated</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fires when the active tab in a window changes. Note that the tab's URL may not be set at the time this event fired, but you can listen to <code>tabs.onUpdated</code> events to be notified when a URL is set.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">onCreated</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when a tab is created. Note that the tab's URL may not be given its final value at the time this event fired. Browsers may create a new tab with a temporary URL such as "about:blank" before loading the new page into it. You can listen to <code>tabs.onUpdated</code> events to be notified when a URL is set.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">onRemoved</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when a tab is closed.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">onUpdated</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when a tab is updated.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">query</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Gets all tabs that have the specified properties, or all tabs if no properties are specified. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">reload</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Reload a tab, optionally bypassing the local web cache. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">remove</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Closes one or more tabs. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">sendMessage_TBD</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Sends a single message from the add-on's background scripts (or other privileged scripts, such as popup scripts or options page scripts) and any content scripts that belong to this extension and are running in the specified tab.
+The message will be received in the content scripts by any listeners to the runtime.onMessage event. Listeners may then optionally send a response back to the background script using the sendResponse argument.
+This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">update</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Navigate the tab to a new URL, or modify other properties of the tab.
+To use this function, pass the ID of the tab to update, and an updateProperties object containing the properties you want to update. Properties that are not specified in <code>BrowserExtTabUpdateDetails</code> are not modified.
+This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn>BrowserExtTabsAPI</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>  The interface for the <code>browser.tabs</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtTabsAPI">tabs</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>  The <code>browser.tabs</code> object.</dd>
                                 </dl>
                             </section>
                         </section>
