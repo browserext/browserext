@@ -356,15 +356,8 @@ partial dictionary BrowserExtManifest_ {
                 <p>
                     Extension events are similar to DOM Events [<a href="https://www.w3.org/TR/dom/">DOM4</a>]. However, extension events are dispatched only to objects in the relevant extension scope (background, event, options, content, etc.). Script in the extension scope can observe events by calling <code>addListener()</code>.
                 </p>
+                
                 <pre class="def idl">
-[NoInterfaceObject]
-dictionary BrowserExtRule {
-    DOMString id;
-    sequence&lt;DOMString&gt; tags;
-    sequence&lt;Any&gt; conditions;
-    sequence&lt;Any&gt; actions;
-    long priority;
-};
 [NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_]
 interface BrowserExtEvent {
     void    addListener(Function callback);
@@ -377,17 +370,11 @@ interface BrowserExtEvent {
                       <section class="introductory">
                             <h4> Definitions</h4>
                             <dl>
-                                <dt><dfn>BrowserExtRule</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtRule">id</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtRule">tags</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtRule">conditions</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtRule">actions</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtRule">priority</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn>BrowserExtEvent</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">addListener</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">removeListener</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">hasListener</dfn></dt><dd> is TBD_define_here</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">hasListeners</dfn></dt><dd> is TBD_define_here</dd>
+                                <dt><dfn>BrowserExtEvent</dfn></dt><dd> The Event type used by extensions</dd>
+                                <dt><dfn data-dfn-for="BrowserExtEvent">addListener</dfn></dt><dd> Register to be notified when the even fires.</dd>
+                                <dt><dfn data-dfn-for="BrowserExtEvent">removeListener</dfn></dt><dd> Unregister for notifications.</dd>
+                                <dt><dfn data-dfn-for="BrowserExtEvent">hasListener</dfn></dt><dd> Confirms whether a specific listener has been registered.</dd>
+                                <dt><dfn data-dfn-for="BrowserExtEvent">hasListeners</dfn></dt><dd> Confirms whether any listeners have been registered.</dd>
                           </dl>
                     </section>
                 </section>
@@ -2543,7 +2530,7 @@ Browser implements BrowserExtWindowsAPI;
                                 <dd> Represents the type of browser window — normal browser window, popup, etc.</dd>
 
                                 <dt> <dfn>BrowserExtGetWindowDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Details about a window, given its ID.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtGetWindowDetails">populate</dfn></dt>
                                 <dd>boolean. If true, the <code>windows.Window</code> object will have a tabs property that contains a list of <code>tabs.Tab</code> objects representing the tabs open in the window. The Tab objects only contain the url, title and favIconUrl properties if the extension's manifest file includes the "tabs" permission.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtGetWindowDetails">windowTypes</dfn></dt>
