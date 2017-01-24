@@ -2450,7 +2450,7 @@ dictionary BrowserExtCreateWindowDetails {
 };
 dictionary BrowserExtGetWindowDetails {
     boolean populate;
-    sequence&lt;BrowserExtWindowType&gt;? windowTypes;
+    sequence&lt;BrowserExtWindowsWindowType&gt;? windowTypes;
 };
 dictionary BrowserExtWindowUpdateDetails {
     boolean drawAttention;
@@ -2497,125 +2497,130 @@ Browser implements BrowserExtWindowsAPI;
                             <h4> Definitions</h4>
                             <dl>
                                 <dt> <dfn>BrowserExtWindowsWindowType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The type of browser window this is.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowType">detached_panel</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The browser window is a detached panel.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowType">normal</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The browser window is a normal window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowType">panel</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The browser window is a panel.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowType">popup</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The browser window is a popup.</dd>
                                 <dt> <dfn>BrowserExtWindowsWindowState</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The state of this browser window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowState">docked</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The window is docked.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowState">fullscreen</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The window is full screen.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowState">maximized</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The window is maximized.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowState">minimized</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The window is minimized.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindowState">normal</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The window is normal.</dd>
 
                                 <dt> <dfn>BrowserExtCreateWindowDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information about a browser window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">focused</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the window is currently the focused window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">height</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The height of the window, including the frame, in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">incognito</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the window is incognito.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">left</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The offset of the window from the left edge of the screen in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">state</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>  Represents the state of this browser window — maximized, minimized, etc.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">tabId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the tab.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">top</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The offset of the window from the top edge of the screen in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string or array of strings. A URL or array of URLs to open as tabs in the window. Fully-qualified URLs must include a scheme. Relative URLs will be relative to the current page within the extension. </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">width</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The width of the window, including the frame, in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtCreateWindowDetails">windowType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Represents the type of browser window — normal browser window, popup, etc.</dd>
 
                                 <dt> <dfn>BrowserExtGetWindowDetails</dfn></dt>
                                 <dd> is TBD_define_here</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtGetWindowDetails">populate</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>boolean. If true, the <code>windows.Window</code> object will have a tabs property that contains a list of <code>tabs.Tab</code> objects representing the tabs open in the window. The Tab objects only contain the url, title and favIconUrl properties if the extension's manifest file includes the "tabs" permission.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtGetWindowDetails">windowTypes</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> array of <code>BrowserExtWindowsWindowType</code></dd>
 
                                 <dt> <dfn>BrowserExtWindowUpdateDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Object containing the properties to update.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">drawAttention</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. If true, causes the window to be displayed in a manner that draws the user's attention to the window, without changing the focused window. The effect lasts until the user changes focus to the window. This option has no effect if the window already has focus. Set to false to cancel a previous drawAttention request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">focused</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. If true, brings the window to the front. If false, brings the next window in the z-order to the front.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">height</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The height to resize the window to in pixels. This value is ignored for panels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">left</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The offset from the left edge of the screen to move the window to in pixels. This value is ignored for panels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">top</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The offset from the top edge of the screen to move the window to in pixels. This value is ignored for panels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">width</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The width to resize the window to in pixels. This value is ignored for panels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowUpdateDetails">windowState</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The new state of the window. The minimized, maximized and fullscreen states cannot be combined with left, top, width or height.</dd>
 
                                 <dt> <dfn>BrowserExtWindowsWindow</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Information about a browser window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">alwaysOnTop</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the window is set to be always on top.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">focused</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the window is currently the focused window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">height</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The height of the window, including the frame, in pixels</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">id</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The ID of the window. Window IDs are unique within a browser session.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">incognito</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> boolean. Whether the window is incognito.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">left</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The offset of the window from the left edge of the screen in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">tabs</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Array of <code>tabs.Tab</code> objects representing the current tabs in the window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">top</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The offset of the window from the top edge of the screen in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">sessionId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The session ID used to uniquely identify a Window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">state</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Represents the state of this browser window — maximized, minimized, etc.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">width</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The width of the window, including the frame, in pixels.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsWindow">windowType</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Represents the type of browser window this is — normal browser window, popup, etc.</dd>
 
 
                                 <dt> <dfn>BrowserExtWindowsOnFocusChangedCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>browser.windows.onFocusChanged</code> callback.</dd>
                                 <dt> <dfn>BrowserExtWindows</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The definition for the <code>browser.windows</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">create</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Creates a new window.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">get</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Gets details about a window, given its ID. The details are passed into a callback.
+This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">getAll</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Gets information about all open windows, passing them into a callback.
+This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">getCurrent_TBD</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Gets the current window, passing its details into a callback.
+This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">getLastFocused</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Gets the window that was most recently focused — typically the window 'on top' — and passes it into a callback.
+This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">onFocusChanged</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when the currently focused window changes. Will be <code>windows.WINDOW_ID_NONE</code> if all browser windows have lost focus.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">update</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Updates the properties of a window. Use this to move, resize, and (un)focus a window, etc.
+This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn>BrowserExtWindowsAPI</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The interface for the <code>browser.windows</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindowsAPI">windows</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>browser.windows</code> object.</dd>
                                 </dl>
                             </section>
                         </section>
