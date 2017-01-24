@@ -1320,77 +1320,77 @@ Browser implements BrowserExtRuntimeAPI;
                             <h4> Definitions</h4>
                             <dl>
                                 <dt> <dfn>BrowserExtRuntimeOnInstalledReason</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The reason that the <code>runtime.onInstalled</code> event is being dispatched.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledReason">browser_update</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The browser was updated to a new version.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledReason">extension_install</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The extension was installed.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledReason">extension_update</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The extension was updated to a new version.</dd>
                                 <dt> <dfn>BrowserExtRuntimeOnInstalledDetails</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Details provided when the <code>runtime.onInstalled</code> event is fired.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledDetails">reason</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> A <code>runtime.OnInstalledReason</code> value stating the reason that this event is being dispatched.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledDetails">previousVersion</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Indicates the previous version of the extension that was just updated. This is present only if the <code>reason</code> value is <code>update.</code></dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeOnInstalledDetails">id</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. Indicates the ID of the module that updated.</dd>
                                 <dt> <dfn>BrowserExtRuntimePort</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Represents one end of a connection between two specific contexts, which can be used to exchange messages.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimePort">disconnect</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> function. Disconnects a port. Either end can call this when they have finished with the port. It will cause onDisconnect to be fired at the other end. This is useful if the other end is maintaining some state relating to this port, which can be cleaned up on disconnect. If this port is connected to a native application, this function will close the native application.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimePort">name</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The port's name, defined in the <code>runtime.connect()</code> or <code>tabs.connect()</code> call that created it. If this port is connected to a native application, its name is the name of the native application.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimePort">onDisconnect</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> object. This contains the <code>addListener()</code> and <code>removeListener()</code> functions common to all events in browser extensions. Listener functions will be called when the other end has called Port.disconnect(). This event will only be fired once for each port. The listener function will be passed the Port object. If the port was disconnected due to an error, then the Port argument will contain an error property giving more information about the error.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimePort">onMessage</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> object. This contains the <code>addListener()</code> and <code>removeListener()</code> functions common to all events in browser extensions. Listener functions will be called when the other end has sent this port a message. The listener will be passed the JSON object that the other end sent.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimePort">postMessage</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> function. Send a message to the other end. This takes one argument, which is a JSON object representing the message to send. It will be delivered to any script listening to the port's onMessage event, or to the native application if this port is connected to a native application.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimePort">sender</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Contains information about the sender of the message. This property will only be present on ports passed to <code>onConnect</code> or <code>onConnectExternal</code> listeners.</dd>
                                 <dt> <dfn>BrowserExtRuntimeMessageSender</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> An object containing information about the sender of a message or connection request.  </dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">id</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The ID of the extension that sent the message, if the message was sent by an extension. Note that this is the extension's internal ID, not the ID in the manifest.json applications key.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">frameId</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> integer. The frame that opened the connection. Zero for top-level frames, positive for child frames. This will only be set when tab is set.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">tab</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>tabs.Tab</code> which opened the connection. This property will only be present when the connection was opened from a tab (including content scripts).</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeMessageSender">url</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> string. The URL of the page or frame hosting the script that sent the message.</dd>
 
                                 <dt> <dfn>BrowserExtRuntimeOnConnectCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The callback fired when a connection is made with either an extension process or a content script.</dd>
                                 <dt> <dfn>BrowserExtRuntimeOnInstalledCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The callback fired when the extension is first installed, when the extension is updated to a new version, and when the browser is updated to a new version.</dd>
                                 <dt> <dfn>BrowserExtRuntimeOnMessageCallback</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The callback used to listen for messages from another part of your browser extension.  </dd>
                                 <dt> <dfn>BrowserExtBrowserRuntime</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The definition for the <code>browser.pageAction</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">getManifest</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Get the complete <code>manifest.json</code> file, serialized to a JSON object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">getURL</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Given a relative path from the <code>manifest.json</code> to a resource packaged with the browser extension, return a fully-qualified URL.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">id</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The ID for this browser extension.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">onConnect</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when a connection is made with either a browser extension process or a content script.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">onInstalled</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Fired when the extension is first installed, when the extension is updated to a new version, and when the browser is updated to a new version./dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">onMessage</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd>Use this event to listen for messages from another part of your browser extension.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">sendMessage</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Sends a single message to event listeners within your extension or a different extension.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">Port</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> Represents one end of a connection between two specific contexts, which can be used to exchange messages.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">MessageSender</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> An object containing information about the sender of a message or connection request.</dd>
 
                                 <dt> <dfn>BrowserExtRuntimeAPI</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The interface for the <code>browser.runtime</code> object.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtRuntimeAPI">runtime</dfn></dt>
-                                <dd> is TBD_define_here</dd>
+                                <dd> The <code>browser.runtime</code> object.</dd>
                                 </dl>
                             </section>
                         </section>
