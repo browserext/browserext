@@ -2634,7 +2634,13 @@ This is an asynchronous function that returns a Promise.</dd>
         </section>
         <section>
             <h3>Permissions URL patterns</h3>
-            <p class="issue">##28## Define how and where permission patterns are used<br /> </p>
+            <p> The <code>"permissions"</code> key may include match patterns that follow the structure <code>&lt;scheme&gt;://&lt;host&gt;/&lt;path&gt;</code>, such as <code>"*://*.w3c.org/*"</code>. The special 
+                pattern <code>"&lt;all_urls&gt;"</code> is also permitted. The match patterns identify a group of URLs for which the extension is requesting extra privileges:</p>
+            <ul>
+                <li>XHR access to those origins</li>
+                <li>the ability to inject scripts with <code>tabs.executeScript</code> into pages from those origins</li>
+                <li>the ability to receive events from the <code>webRequest</code> API for those origins</li>
+            </ul>
         </section>
         <section class='informative'>
             <h3>Full Example</h3>
