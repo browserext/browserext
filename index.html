@@ -720,17 +720,17 @@ Browser implements BrowserExtBrowserActionAPI;
                                 <dd>Returns the color of background for the BrowserAction button in the UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">getBadgeText</dfn></dt>
                                 <dd>Returns the UI string for the BrowserAction button badge text.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction">getPopup</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction" data-lt="getPopup()">getPopup</dfn></dt>
                                 <dd> Returns the relative path to the page to be displayed when the user actives the BrowserAction in the browser UI.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction">onClicked</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction" data-lt="onClicked()">onClicked</dfn></dt>
                                 <dd> The event that fires when the user activates the BrowserAction button.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setBadgeBackgroundColor</dfn></dt>
                                 <dd> Specifies a new color to be displayed in the as the background for the BrowserAction button in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setBadgeText</dfn></dt>
                                 <dd> Specifies a new text string to be displayed in the BrowserAction button in the browser UI.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setIcon</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction" data-lt="setIcon()">setIcon</dfn></dt>
                                 <dd> Specifies a new image to be displayed in the BrowserAction button in the browser UI.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction">setPopup</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserAction" data-lt="setPopup()">setPopup</dfn></dt>
                                 <dd> Specifies the relative path to the page to be displayed when the user actives the BrowserAction in the browser UI.</dd>
                                 <dt> <dfn>BrowserExtBrowserActionAPI</dfn></dt>
                                 <dd> The interface for the <code>browser.browserAction</code> object.</dd>
@@ -816,7 +816,7 @@ callback BrowserExtContextMenuOnClickedCallback = void (BrowserExtContextMenuOnC
 [NoInterfaceObject]
 interface BrowserExtContextMenus {
     Promise&lt;long&gt; create(BrowserExtContextMenuCreateDetails details);
-    BrowserExtEvent onClicked_TBD(BrowserExtContextMenuOnClickedCallback callback);
+    BrowserExtEvent onClicked(BrowserExtContextMenuOnClickedCallback callback);
 	Promise&lt;void&gt; remove((long or DOMString) itemId);
     Promise&lt;void&gt;  removeAll();
     Promise&lt;void&gt;  update((long or DOMString) itemId, BrowserExtContextMenuUpdateDetails details);
@@ -940,7 +940,7 @@ You can use "%s" in the string. If you do this, and some text is selected in the
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">create</dfn></dt>
             <dd> Creates a new context menu item, given an options object defining properties for the item.
 Unlike other asynchronous functions, this one does not return a promise, but uses an optional callback to communicate success or failure. This is because its return value is the ID of the new item.</dd>
-            <dt> <dfn data-dfn-for="BrowserExtContextMenus">onClicked_TBD</dfn></dt>
+            <dt> <dfn data-dfn-for="BrowserExtContextMenus" data-lt="onClicked()">BrowserExtContextMenus.onClicked</dfn></dt>
             <dd> Fired when a context menu item is clicked.</dd>
             <dt> <dfn data-dfn-for="BrowserExtContextMenus">remove</dfn></dt>
             <dd> Removes a context menu item.
@@ -1166,12 +1166,12 @@ dictionary BrowserExtBadgePath {
 };
 callback BrowserExtPageActionOnClickedCallback = void (BrowserExtTabsTab tab);
 interface BrowserExtPageAction {
-    Promise&lt;DOMString?&gt; getPopup_TBD(BrowserExtTabIdDetails details);
+    Promise&lt;DOMString?&gt; getPopup(BrowserExtTabIdDetails details);
     Promise&lt;DOMString?&gt; getTitle(BrowserExtTabIdDetails details);
     void hide(long tabId);
-    BrowserExtEvent onClicked_TBD2(BrowserExtPageActionOnClickedCallback callback);
-    Promise&lt;void&gt; setIcon_TBD(BrowserExtBadgePath path);
-    void setPopup_TBD(BrowserExtBadgePathTabId details);
+    BrowserExtEvent onClicked(BrowserExtPageActionOnClickedCallback callback);
+    Promise&lt;void&gt; setIcon(BrowserExtBadgePath path);
+    void setPopup(BrowserExtBadgePathTabId details);
     void setTitle(BrowserExtBadgeTextTabId details);
     void show(long tabId);
 };
@@ -1202,17 +1202,17 @@ Browser implements BrowserExtPageActionAPI;
                                 <dd> This callback handles the <code>pageAction.onClicked()</code> event.</dd>
                                 <dt> <dfn>BrowserExtPageAction</dfn></dt>
                                 <dd> The definition for the <code>browser.pageAction</code> object.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtPageAction">getPopup_TBD</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtPageAction" data-lt="getPopup()">getPopup</dfn></dt>
                                 <dd> Returns the relative path to the page to be displayed when the user actives the PageAction in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtPageAction">getTitle</dfn></dt>
                                 <dd> Returns the UI string for the PageAction button title text.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtPageAction">hide</dfn></dt>
                                 <dd> Hides the page action for a given tab.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtPageAction">onClicked_TBD2</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtPageAction" data-lt="onClicked()">onClicked</dfn></dt>
                                 <dd> The event that fires when the user activates the PageAction button.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtPageAction">setIcon_TBD</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtPageAction" data-lt="setIcon()">setIcon</dfn></dt>
                                 <dd> Specifies a new image to be displayed in the PageAction button in the browser UI.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtPageAction">setPopup_TBD</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtPageAction" data-lt="setPopup()">setPopup</dfn></dt>
                                 <dd> Specifies the relative path to the page to be displayed when the user actives the PageAction in the browser UI.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtPageAction">setTitle</dfn></dt>
                                 <dd> Specifies a new text string to be displayed for the PageAction button in the browser UI.</dd>
@@ -1367,7 +1367,7 @@ Browser implements BrowserExtRuntimeAPI;
                                 <dd> Fired when the extension is first installed, when the extension is updated to a new version, and when the browser is updated to a new version./dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">onMessage</dfn></dt>
                                 <dd>Use this event to listen for messages from another part of your browser extension.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">sendMessage</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime" data-lt="sendMessage()">sendMessage</dfn></dt>
                                 <dd> Sends a single message to event listeners within your extension or a different extension.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserRuntime">Port</dfn></dt>
                                 <dd> Represents one end of a connection between two specific contexts, which can be used to exchange messages.</dd>
@@ -1537,7 +1537,7 @@ interface BrowserExtBrowserTabs {
     Promise&lt;BrowserExtTabsTab&gt; query(BrowserExtTabQueryDetails queryDetails);
     Promise&lt;void&gt; reload(BrowserExtTabReloadDetails details);
     Promise&lt;void&gt; remove((long or sequence&lt;long&gt;) tabIds);
-    Promise&lt;any&gt; sendMessage_TBD(long tabId, any message, optional BrowserExtTabSendMessageOptions details);
+    Promise&lt;any&gt; sendMessage(long tabId, any message, optional BrowserExtTabSendMessageOptions details);
     Promise&lt;BrowserExtTabsTab&gt; update(optional long tabId, BrowserExtTabUpdateDetails details);
 };
 [NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtTabs_]
@@ -1788,7 +1788,7 @@ Browser implements BrowserExtTabsAPI;
                                 <dd> Injects JavaScript code into a page. To use this API you must have the permission for the page's URL, either explicitly as a host permission, or using the activeTab permission.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">get</dfn></dt>
                                 <dd> Given a tab ID, get the tab's details as a <code>tabs.Tab</code> object. This is an asynchronous function that returns a Promise.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">getCurrent</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserTabs" data-lt="getCurrent()">getCurrent</dfn></dt>
                                 <dd> Get a <code>tabs.Tab</code> containing information about the tab that this script is running in. You can call this function in contexts where there is a browser tab, such as an options page. If you call it from a background script or a popup, it will return undefined. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">insertCSS</dfn></dt>
                                 <dd> Injects CSS into a page. To use this API you must have the permission for the page's URL, either explicitly as a host permission, or using the activeTab permission. You can only inject CSS into pages whose URL can be expressed using a match pattern: meaning, its scheme must be one of "http", "https", "file", "ftp". The inserted CSS may be removed again by calling tabs.removeCSS().This is an asynchronous function that returns a Promise.</dd>
@@ -1806,7 +1806,7 @@ Browser implements BrowserExtTabsAPI;
                                 <dd> Reload a tab, optionally bypassing the local web cache. This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">remove</dfn></dt>
                                 <dd> Closes one or more tabs. This is an asynchronous function that returns a Promise.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserTabs">sendMessage_TBD</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserTabs" data-lt="sendMessage()">sendMessage</dfn></dt>
                                 <dd> Sends a single message from the extension's background scripts (or other privileged scripts, such as popup scripts or options page scripts) and any content scripts that belong to this extension and are running in the specified tab.
 The message will be received in the content scripts by any listeners to the runtime.onMessage event. Listeners may then optionally send a response back to the background script using the sendResponse argument.
 This is an asynchronous function that returns a Promise.</dd>
@@ -2040,7 +2040,7 @@ Browser implements BrowserExtWebNavigationAPI;
                                 <dd>Fired when the browser is about to start a navigation event.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onCommitted</dfn></dt>
                                 <dd> Fired when a navigation is committed. At least part of the new document has been received from the server and the browser has decided to switch to the new document.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onCompleted</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation" data-lt="onCompleted()">onCompleted</dfn></dt>
                                 <dd> Fired when a document, including the resources it refers to, is completely loaded and initialized. This is equivalent to the DOM load event.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebNavigation">onDOMContentLoaded</dfn></dt>
                                 <dd> Fired when the <code>DOMContentLoaded</code> event is fired in the page. At this point the document is loaded and parsed, and the DOM is fully constructed, but linked resources such as images, stylesheets and subframes may not yet be loaded.</dd>
@@ -2183,7 +2183,7 @@ callback BrowserExtWebRequestOnSendHeadersCallback = void (BrowserExtWebRequestO
 interface BrowserExtBrowserWebRequest {
     void onBeforeRequest(BrowserExtWebRequestOnBeforeRequestCallback callback);
     void onBeforeSendHeaders(BrowserExtWebRequestOnBeforeSendHeadersCallback callback);
-    void onCompleted_TBD(BrowserExtWebRequestOnCompletedCallback callback);
+    void onCompleted(BrowserExtWebRequestOnCompletedCallback callback);
     void onHeadersReceived(BrowserExtWebRequestOnHeadersReceivedCallback callback);
     void onSendHeaders(Function callback);
 };
@@ -2380,7 +2380,7 @@ Browser implements BrowserWebRequestAPI;
                                 <dd> This event is triggered when a request is about to be made, and before headers are available. This is a good place to listen if you want to cancel or redirect the request.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onBeforeSendHeaders</dfn></dt>
                                 <dd> This event is triggered before sending any HTTP data, but after all HTTP headers are available. This is a good place to listen if you want to modify HTTP request headers.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onCompleted_TBD</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest" data-lt="onCompleted()">onCompleted</dfn></dt>
                                 <dd> Fired when a request has completed.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtBrowserWebRequest">onHeadersReceived</dfn></dt>
                                 <dd> Fired when the HTTP response headers associated with a request have been received. You can use this event to modify HTTP response headers.</dd>
@@ -2468,7 +2468,7 @@ interface BrowserExtWindows {
     Promise&lt;BrowserExtWindowsWindow&gt; create(CreateWindowDetails details);
     Promise&lt;BrowserExtWindowsWindow&gt; get(long windowId, optional BrowserExtGetWindowDetails details);
     Promise&lt;sequence&lt;BrowserExtWindowsWindow&gt;&gt; getAll(optional BrowserExtGetWindowDetail details);
-    Promise&lt;BrowserExtWindowsWindow&gt; getCurrent_TBD(optional BrowserExtGetWindowDetail details);
+    Promise&lt;BrowserExtWindowsWindow&gt; getCurrent(optional BrowserExtGetWindowDetail details);
     Promise&lt;BrowserExtWindowsWindow&gt; getLastFocused(optional BrowserExtGetWindowDetail details);
     void onFocusChanged(BrowserExtWindowsOnFocusChangedCallback callback);
     Promise&lt;BrowserExtWindowsWindow&gt; update(long windowId, optional BrowserExtWindowUpdateDetails details);
@@ -2593,7 +2593,7 @@ This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">getAll</dfn></dt>
                                 <dd> Gets information about all open windows, passing them into a callback.
 This is an asynchronous function that returns a Promise.</dd>
-                                <dt> <dfn data-dfn-for="BrowserExtWindows">getCurrent_TBD</dfn></dt>
+                                <dt> <dfn data-dfn-for="BrowserExtWindows" data-lt="getCurrent()">getCurrent</dfn></dt>
                                 <dd> Gets the current window, passing its details into a callback.
 This is an asynchronous function that returns a Promise.</dd>
                                 <dt> <dfn data-dfn-for="BrowserExtWindows">getLastFocused</dfn></dt>
