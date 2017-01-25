@@ -112,19 +112,25 @@
                     <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
                 </ul>
                 </section>
-                <section>
-                    <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
-                    <p>
-                        Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . If the browser extension author specifies a new CSP, it will override the default CSP.
-                    </p>
-                    <p class="issue">Add a separate non-normative section on how content scripts interact with CSP<br /><a href="https://github.com/browserext/browserext/issues/18">GitHub Issue 18</a></p>
-                    <ul>
-                        <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
-                        <li>Only script from the extension's package can be executed</li>
-                        <li>Executing script from the web is not allowed</li>
-                    </ul>
+            <section>
+                <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
+                <p>
+                    Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . If the browser extension author specifies a new CSP, it will override the default CSP.
+                </p>
+                <ul>
+                    <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
+                    <li>Only script from the extension's package can be executed</li>
+                    <li>Executing script from the web is not allowed</li>
+                </ul>
+                <section class="informative">
+                    <h5 id="availability-csp-content">Cross-domain Privileges</h5>
+                    <p> Content scripts get the same cross-domain privileges as the rest of the extension. So if the extension has requested cross-domain access for a domain using the permissions key in <code>manifest.json</code>, then its content scripts get access that domain as well.</p>
                 </section>
-
+                <section class="informative">
+                    <h5 id="availability-csp-content">Content and Background Script Communication</h5>
+                    <p> Although content scripts can't directly use most of the extension APIs, they can communicate with the extension's background scripts using the messaging APIs, and can therefore indirectly access all the same APIs that the background scripts can.</p>
+                </section>
+            </section>
                 <section class="informative">
                     <h4>Execution Context and Manifest Restrictions</h4>
                     <p>
@@ -3183,6 +3189,8 @@ This is an asynchronous function that returns a Promise.</dd>
             <ul>
                 <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization</a></li>
                 <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/Locale-Specific_Message_reference">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/Locale-Specific_Message_reference</a></li>
+                <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_scripts">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_scripts</a></li>
+                <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API</a> for various parameter/property/member descriptions for relevant APIs herein</li>
             </ul>
         </section>
     <script>
