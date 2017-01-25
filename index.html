@@ -2738,9 +2738,33 @@ This is an asynchronous function that returns a Promise.</dd>
     </section>
     <section  >
         <h2>Content Security Polity (CSP)</h2>
-        The default CSP is discussed in the specification [[CSP3]] . 
-        <p class="issue">##29## Complete this section, discussing special considerations for extensions and CSP.<br />  </p>
-    </section>
+        <p>Content Security Policy (CSP) is intended to prevent inadvertant execution of malicious code. The default CSP for web content is discussed in the specification [[CSP3]] . For extensions, the default CSP is </p>
+        <pre>"script-src 'self'; object-src 'self';"</pre>
+        <p>This means:</p>
+        <ul>
+            <li>
+                <b>Only <code>&lt;script&gt;</code> and <code>&lt;object&gt;</code> resources that are included in the extension package may be accessed</b>
+                <p>If the extension must access additional script libraries such as jQuery, copies of the .js files must be included in the extension package. </p><p>Alternatively, an extension may loosen the restriction and allow a remote file to be accessed. In this case, the origin for the hosted .js file may be specified in the <code>"content_security_policy"</code> key in <code>manifest.json</code>. For example:
+                <p class="example"><code>"content_security_policy" : "script-src 'self' https://*.jquery.com; object-src 'self'"</code></p>
+            </li>
+            <li>
+                <b>The extension will not evaluate strings as JavaScript</b>
+                <p>The following are restricted by default:</p>
+                <ul>
+                    <li><code>eval("script_goes_here;");</code></li>
+                    <li><code>window.setTimeout("script_goes_here;", t);</code></li>
+                    <li><code>var f = new Function("script_goes_here;");</code></li>
+                </ul>
+                <p>To enable the use of these evaluators, the CSP may be modified to include <code>'unsafe-eval'</code> as follows:</p>
+                <p class="example"><code>"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"</code></p>
+            </li>
+            <li><b>Inline JavaScript is not executed</b>
+                <p>Inline <code>&lt;script&gt;</code> tags and inline event handlers (e.g. <code>&lt;div onclick="script_goes_here;"&gt;</code>) are silently ignored. To enable the use of inline script, a SHA256 hash of the entire tag may be added to the <code>"content_security_policy"</code> key in <code>manifest.json</code>. For example, replace <code>&lt;hash_goes_here&gt;</code> with the actual hash in the following:</p>
+                <p class="example"><code>"content_security_policy" : "script-src 'self' 'sha256-&lt;hash_goes_here&gt;'; object-src 'self'"</code></p>
+            </li>
+        </ul>
+
+</section>
         <section  >
             <h2>Testing Extensions with WebDriver</h2>
             <p>
@@ -3196,6 +3220,8 @@ This is an asynchronous function that returns a Promise.</dd>
                 <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Internationalization</a></li>
                 <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/Locale-Specific_Message_reference">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/Locale-Specific_Message_reference</a></li>
                 <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_scripts">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_scripts</a></li>
+                <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_Security_Policy">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_Security_Policy</a></li>
+                <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/content_security_policy">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/content_security_policy</a></li>
                 <li><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API">https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API</a> for various parameter/property/member descriptions for relevant APIs herein</li>
             </ul>
         </section>
