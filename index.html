@@ -3194,22 +3194,25 @@ This is an asynchronous function that returns a Promise.</dd>
                     </section>
                 </section>
             </section>
+        <section >
+            <h2>Packaging</h2>
             <section class='informative'>
-                <h2>Packaging</h2>
+                <h3>Overview</h3>
                 <p>
-                    Browser extensions MAY be distributed and subsequently loaded as individual files or via a container, such as a *.zip archive. Regardless of the packaging format, these containers must contain the following:
+                    Browser extensions MAY be distributed and subsequently loaded as individual files or via a container, such as a *.zip archive. Regardless of the packaging format, these containers MUST contain the following:
                 </p>
                 <ul>
                     <li>manifest.json</li>
                     <li>Necessary JavaScript files (&lt;filename&gt;.js)</li>
                 </ul>
-                <section class='informative'>
-                    <h3>Digital signatures</h3>
-                    <p class="issue">
-                        This is TBD.
-                    </p>
-                </section>
             </section>
+            <section class='informative'>
+                <h3>Digital signatures</h3>
+                <p>
+                    Browser vendors MAY require that extension packages include a digital signature. The signature MAY indicate the source of the extension, such as a distribution store or the extension's publisher. This aspect of packaging varies by browser, and browser implementers MAY enforce different requirements.
+                </p>
+            </section>       
+        </section>
         <section class="appendix" >
             <h2 id="acknowledgements">Acknownledgements</h2>
             <p>
