@@ -112,25 +112,7 @@
                     <li>Content Security Policy (CSP) for the extension and target web page (for content scripts)
                 </ul>
                 </section>
-            <section>
-                <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
-                <p>
-                    Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . If the browser extension author specifies a new CSP, it will override the default CSP.
-                </p>
-                <ul>
-                    <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
-                    <li>Only script from the extension's package can be executed</li>
-                    <li>Executing script from the web is not allowed</li>
-                </ul>
-                <section class="informative">
-                    <h5 id="availability-csp-content">Cross-domain Privileges</h5>
-                    <p> Content scripts get the same cross-domain privileges as the rest of the extension. So if the extension has requested cross-domain access for a domain using the permissions key in <code>manifest.json</code>, then its content scripts get access that domain as well.</p>
-                </section>
-                <section class="informative">
-                    <h5 id="availability-csp-content">Content and Background Script Communication</h5>
-                    <p> Although content scripts can't directly use most of the extension APIs, they can communicate with the extension's background scripts using the messaging APIs, and can therefore indirectly access all the same APIs that the background scripts can.</p>
-                </section>
-            </section>
+
                 <section class="informative">
                     <h4>Execution Context and Manifest Restrictions</h4>
                     <p>
@@ -352,7 +334,18 @@ partial dictionary BrowserExtManifest_ {
 
                     </section>
                 </section>
+            <section>
+                <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
+                <p>
+                    Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . If the browser extension author specifies a new CSP, it will override the default CSP. Refer to the CSP <a href="#csp-overview">Overview</a> section for more information about the availability of these APIs. The <a href="#csp-cross-domain">Cross-domain Privileges</a> and <a href="#availability-csp-content">Content and Background Script Communication</a> sections provide details about API usage by content scripts.
+                </p>
+                <ul>
+                    <li>Script execution via <code>eval()</code> and inline script execution are not allowed</li>
+                    <li>Only script from the extension's package can be executed</li>
+                    <li>Executing script from the web is not allowed</li>
+                </ul>
 
+            </section>
             </section>
 
         <section>
@@ -2738,33 +2731,45 @@ This is an asynchronous function that returns a Promise.</dd>
     </section>
     <section  >
         <h2>Content Security Polity (CSP)</h2>
-        <p>Content Security Policy (CSP) is intended to prevent inadvertant execution of malicious code. The default CSP for web content is discussed in the specification [[CSP3]] . For extensions, the default CSP is </p>
-        <pre>"script-src 'self'; object-src 'self';"</pre>
-        <p>This means:</p>
-        <ul>
-            <li>
-                <b>Only <code>&lt;script&gt;</code> and <code>&lt;object&gt;</code> resources that are included in the extension package may be accessed</b>
-                <p>If the extension must access additional script libraries such as jQuery, copies of the .js files must be included in the extension package. </p><p>Alternatively, an extension may loosen the restriction and allow a remote file to be accessed. In this case, the origin for the hosted .js file may be specified in the <code>"content_security_policy"</code> key in <code>manifest.json</code>. For example:
-                <p class="example"><code>"content_security_policy" : "script-src 'self' https://*.jquery.com; object-src 'self'"</code></p>
-            </li>
-            <li>
-                <b>The extension will not evaluate strings as JavaScript</b>
-                <p>The following are restricted by default:</p>
-                <ul>
-                    <li><code>eval("script_goes_here;");</code></li>
-                    <li><code>window.setTimeout("script_goes_here;", t);</code></li>
-                    <li><code>var f = new Function("script_goes_here;");</code></li>
-                </ul>
-                <p>To enable the use of these evaluators, the CSP may be modified to include <code>'unsafe-eval'</code> as follows:</p>
-                <p class="example"><code>"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"</code></p>
-            </li>
-            <li><b>Inline JavaScript is not executed</b>
-                <p>Inline <code>&lt;script&gt;</code> tags and inline event handlers (e.g. <code>&lt;div onclick="script_goes_here;"&gt;</code>) are silently ignored. To enable the use of inline script, a SHA256 hash of the entire tag may be added to the <code>"content_security_policy"</code> key in <code>manifest.json</code>. For example, replace <code>&lt;hash_goes_here&gt;</code> with the actual hash in the following:</p>
-                <p class="example"><code>"content_security_policy" : "script-src 'self' 'sha256-&lt;hash_goes_here&gt;'; object-src 'self'"</code></p>
-            </li>
-        </ul>
+        <section >
+            <h5 id="csp-overview">Overview</h5>
+            <p>Content Security Policy (CSP) is intended to prevent inadvertant execution of malicious code. The default CSP for web content is discussed in the specification [[CSP3]] . For extensions, the default CSP is </p>
+            <pre>"script-src 'self'; object-src 'self';"</pre>
+            <p>This means:</p>
+            <ul>
+                <li>
+                    <b>Only <code>&lt;script&gt;</code> and <code>&lt;object&gt;</code> resources that are included in the extension package may be accessed</b>
+                    <p>If the extension must access additional script libraries such as jQuery, copies of the .js files must be included in the extension package. </p><p>Alternatively, an extension may loosen the restriction and allow a remote file to be accessed. In this case, the origin for the hosted .js file may be specified in the <code>"content_security_policy"</code> key in <code>manifest.json</code>. For example:
+                    <p class="example"><code>"content_security_policy" : "script-src 'self' https://*.jquery.com; object-src 'self'"</code></p>
+                </li>
+                <li>
+                    <b>The extension will not evaluate strings as JavaScript</b>
+                    <p>The following are restricted by default:</p>
+                    <ul>
+                        <li><code>eval("script_goes_here;");</code></li>
+                        <li><code>window.setTimeout("script_goes_here;", t);</code></li>
+                        <li><code>var f = new Function("script_goes_here;");</code></li>
+                    </ul>
+                    <p>To enable the use of these evaluators, the CSP may be modified to include <code>'unsafe-eval'</code> as follows:</p>
+                    <p class="example"><code>"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"</code></p>
+                </li>
+                <li>
+                    <b>Inline JavaScript is not executed</b>
+                    <p>Inline <code>&lt;script&gt;</code> tags and inline event handlers (e.g. <code>&lt;div onclick="script_goes_here;"&gt;</code>) are silently ignored. To enable the use of inline script, a SHA256 hash of the entire tag may be added to the <code>"content_security_policy"</code> key in <code>manifest.json</code>. For example, replace <code>&lt;hash_goes_here&gt;</code> with the actual hash in the following:</p>
+                    <p class="example"><code>"content_security_policy" : "script-src 'self' 'sha256-&lt;hash_goes_here&gt;'; object-src 'self'"</code></p>
+                </li>
+            </ul>
+        </section>
+        <section class="informative">
+                <h5 id="csp-cross-domain">Cross-domain Privileges</h5>
+                <p> Content scripts get the same cross-domain privileges as the rest of the extension. So if the extension has requested cross-domain access for a domain using the permissions key in <code>manifest.json</code>, then its content scripts get access that domain as well.</p>
+            </section>
+            <section class="informative">
+                <h5 id="availability-csp-content">Content and Background Script Communication</h5>
+                <p> Although content scripts can't directly use most of the extension APIs, they can communicate with the extension's background scripts using the messaging APIs, and can therefore indirectly access all the same APIs that the background scripts can.</p>
+            </section>
 
-</section>
+        </section>
         <section  >
             <h2>Testing Extensions with WebDriver</h2>
             <p>
