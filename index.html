@@ -348,36 +348,7 @@ partial dictionary BrowserExtManifest_ {
             </section>
             </section>
 
-        <section>
-            <h3>Events</h3>
-            <section  >
-                <h4>Overview</h4>
-                <p>
-                    Extension events are similar to DOM Events [<a href="https://www.w3.org/TR/dom/">DOM4</a>]. However, extension events are dispatched only to objects in the relevant extension scope (background, event, options, content, etc.). Script in the extension scope can observe events by calling <code>addListener()</code>.
-                </p>
-                
-                <pre class="def idl">
-[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_]
-interface BrowserExtEvent {
-    void    addListener(Function callback);
-    void    removeListener(Function callback);
-    boolean hasListener(Function callback);
-    boolean hasListeners();
-};
-</pre>
 
-                      <section class="introductory">
-                            <h4> Definitions</h4>
-                            <dl>
-                                <dt><dfn>BrowserExtEvent</dfn></dt><dd> The Event type used by extensions</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">addListener</dfn></dt><dd> Register to be notified when the even fires.</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">removeListener</dfn></dt><dd> Unregister for notifications.</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">hasListener</dfn></dt><dd> Confirms whether a specific listener has been registered.</dd>
-                                <dt><dfn data-dfn-for="BrowserExtEvent">hasListeners</dfn></dt><dd> Confirms whether any listeners have been registered.</dd>
-                          </dl>
-                    </section>
-                </section>
-        </section>
 
         <section>
             <h3 id="coreapis">The <code>browser</code> object</h3>
@@ -2603,7 +2574,41 @@ This is an asynchronous function that returns a Promise.</dd>
         </section>
 
 </section>
+    <section>
+        <h3>Events</h3>
+        <section>
+            <h4>Overview</h4>
+            <p>
+                Extension events are similar to DOM Events [<a href="https://www.w3.org/TR/dom/">DOM4</a>]. However, extension events are dispatched only to objects in the relevant extension scope (background, event, options, content, etc.). Script in the extension scope can observe events by calling <code>addListener()</code>.
+            </p>
 
+            <pre class="def idl">
+[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_]
+interface BrowserExtEvent {
+    void    addListener(Function callback);
+    void    removeListener(Function callback);
+    boolean hasListener(Function callback);
+    boolean hasListeners();
+};
+</pre>
+
+            <section class="introductory">
+                <h4> Definitions</h4>
+                <dl>
+                    <dt><dfn>BrowserExtEvent</dfn></dt>
+                    <dd> The Event type used by extensions</dd>
+                    <dt><dfn data-dfn-for="BrowserExtEvent">addListener</dfn></dt>
+                    <dd> Register to be notified when the even fires.</dd>
+                    <dt><dfn data-dfn-for="BrowserExtEvent">removeListener</dfn></dt>
+                    <dd> Unregister for notifications.</dd>
+                    <dt><dfn data-dfn-for="BrowserExtEvent">hasListener</dfn></dt>
+                    <dd> Confirms whether a specific listener has been registered.</dd>
+                    <dt><dfn data-dfn-for="BrowserExtEvent">hasListeners</dfn></dt>
+                    <dd> Confirms whether any listeners have been registered.</dd>
+                </dl>
+            </section>
+        </section>
+    </section>
     <section>
         <h2 id="message-strings">Message Strings</h2>
         <section>
