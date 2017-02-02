@@ -1057,23 +1057,7 @@ This is an asynchronous function that returns a Promise.</dd>
                         <p>The <code>"content"</code> item defines the content of the placeholder. This can be a hardcoded string, such as "My placeholder", but it can also include values obtained from a i18n.getMessage() call. </p>
                         <p>The optional <code>"example"</code> item is intended to help translators by showing them an example of how the placeholder would appear to end users, allowing them to make the best choice when localizing the file.</p>
                     </section>
-                    <section class="introductory">
-                        <h4>Predefined messages</h4>
-                        <p>Predefined messages are accessed in the same way as other messages. The syntax for standard messages is:</p>
-                        <code>__MSG_extensionName__</code>
-                        <p>Predefined messages use exactly the same syntax, except with @@ before the message name. For example:</p>
-                        <code>__MSG_@@ui_locale__</code>
-                        <p>The following table shows the different available predefined messages:</p>
-                        <table>
-                            <tr><td><b>Message name</b></td><td><b>Description</b></td></tr>
-                            <tr><td>@@extension_id</td><td>The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message. Note that you can't use this message in a manifest file.</td></tr>
-                            <tr><td>@@ui_locale</td><td>The current locale; you might use this string to construct locale-specific URLs.</td></tr>
-                            <tr><td>@@bidi_dir</td><td>The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Arabic.</td></tr>
-                            <tr><td>@@bidi_reversed_dir</td><td>If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it's "ltr".</td></tr>
-                            <tr><td>@@bidi_start_edge</td><td>If the @@bidi_dir is "ltr", then this is "left"; otherwise, it's "right".</td></tr>
-                            <tr><td>@@bidi_end_edge</td><td>If the @@bidi_dir is "ltr", then this is "right"; otherwise, it's "left".</td></tr>
-                        </table>
-                    </section>
+
                     <section class="introductory">
                         <h4>Context</h4>
                         <p>
@@ -2619,6 +2603,35 @@ This is an asynchronous function that returns a Promise.</dd>
         </section>
 
 </section>
+
+    <section>
+        <h2 id="message-strings">Message Strings</h2>
+        <section>
+            <h4>Overview</h4>
+        </section>
+        <section>
+            <p>Message strings are used in the <code>manifest.json</code> file as well <code>browser.i18n.getMessage()</code>. </p>
+        </section>
+            <section>
+                <h4>Predefined messages</h4>
+            </section>
+            <section>
+                <p>Predefined messages are accessed in the same way as other messages. The syntax for standard messages is:</p>
+                <code>__MSG_extensionName__</code>
+                <p>Predefined messages use exactly the same syntax, except with @@ before the message name. For example:</p>
+                <code>__MSG_@@ui_locale__</code>
+                <p>The following table shows the different available predefined messages:</p>
+                <table>
+                    <tr><td><b>Message name</b></td><td><b>Description</b></td></tr>
+                    <tr><td>@@extension_id</td><td>The extension or app ID; you might use this string to construct URLs for resources inside the extension. Even unlocalized extensions can use this message. Note that you can't use this message in a manifest file.</td></tr>
+                    <tr><td>@@ui_locale</td><td>The current locale; you might use this string to construct locale-specific URLs.</td></tr>
+                    <tr><td>@@bidi_dir</td><td>The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Arabic.</td></tr>
+                    <tr><td>@@bidi_reversed_dir</td><td>If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it's "ltr".</td></tr>
+                    <tr><td>@@bidi_start_edge</td><td>If the @@bidi_dir is "ltr", then this is "left"; otherwise, it's "right".</td></tr>
+                    <tr><td>@@bidi_end_edge</td><td>If the @@bidi_dir is "ltr", then this is "right"; otherwise, it's "left".</td></tr>
+                </table>
+            </section>
+        </section>
     <section >
         <h2 id="manifest-json">Manifest Format</h2>
         <section>
