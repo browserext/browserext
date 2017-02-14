@@ -2798,8 +2798,7 @@ interface BrowserExtEvent {
                 <li>Additional functionality required to support browser extensions, defined below in the Browser Extensions specification</li>
             </ul>
 
-            <p class="issue">[ISSUE] (2016.09.22) ##31## Title should be enough to identify extension, but may want to add an extensionId or extensionName property. Will consult BE CG<br />  </p>
-            
+
             <section  >
                 <h3>Protocol</h3>
                 <section  >
@@ -3088,6 +3087,12 @@ interface BrowserExtEvent {
                                     string which is unique for each browser extension.
                                 </p>
                             </li>
+                                <li>
+                                    <p>
+                                        Set the property <code>name</code> on <var>extension</var> to a
+                                        string which corresponds to the browser extension's <code>"name"</code> entry in <code>manifest.json</code>.
+                                    </p>
+                                </li>
                     </section>                    
                     <section>
                         <h3><code>getBrowserExtActions()</code></h3>
