@@ -2799,7 +2799,7 @@ interface BrowserExtEvent {
             </ul>
 
             <p class="issue">[ISSUE] (2016.09.22) ##31## Title should be enough to identify extension, but may want to add an extensionId or extensionName property. Will consult BE CG<br />  </p>
-            <p class="issue">[ISSUE] (2016.09.22) ##46## Support user permissions/prompts (Need to follow up with Kris)</p>
+            
             <section  >
                 <h3>Protocol</h3>
                 <section  >
@@ -2923,15 +2923,62 @@ interface BrowserExtEvent {
                     <p>In addition to the Capabilities defined in the WebDriver specification [[webdriver]], support for browser extensions requires the following additional entry on the <i>server capabilities</i> JSON object:</p>
                     <dl>
                         <dt>
-                            "<code>enabledExtensions</code>"
+                            "<code>enabledBrowserExtensions</code>"
                         </dt>
                         <dd>
                             An array of absolute paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
                         </dd>
                     </dl>
+                    <p>The following is an optional entry for the <i>server capabilities</i> JSON object:</p>
+                    <dl>
+                        <dt>
+                            "<code>browserExtPermissionPromptBehavior</code>"
+                        </dt>
+                        <dd>
+                            A string indicating how permission confirmation prompts should be addressed. This entry, if specified, will accept or dismiss the prompt before it can be handled by <a href="#browser-ext-permission-prompt-accept"><code>browserExtPermissionPromptAccept</code></a> or <a href="#browser-ext-permission-prompt-dismiss"><code>browserExtPermissionPromptDismiss</code></a>.
+                            <table class="simple">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Keyword
+                                        </th>
+                                        <th>
+                                            State
+                                        </th>
+                                        <th>
+                                            Description
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            "<code>accept</code>"
+                                        </td>
+                                        <td>
+                                            <dfn data-dfn-type="dfn" id="dfn-accept-state">Accept state</dfn>
+                                        </td>
+                                        <td>
+                                            All browser extension permission dialogs should be accepted.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            "<code>dismiss</code>"
+                                        </td>
+                                        <td>
+                                            <dfn data-dfn-type="dfn" id="dfn-dismiss-state">Dismiss state</dfn>
+                                        </td>
+                                        <td>
+                                            All browser extension permission dialogs should be dismissed.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </dd>
+                    </dl>
                     <section  >
                         <h4>Extension Lifetime</h4>
-                        <p>No browser extension will be installed or pre-loaded during a WebDriver session unless it is explicitly specified in the <code>enabledExtensions</code> array. Browser extensions loaded during the session will not be available to other active instances of the browser that are not part of the WebDriver session. When the session ends, the array of browser extensions are unloaded and uninstalled.</p>
+                        <p>No browser extension will be installed or pre-loaded during a WebDriver session unless it is explicitly specified in the <code>enabledBrowserExtensions</code> array. Browser extensions loaded during the session will not be available to other active instances of the browser that are not part of the WebDriver session. When the session ends, the array of browser extensions are unloaded and uninstalled.</p>
                     </section>
                 </section>
                 <section  >
@@ -3406,7 +3453,7 @@ interface BrowserExtEvent {
                         <dl class="parameters">
                             <dt>String menuitemId</dt>
                             <dd>
-                                The context menu item id, as returned by th
+                                The context menu item id, as returned by the
                                 <code>getBrowserExtContextMenuItems()</code>
                                 command.
                             </dd>
@@ -3417,6 +3464,66 @@ interface BrowserExtEvent {
                             status code MUST be returned.
                         </p>
                     </section>
+                    <section>
+                        <h3><code>browserExtPermissionPromptAccept()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>POST</td>
+                                    <td id="browser-ext-permission-prompt-accept">/session/{<var>sessionId</var>}/browserext/permissionPrompt/accept</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            This accepts a user prompt, allowing the browser extension to call the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>.
+                        </p>
+                    </section> 
+                    <section>
+                        <h3><code>browserExtPermissionPromptDismiss()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>POST</td>
+                                    <td id="browser-ext-permission-prompt-dismiss">/session/{<var>sessionId</var>}/browserext/permissionPrompt/dismiss</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            This dismisses a user prompt, rejecting the browser extension's request to use the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>.
+                        </p>
+                    </section> 
+                    <section>
+                        <h3><code>getBrowserExtPermissionPromptText()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>GET</td>
+                                    <td id="browser-ext-permission-prompt-text">/session/{<var>sessionId</var>}/browserext/permissionPrompt/text</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            Returns a string that includes the names of APIs which require user confirmation.
+                        </p>
+                    </section> 
                 </section>
             </section>
         <section >
