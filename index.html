@@ -2842,6 +2842,21 @@ interface BrowserExtEvent {
                                 <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenuItem/{<var>menuitemId</var>}</td>
                                 <td>Select Browser Extension Context Menu Item</td>
                             </tr>
+                            <tr>
+                                <td>POST</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/permissionPrompt/accept</td>
+                                <td>Browser Extension Permission Prompt Accept</td>
+                            </tr>
+                            <tr>
+                                <td>POST</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/permissionPrompt/dismiss</td>
+                                <td>Browser Extension Permission Prompt Dismiss</td>
+                            </tr>
+                            <tr>
+                                <td>GET</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/permissionPrompt/text</td>
+                                <td>Get Browser Extension Permission Prompt Text</td>
+                            </tr>
                         </tbody>
                     </table>
                 </section>
@@ -2905,6 +2920,15 @@ interface BrowserExtEvent {
                                     A request to select an extension context menu item could not be completed
                                     because there is no matching extension context menu item for the given
                                     element.
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td><dfn id="dfn-no-such-browser-extension-permission-prompt" data-dfn-type="dfn">no such browser extension permission prompt</dfn></td>
+                                <td>400</td>
+                                <td><code>no such browser extension permission prompt</code></td>
+                                <td>
+                                    A request to obtain the permission prompt text could not be completed
+                                    because there is no permission prompt at this time.
                                 </td>
                             </tr>
                         </tbody>
@@ -3482,7 +3506,7 @@ interface BrowserExtEvent {
                             </tbody>
                         </table>
                         <p>
-                            This accepts a user prompt, allowing the browser extension to call the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>.
+                            This accepts a user prompt, allowing the browser extension to call the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>. If there is no prompt at the time this API is called, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned.
                         </p>
                     </section> 
                     <section>
@@ -3502,7 +3526,7 @@ interface BrowserExtEvent {
                             </tbody>
                         </table>
                         <p>
-                            This dismisses a user prompt, rejecting the browser extension's request to use the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>.
+                            This dismisses a user prompt, rejecting the browser extension's request to use the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>. If there is no prompt at the time this API is called, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned.
                         </p>
                     </section> 
                     <section>
@@ -3522,7 +3546,7 @@ interface BrowserExtEvent {
                             </tbody>
                         </table>
                         <p>
-                            Returns a string that includes the names of APIs which require user confirmation.
+                            Returns a string that includes the names of APIs which require user confirmation. If there is no prompt at the time this API is called, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned.
                         </p>
                     </section> 
                 </section>
