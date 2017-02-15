@@ -335,7 +335,7 @@ partial dictionary BrowserExtManifest_ {
                     </section>
                 </section>
             <section>
-                <h4 id="availability-csp">Content Security Policy (CSP) Restrictions</h4>
+                <h4 id="availability-csp"><font style="font-size:0pt;visibility:hidden;">Considerations</font>Content Security Policy (CSP) Restrictions</h4>
                 <p>
                     Use of some JavaScript APIs such as <code>eval()</code> are restricted due to CSP. If an explicit policy is not specified, the default policy is applied. The default CSP is discussed in the specification [[CSP3]] . If the browser extension author specifies a new CSP, it will override the default CSP. Refer to the CSP <a href="#csp-overview">Overview</a> section for more information about the availability of these APIs. The <a href="#csp-cross-domain">Cross-domain Privileges</a> and <a href="#availability-csp-content">Content and Background Script Communication</a> sections provide details about API usage by content scripts.
                 </p>
@@ -2613,14 +2613,10 @@ interface BrowserExtEvent {
         <h2 id="message-strings">Message Strings</h2>
         <section>
             <h4>Overview</h4>
-        </section>
-        <section>
             <p>Message strings are used in the <code>manifest.json</code> file as well <code>browser.i18n.getMessage()</code>. </p>
         </section>
             <section>
                 <h4>Predefined messages</h4>
-            </section>
-            <section>
                 <p>Predefined messages are accessed in the same way as other messages. The syntax for standard messages is:</p>
                 <code>__MSG_extensionName__</code>
                 <p>Predefined messages use exactly the same syntax, except with @@ before the message name. For example:</p>
@@ -2748,7 +2744,7 @@ interface BrowserExtEvent {
         </section>
     </section>
     <section  >
-        <h2>Content Security Polity (CSP)</h2>
+        <h2>Content Security Policy (CSP)</h2>
         <section >
             <h5 id="csp-overview">Overview</h5>
             <p>Content Security Policy (CSP) is intended to prevent inadvertant execution of malicious code. The default CSP for web content is discussed in the specification [[CSP3]] . For extensions, the default CSP is </p>
@@ -2798,8 +2794,7 @@ interface BrowserExtEvent {
                 <li>Additional functionality required to support browser extensions, defined below in the Browser Extensions specification</li>
             </ul>
 
-            <p class="issue">[ISSUE] (2016.09.22) ##31## Title should be enough to identify extension, but may want to add an extensionId or extensionName property. Will consult BE CG<br />  </p>
-            <p class="issue">[ISSUE] (2016.09.22) ##46## Support user permissions/prompts (Need to follow up with Kris)</p>
+
             <section  >
                 <h3>Protocol</h3>
                 <section  >
@@ -2846,6 +2841,21 @@ interface BrowserExtEvent {
                                 <td>POST</td>
                                 <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenuItem/{<var>menuitemId</var>}</td>
                                 <td>Select Browser Extension Context Menu Item</td>
+                            </tr>
+                            <tr>
+                                <td>POST</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/permissionPrompt/accept</td>
+                                <td>Browser Extension Permission Prompt Accept</td>
+                            </tr>
+                            <tr>
+                                <td>POST</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/permissionPrompt/dismiss</td>
+                                <td>Browser Extension Permission Prompt Dismiss</td>
+                            </tr>
+                            <tr>
+                                <td>GET</td>
+                                <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/permissionPrompt/text</td>
+                                <td>Get Browser Extension Permission Prompt Text</td>
                             </tr>
                         </tbody>
                     </table>
@@ -2912,6 +2922,15 @@ interface BrowserExtEvent {
                                     element.
                                 </td>
                             </tr>
+                                                        <tr>
+                                <td><dfn id="dfn-no-such-browser-extension-permission-prompt" data-dfn-type="dfn">no such browser extension permission prompt</dfn></td>
+                                <td>400</td>
+                                <td><code>no such browser extension permission prompt</code></td>
+                                <td>
+                                    A request to obtain the permission prompt text could not be completed
+                                    because there is no permission prompt at this time.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </section>
@@ -2923,15 +2942,62 @@ interface BrowserExtEvent {
                     <p>In addition to the Capabilities defined in the WebDriver specification [[webdriver]], support for browser extensions requires the following additional entry on the <i>server capabilities</i> JSON object:</p>
                     <dl>
                         <dt>
-                            "<code>enabledExtensions</code>"
+                            "<code>enabledBrowserExtensions</code>"
                         </dt>
                         <dd>
                             An array of absolute paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
                         </dd>
                     </dl>
+                    <p>The following is an optional entry for the <i>server capabilities</i> JSON object:</p>
+                    <dl>
+                        <dt>
+                            "<code>browserExtPermissionPromptBehavior</code>"
+                        </dt>
+                        <dd>
+                            A string indicating how permission confirmation prompts should be addressed. This entry, if specified, will accept or dismiss the prompt before it can be handled by <a href="#browser-ext-permission-prompt-accept"><code>browserExtPermissionPromptAccept</code></a> or <a href="#browser-ext-permission-prompt-dismiss"><code>browserExtPermissionPromptDismiss</code></a>.
+                            <table class="simple">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Keyword
+                                        </th>
+                                        <th>
+                                            State
+                                        </th>
+                                        <th>
+                                            Description
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            "<code>accept</code>"
+                                        </td>
+                                        <td>
+                                            <dfn data-dfn-type="dfn" id="dfn-accept-state">Accept state</dfn>
+                                        </td>
+                                        <td>
+                                            All browser extension permission dialogs should be accepted.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            "<code>dismiss</code>"
+                                        </td>
+                                        <td>
+                                            <dfn data-dfn-type="dfn" id="dfn-dismiss-state">Dismiss state</dfn>
+                                        </td>
+                                        <td>
+                                            All browser extension permission dialogs should be dismissed.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </dd>
+                    </dl>
                     <section  >
                         <h4>Extension Lifetime</h4>
-                        <p>No browser extension will be installed or pre-loaded during a WebDriver session unless it is explicitly specified in the <code>enabledExtensions</code> array. Browser extensions loaded during the session will not be available to other active instances of the browser that are not part of the WebDriver session. When the session ends, the array of browser extensions are unloaded and uninstalled.</p>
+                        <p>No browser extension will be installed or pre-loaded during a WebDriver session unless it is explicitly specified in the <code>enabledBrowserExtensions</code> array. Browser extensions loaded during the session will not be available to other active instances of the browser that are not part of the WebDriver session. When the session ends, the array of browser extensions are unloaded and uninstalled.</p>
                     </section>
                 </section>
                 <section  >
@@ -2965,7 +3031,7 @@ interface BrowserExtEvent {
                                 To install an extension located at "/ext/" in a session with ID <i>0</i>, the local end would  
                                 POST to <code>/session/0/browserext/</code> with the request body 
                             </p>
-                            <pre class="highlight hljs xquery">{ <span class="hljs-string">"extensionPaths"</span>: [<span class="hljs-string">"/ext/"</span>] }</pre>
+                            <pre class="hljs xquery">{ <span class="hljs-string">"extensionPaths"</span>: [<span class="hljs-string">"/ext/"</span>] }</pre>
                         </aside>                        
                         <p>
 
@@ -3041,6 +3107,12 @@ interface BrowserExtEvent {
                                     string which is unique for each browser extension.
                                 </p>
                             </li>
+                                <li>
+                                    <p>
+                                        Set the property <code>name</code> on <var>extension</var> to a
+                                        string which corresponds to the browser extension's <code>"name"</code> entry in <code>manifest.json</code>.
+                                    </p>
+                                </li>
                     </section>                    
                     <section>
                         <h3><code>getBrowserExtActions()</code></h3>
@@ -3203,7 +3275,7 @@ interface BrowserExtEvent {
                                 To click a pageAction of an extension with ID <i>1</i> in a session with ID <i>0</i>, the local end would  
                                 POST to <code>/session/0/browserext/1/action/</code> with the request body 
                             </p>
-                            <pre class="highlight hljs xquery">{ <span class="hljs-string">"type"</span>: <span class="hljs-string">"pageAction"</span> }</pre>
+                            <pre class="hljs xquery">{ <span class="hljs-string">"type"</span>: <span class="hljs-string">"pageAction"</span> }</pre>
                         </aside>                        
                         <p>
                             If the type specified does not correspond to a browser extension action available in the browser/on the current page, a
@@ -3406,7 +3478,7 @@ interface BrowserExtEvent {
                         <dl class="parameters">
                             <dt>String menuitemId</dt>
                             <dd>
-                                The context menu item id, as returned by th
+                                The context menu item id, as returned by the
                                 <code>getBrowserExtContextMenuItems()</code>
                                 command.
                             </dd>
@@ -3417,6 +3489,66 @@ interface BrowserExtEvent {
                             status code MUST be returned.
                         </p>
                     </section>
+                    <section>
+                        <h3><code>browserExtPermissionPromptAccept()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>POST</td>
+                                    <td id="browser-ext-permission-prompt-accept">/session/{<var>sessionId</var>}/browserext/permissionPrompt/accept</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            This accepts a user prompt, allowing the browser extension to call the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>. If there is no prompt at the time this API is called, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned.
+                        </p>
+                    </section> 
+                    <section>
+                        <h3><code>browserExtPermissionPromptDismiss()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>POST</td>
+                                    <td id="browser-ext-permission-prompt-dismiss">/session/{<var>sessionId</var>}/browserext/permissionPrompt/dismiss</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            This dismisses a user prompt, rejecting the browser extension's request to use the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>. If there is no prompt at the time this API is called, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned.
+                        </p>
+                    </section> 
+                    <section>
+                        <h3><code>getBrowserExtPermissionPromptText()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>GET</td>
+                                    <td id="browser-ext-permission-prompt-text">/session/{<var>sessionId</var>}/browserext/permissionPrompt/text</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            Returns a string that includes the names of APIs which require user confirmation. If there is no prompt at the time this API is called, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned.
+                        </p>
+                    </section> 
                 </section>
             </section>
         <section >
