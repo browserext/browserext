@@ -8,6 +8,7 @@
             border: 1px solid black;
             padding: 8px;
             font-size: 11pt;
+            vertical-align: text-top;
         }
         
         table {
@@ -1021,7 +1022,7 @@ This is an asynchronous function that returns a Promise.</dd>
     "placeholders": {
       "url" : {
         "content" : "$1"
-        "example" : "https://www.w3c.org"
+        "example" : "https://www.w3.org"
       }
 </pre>
                         <p>The placeholder <code>name</code> ("url" in the above example) is used to represent the placeholder in the substitution string (e.g. "url" becomes $URL$). It is case insensitive and can contain the same characters as a message string name.</p>
@@ -1347,7 +1348,7 @@ Browser implements BrowserExtRuntimeAPI;
                     </section><section class="introductory">
                         <h4>Manifest</h4>
                         <p>
-                            The <code>"tabs"</code> permission is required to use this object.
+                            The <code>"tabs"</code> permission is required to use this object. Refer to the <a href="#active-tab"><code>activeTab</code> permission</a> section for more information about accessing these APIs.
                         </p>
 <pre>
 {
@@ -2029,7 +2030,7 @@ Browser implements BrowserExtWebNavigationAPI;
     "permissions": [                           // Required
         "webRequest"                            // Required
         "webRequestBlocking"                    // Optional
-        "&lt;URL pattern&gt;"                         // Optional, e.g. "*://*.w3c.org/"
+        "&lt;URL pattern&gt;"                         // Optional, e.g. "*://*.w3.org/"
     ]                                          // Required   
 }
 </pre>
@@ -2637,11 +2638,89 @@ interface BrowserExtEvent {
         <h2 id="manifest-json">Manifest Format</h2>
         <section>
             <h3>Pre-parsing</h3>
-            Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers MAY ignore those keys.
+            <p>Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers MAY ignore those keys.</p>
         </section>
         <section>
-            <h3>Permissions URL patterns</h3>
-            <p> The <code>"permissions"</code> key may include match patterns that follow the structure <code>&lt;scheme&gt;://&lt;host&gt;/&lt;path&gt;</code>, such as <code>"*://*.w3c.org/*"</code>. The special 
+            <h3>List of Keys</h3>
+            <p>The full list of supported manifest keys is provided below:</p>
+            <table class="simple">
+                <tr><th width="100px">Key</th><th>Required</th><th>Details</th></tr>
+                <tr><td width="100px"><code>"name"</code></td><td>Required</td><td>The name of the extension. </td></tr>
+                <tr><td><code>"version"</code></td><td>Required</td><td>A string representation of a number</td></tr>
+                <tr><td><code>"default_locale"</code></td><td>Required if extension uses locales. Not allowed if extension does not use locales</td><td>See <a href="#message-strings">Message Strings</a> and <a href="#i18n"><code>browser.i18n</code></a> for more information about the use of locales and localized resources.</td></tr>
+                <tr><td><code>"description"</code></td><td>Optional</td><td>Describes the capabilities of the extension.</td></tr>
+                <tr><td><code>"icons" : {<br />
+&nbsp;&nbsp;&nbsp;"&lt;size&gt;" : "&lt;filename.jpg&gt;"<br />
+}</code></td><td>Optional</td><td>A list of pairs of pixel dimensions and JPEG filenames. These are typically used to display visuals for the extension in browser management UI for extensions. Browsers MAY require specific sizes. For example,<br /><code>"icons":{<br />&nbsp;&nbsp;&nbsp;"16":"small.jpg",<br />&nbsp;&nbsp;&nbsp;"32":"medium.jpg"<br />}<br /></code> would be used for a small JPEG with height of 16 pixels and width of 16 pixels (small.jpg), and a second JPEG 32x32 pixels in size (medium.jpg).</td></tr>
+<tr><td><code>"developer": {<br />
+&nbsp;&nbsp;&nbsp;"name": "&lt;Company&gt;",<br />
+&nbsp;&nbsp;&nbsp;"url": "&lt;Website&gt;"<br />
+}</code></td><td>Optional</td><td>Includes subkeys for <code>"name"</code> and <code>"url"</code> that provide information about the entity that authored the extension, typically a company or programmer name. The <code>"url"</code> subkey SHOULD refer to the company/programmer site, not a description of the extension.</td></tr>
+                <tr><td><code>"browser_action"</code></td><td>Optional<br /><br />Note that some browsers only permit <code>"browser_action"</code> or <code>"page_action"</code>, but not both at the same time</p></td><td>See <a href="#browserAction">browser.browserAction</a> for more information about the subkeys for <code>"browser_action"</code>.</td></tr>
+                <tr><td><code>"page_action"</code></td><td>Optional<br /><br />Note that some browsers only permit <code>"browser_action"</code> or <code>"page_action"</code>, but not both at the same time</td><td>See <a href="#pageAction">browser.pageAction</a> for more information about the subkeys for <code>"page_action"</code>.</td></tr>
+<tr><td><code>"browser_specific_settings":{<br />
+&nbsp;&nbsp;&nbsp;&lt;browser_name&gt;": {<br />
+&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;"&lt;key&gt;": "&lt;value&gt;"<br />
+&nbsp;&nbsp;&nbsp;}<br />
+}</code></td><td>Optional</td><td>Describes specific values that MAY be considered by a browser. For example, a particular extension may require version 42 or greater of the Gecko browser in order to work properly:<br />
+<code>"browser_specific_settings":{<br />
+&nbsp;&nbsp;&nbsp;"gecko": {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"strict_min_version": "42.0"<br />
+&nbsp;&nbsp;&nbsp;}<br />
+}</code><br />
+
+                              </td></tr>
+<tr><td><code>"background" : {<br />
+&nbsp;&nbsp;&nbsp;"page": "&lt;Page URL&gt;",<br />
+&nbsp;&nbsp;&nbsp;"scripts": [...],<br />
+&nbsp;&nbsp;&nbsp;"persistent": boolean,<br />
+}
+</code></td><td>Optional<br /><br/>If <code>"background"</code> is specified, <code>"persistent"</code> is required.<br /><br/>Other subkeys are optional</td><td>Automatically loads a page or script and begins execution, regardless of the page being viewed in a tab.</td></tr> 
+
+<tr><td><code>"content_scripts" : {<br />
+&nbsp;&nbsp;&nbsp;"all_frames": &lt;boolean&gt;,<br />
+&nbsp;&nbsp;&nbsp;"css": [...],<br />
+&nbsp;&nbsp;&nbsp;"exclude_matches": [...],<br />
+&nbsp;&nbsp;&nbsp;"js": [...],<br />
+&nbsp;&nbsp;&nbsp;"matches": [...],<br />
+&nbsp;&nbsp;&nbsp;"run_at": &lt;see_details&gt;,<br />
+}
+</code></td><td>Optional</td><td>Automatically adds scripts (from the <code>"js"</code> subkey list) or CSS (from the <code>"css"</code> subkey list) to each page within a tab.<br /><br/>If <code>all_frames</code> is <code>false</code>, the string patterns from <code>matches</code> and <code>exclude_matches</code> are used accordingly to determine which page content is modified or excluded.<br /><br/>Valid values for <code>"run_at"</code> are <code>"document_start", "document_end"</code> and <code>"document_idle"</code>.</p></td></tr>
+
+<tr><td><code>"content_security_policy"</code></td><td>Optional</td><td>A string representation of the new policy to override the default policy. See <a href="#csp-overview">Content Security Policy (CSP)</a> for more information.</td></tr>                 
+<tr><td><code>"options_page"</code></td><td>Optional</td><td>The page within the extension that allows extension users to modify settings or options for the extension.</td></tr>
+<tr><td><code>"manifest_version"</code></td><td>Optional</td><td>This is not used</td></tr>
+<tr><td><code>"required_keys":[...]</code></td><td>Optional</td><td>See the <a href="#required-keys"><code>required_keys</code> key</a> section for more information about this key.</td></tr>
+<tr><td><code>"web_accessible_resources":[...]</code></td><td>Optional</td><td>Resources listed here may be accessed by Internet-hosted site pages.</td></tr>
+<tr><td><code>"externally_connectable": [<br />
+&nbsp;&nbsp;&nbsp;"ids": [...],<br />
+&nbsp;&nbsp;&nbsp;"matches": [...],<br />
+]</code></td><td>Optional</td><td>Other extensions or Internet-hosted site pages may send messages to this extension if their extension ID (<code>"ids"</code>) or page URL pattern (<code>"matches"</code>) are specified.</td></tr>
+<tr><td><code>"permissions" : {<br />
+&nbsp;&nbsp;&nbsp;"activeTab",<br />
+&nbsp;&nbsp;&nbsp;"contextMenus",<br />
+&nbsp;&nbsp;&nbsp;"tabs",<br />
+&nbsp;&nbsp;&nbsp;"webNavigation",<br />
+&nbsp;&nbsp;&nbsp;"webRequestBlocking",<br />
+&nbsp;&nbsp;&nbsp;"&lt;url-pattern&gt;",<br />
+}</code></td><td>Optional </td><td>Each subkey must be specified in order to use the associated API.<br />
+<ul>
+<li><code>activeTab...<a href="#tabs">browser.tabs</a></code> (<a href="#active-tab">activeTab</a>)</li>
+<li><code>contextMenus...<a href="#contextMenus">browser.contextMenus</a></code></li>
+<li><code>tabs...<a href="#tabs">browser.tabs</a></code></li>
+<li><code>webNavigation...<a href="#webNavigation">browser.webNavigation</a></code></li>
+<li><code>webRequest...<a href="#webRequest">browser.webRequest</a></code></li>
+<li><code>webRequestBlocking...<a href="#webRequest">browser.webRequest </a></code>(blocking)</li>
+</ul>
+
+Patterns listed in <code>&lt;url-pattern&gt;</code> allow additional permissions for URLs that match those patterns. See <a href="#all-urls">Permissions URL patterns</a> for more information. 
+                                                          </td></tr>
+                 
+            </table>
+        </section>
+        <section>
+            <h3 id="all-urls">Permissions URL patterns</h3>
+            <p> The <code>"permissions"</code> key may include match patterns that follow the structure <code>&lt;scheme&gt;://&lt;host&gt;/&lt;path&gt;</code>, such as <code>"*://*.w3.org/*"</code>. The special 
                 pattern <code>"&lt;all_urls&gt;"</code> is also permitted. The match patterns identify a group of URLs for which the extension is requesting extra privileges:</p>
             <ul>
                 <li>XHR access to those origins</li>
@@ -2649,7 +2728,14 @@ interface BrowserExtEvent {
                 <li>the ability to receive events from the <code>webRequest</code> API for those origins</li>
             </ul>
         </section>
-        <section class='informative'>
+        <section>
+            <h3 id="active-tab">The <code>activeTab</code> permission</h3>
+            <p> The <code>"activeTab"</code> permission enables the use of <code>browser.tabs</code> API only if the user has actively initiated an action such as the <code>browserAction</code>. The <code>browser.tabs</code> API can be used until the tab is navigated to another page or closed.</p><p>Passive background-only extensions cannot use the <code>browser.tabs</code> API unless both the <code>"tabs"</code> permission and a URL pattern (e.g. <code>"&lt;all_urls&gt;"> or "http://*" or "*://&.w3.org/*"</code>) are both explicitly declared in the <code>manifest.json</code>. </p>        </section>
+        <section>
+            <h3 id="required-keys">The <code>required_keys</code> key</h3>
+            <p>This key is optional, but if it is specified, it provides a list of strings representing manifest keys that MUST be supported. If the browser loading the extension does not support the specified key, the browser MUST reject the manifest and not load the extension.</p>
+        </section>
+                <section class='informative'>
             <h3>Full Example</h3>
 <pre>
 // Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, 
@@ -2663,7 +2749,7 @@ interface BrowserExtEvent {
   "name": "The Name of Your Extension",             // Required
   "version": "Your Extension Version",              // Required
   "default_locale": "en",                           // Required if locales are used. Otherwise, not allowed
-  "description": "Description for Your Extensions",   
+  "description": "Description for Your Extension",   
   "icons": {...},                                    
   "developer": {                                    
        "name": "Your Name or Company",              
@@ -2705,7 +2791,6 @@ interface BrowserExtEvent {
   "permissions": {                                  
        "activeTab",                                                
        "contextMenus",                              
-       "storage",                                   
        "tabs",                                      
        "webNavigation",                            
        "webRequest",                                
@@ -3468,7 +3553,7 @@ interface BrowserExtEvent {
                         <ul><li>Let <var>permissionPrompt</var> be a new JSON Object.</li>
                             <li>Set the property <code>promptId</code> to a string which is unique for each time a prompt is displayed.</li>
                             <li>Set the property <code>promptMessageText</code> to a string which represents the text shown to the user, localized to the default locale specified in <code>manifest.json</code>.</li>
-                            <li>Set the property <code>promptDefaultLocale</code> to the default locale code specified in <code>manifest.json</code>.</li>
+                            <li>Set the property <code>promptDefaultLocale</code> to the default locale code specified in <code>manifest.json</code>. If locales are not used by the extension, the property SHOULD be omitted, but MAY return an empty string ("").</li>
                             <li>Set the property <code>promptRequestingUrl</code> to a string representing the relevant URL. Strings returned here are the same strings defined in the <code>"permissions": [ ]</code> section of <code>manisfest.json</code>. If a URL is not applicable to the prompt, the property SHOULD be omitted but MAY also return an empty string ("").</li>
                             <li>Set the property <code>promptPermissions</code> to an array of strings which correspond to requested permissions. Strings returned here are the same strings defined in the <code>"permissions": [ ]</code> section of <code>manisfest.json</code>. If permissions are not applicable to the prompt, the property SHOULD be omitted, but MAY include an empty array ([]) or an array of empty strings ([""]). </li>
                             <li>Set the property <code>promptActions</code> to an array of strings which correspond to possible actions the user could take. The actions <code>allow</code> and <code>deny</code> are required. Other optional values MAY be returned, but the behavior is not prescribed in this specification.</li>
@@ -3535,20 +3620,19 @@ interface BrowserExtEvent {
                                     </tbody>
                                 </table>
                             <aside class="example">
-                            <div class="example-permissionPrompt"></div>
-                                <p>This prompt requests broad permissions that do not correspond to a specific URL.</p>
+                            <div class="example-permissionPrompt-unlocalized-noUrl"></div>
+                                <p>This extension, which does not use locales, prompts to request broad permissions that do not correspond to a specific URL.</p>
                             <pre class="hljs xquery">
 { 
 <span class="hljs-string">"promptId"</span>: <span class="hljs-string">"1"</span>,
 <span class="hljs-string">"promptMessageText"</span>: <span class="hljs-string">"A new extension Sample1 has been installed. It can access your browsing activity. Do you wish to continue? Yes No Close"</span>,
-<span class="hljs-string">"promptDefaultLocale"</span>: <span class="hljs-string">"en"</span>,
 <span class="hljs-string">"promptPermissions"</span>: <span class="hljs-string">["tabs","webNavigation"]</span>,
 <span class="hljs-string">"promptActions"</span>: <span class="hljs-string">["allow","deny","dismiss"]</span>
 }</pre>
                         </aside> 
                                                     <aside class="example">
-                            <div class="example-permissionPrompt"></div>
-                                <p>This prompt requests permissions specific to a banking URL.</p>
+                            <div class="example-permissionPrompt-localized-with-url"></div>
+                                <p>This extension, which uses locales to provide translated strings, prompts for permissions specific to a banking URL.</p>
                             <pre class="hljs xquery">
 { 
 <span class="hljs-string">"promptId"</span>: <span class="hljs-string">"2"</span>,
