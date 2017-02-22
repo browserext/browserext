@@ -8,6 +8,7 @@
             border: 1px solid black;
             padding: 8px;
             font-size: 11pt;
+            vertical-align: text-top;
         }
         
         table {
@@ -1021,7 +1022,7 @@ This is an asynchronous function that returns a Promise.</dd>
     "placeholders": {
       "url" : {
         "content" : "$1"
-        "example" : "https://www.w3c.org"
+        "example" : "https://www.w3.org"
       }
 </pre>
                         <p>The placeholder <code>name</code> ("url" in the above example) is used to represent the placeholder in the substitution string (e.g. "url" becomes $URL$). It is case insensitive and can contain the same characters as a message string name.</p>
@@ -1347,7 +1348,7 @@ Browser implements BrowserExtRuntimeAPI;
                     </section><section class="introductory">
                         <h4>Manifest</h4>
                         <p>
-                            The <code>"tabs"</code> permission is required to use this object.
+                            The <code>"tabs"</code> permission is required to use this object. Refer to the <a href="#active-tab"><code>activeTab</code> permission</a> section for more information about accessing these APIs.
                         </p>
 <pre>
 {
@@ -2029,7 +2030,7 @@ Browser implements BrowserExtWebNavigationAPI;
     "permissions": [                           // Required
         "webRequest"                            // Required
         "webRequestBlocking"                    // Optional
-        "&lt;URL pattern&gt;"                         // Optional, e.g. "*://*.w3c.org/"
+        "&lt;URL pattern&gt;"                         // Optional, e.g. "*://*.w3.org/"
     ]                                          // Required   
 }
 </pre>
@@ -2637,11 +2638,89 @@ interface BrowserExtEvent {
         <h2 id="manifest-json">Manifest Format</h2>
         <section>
             <h3>Pre-parsing</h3>
-            Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers MAY ignore those keys.
+            <p>Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers MAY ignore those keys.</p>
         </section>
         <section>
-            <h3>Permissions URL patterns</h3>
-            <p> The <code>"permissions"</code> key may include match patterns that follow the structure <code>&lt;scheme&gt;://&lt;host&gt;/&lt;path&gt;</code>, such as <code>"*://*.w3c.org/*"</code>. The special 
+            <h3>List of Keys</h3>
+            <p>The full list of supported manifest keys is provided below:</p>
+            <table class="simple">
+                <tr><th width="100px">Key</th><th>Required</th><th>Details</th></tr>
+                <tr><td width="100px"><code>"name"</code></td><td>Required</td><td>The name of the extension. </td></tr>
+                <tr><td><code>"version"</code></td><td>Required</td><td>A string representation of a number</td></tr>
+                <tr><td><code>"default_locale"</code></td><td>Required if extension uses locales. Not allowed if extension does not use locales</td><td>See <a href="#message-strings">Message Strings</a> and <a href="#i18n"><code>browser.i18n</code></a> for more information about the use of locales and localized resources.</td></tr>
+                <tr><td><code>"description"</code></td><td>Optional</td><td>Describes the capabilities of the extension.</td></tr>
+                <tr><td><code>"icons" : {<br />
+&nbsp;&nbsp;&nbsp;"&lt;size&gt;" : "&lt;filename.jpg&gt;"<br />
+}</code></td><td>Optional</td><td>A list of pairs of pixel dimensions and JPEG filenames. These are typically used to display visuals for the extension in browser management UI for extensions. Browsers MAY require specific sizes. For example,<br /><code>"icons":{<br />&nbsp;&nbsp;&nbsp;"16":"small.jpg",<br />&nbsp;&nbsp;&nbsp;"32":"medium.jpg"<br />}<br /></code> would be used for a small JPEG with height of 16 pixels and width of 16 pixels (small.jpg), and a second JPEG 32x32 pixels in size (medium.jpg).</td></tr>
+<tr><td><code>"developer": {<br />
+&nbsp;&nbsp;&nbsp;"name": "&lt;Company&gt;",<br />
+&nbsp;&nbsp;&nbsp;"url": "&lt;Website&gt;"<br />
+}</code></td><td>Optional</td><td>Includes subkeys for <code>"name"</code> and <code>"url"</code> that provide information about the entity that authored the extension, typically a company or programmer name. The <code>"url"</code> subkey SHOULD refer to the company/programmer site, not a description of the extension.</td></tr>
+                <tr><td><code>"browser_action"</code></td><td>Optional<br /><br />Note that some browsers only permit <code>"browser_action"</code> or <code>"page_action"</code>, but not both at the same time</p></td><td>See <a href="#browserAction">browser.browserAction</a> for more information about the subkeys for <code>"browser_action"</code>.</td></tr>
+                <tr><td><code>"page_action"</code></td><td>Optional<br /><br />Note that some browsers only permit <code>"browser_action"</code> or <code>"page_action"</code>, but not both at the same time</td><td>See <a href="#pageAction">browser.pageAction</a> for more information about the subkeys for <code>"page_action"</code>.</td></tr>
+<tr><td><code>"browser_specific_settings":{<br />
+&nbsp;&nbsp;&nbsp;&lt;browser_name&gt;": {<br />
+&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;"&lt;key&gt;": "&lt;value&gt;"<br />
+&nbsp;&nbsp;&nbsp;}<br />
+}</code></td><td>Optional</td><td>Describes specific values that MAY be considered by a browser. For example, a particular extension may require version 42 or greater of the Gecko browser in order to work properly:<br />
+<code>"browser_specific_settings":{<br />
+&nbsp;&nbsp;&nbsp;"gecko": {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"strict_min_version": "42.0"<br />
+&nbsp;&nbsp;&nbsp;}<br />
+}</code><br />
+
+                              </td></tr>
+<tr><td><code>"background" : {<br />
+&nbsp;&nbsp;&nbsp;"page": "&lt;Page URL&gt;",<br />
+&nbsp;&nbsp;&nbsp;"scripts": [...],<br />
+&nbsp;&nbsp;&nbsp;"persistent": boolean,<br />
+}
+</code></td><td>Optional<br /><br/>If <code>"background"</code> is specified, <code>"persistent"</code> is required.<br /><br/>Other subkeys are optional</td><td>Automatically loads a page or script and begins execution, regardless of the page being viewed in a tab.</td></tr> 
+
+<tr><td><code>"content_scripts" : {<br />
+&nbsp;&nbsp;&nbsp;"all_frames": &lt;boolean&gt;,<br />
+&nbsp;&nbsp;&nbsp;"css": [...],<br />
+&nbsp;&nbsp;&nbsp;"exclude_matches": [...],<br />
+&nbsp;&nbsp;&nbsp;"js": [...],<br />
+&nbsp;&nbsp;&nbsp;"matches": [...],<br />
+&nbsp;&nbsp;&nbsp;"run_at": &lt;see_details&gt;,<br />
+}
+</code></td><td>Optional</td><td>Automatically adds scripts (from the <code>"js"</code> subkey list) or CSS (from the <code>"css"</code> subkey list) to each page within a tab.<br /><br/>If <code>all_frames</code> is <code>false</code>, the string patterns from <code>matches</code> and <code>exclude_matches</code> are used accordingly to determine which page content is modified or excluded.<br /><br/>Valid values for <code>"run_at"</code> are <code>"document_start", "document_end"</code> and <code>"document_idle"</code>.</p></td></tr>
+
+<tr><td><code>"content_security_policy"</code></td><td>Optional</td><td>A string representation of the new policy to override the default policy. See <a href="#csp-overview">Content Security Policy (CSP)</a> for more information.</td></tr>                 
+<tr><td><code>"options_page"</code></td><td>Optional</td><td>The page within the extension that allows extension users to modify settings or options for the extension.</td></tr>
+<tr><td><code>"manifest_version"</code></td><td>Optional</td><td>This is not used</td></tr>
+<tr><td><code>"required_keys":[...]</code></td><td>Optional</td><td>See the <a href="#required-keys"><code>required_keys</code> key</a> section for more information about this key.</td></tr>
+<tr><td><code>"web_accessible_resources":[...]</code></td><td>Optional</td><td>Resources listed here may be accessed by Internet-hosted site pages.</td></tr>
+<tr><td><code>"externally_connectable": [<br />
+&nbsp;&nbsp;&nbsp;"ids": [...],<br />
+&nbsp;&nbsp;&nbsp;"matches": [...],<br />
+]</code></td><td>Optional</td><td>Other extensions or Internet-hosted site pages may send messages to this extension if their extension ID (<code>"ids"</code>) or page URL pattern (<code>"matches"</code>) are specified.</td></tr>
+<tr><td><code>"permissions" : {<br />
+&nbsp;&nbsp;&nbsp;"activeTab",<br />
+&nbsp;&nbsp;&nbsp;"contextMenus",<br />
+&nbsp;&nbsp;&nbsp;"tabs",<br />
+&nbsp;&nbsp;&nbsp;"webNavigation",<br />
+&nbsp;&nbsp;&nbsp;"webRequestBlocking",<br />
+&nbsp;&nbsp;&nbsp;"&lt;url-pattern&gt;",<br />
+}</code></td><td>Optional </td><td>Each subkey must be specified in order to use the associated API.<br />
+<ul>
+<li><code>activeTab...<a href="#tabs">browser.tabs</a></code> (<a href="#active-tab">activeTab</a>)</li>
+<li><code>contextMenus...<a href="#contextMenus">browser.contextMenus</a></code></li>
+<li><code>tabs...<a href="#tabs">browser.tabs</a></code></li>
+<li><code>webNavigation...<a href="#webNavigation">browser.webNavigation</a></code></li>
+<li><code>webRequest...<a href="#webRequest">browser.webRequest</a></code></li>
+<li><code>webRequestBlocking...<a href="#webRequest">browser.webRequest </a></code>(blocking)</li>
+</ul>
+
+Patterns listed in <code>&lt;url-pattern&gt;</code> allow additional permissions for URLs that match those patterns. See <a href="#all-urls">Permissions URL patterns</a> for more information. 
+                                                          </td></tr>
+                 
+            </table>
+        </section>
+        <section>
+            <h3 id="all-urls">Permissions URL patterns</h3>
+            <p> The <code>"permissions"</code> key may include match patterns that follow the structure <code>&lt;scheme&gt;://&lt;host&gt;/&lt;path&gt;</code>, such as <code>"*://*.w3.org/*"</code>. The special 
                 pattern <code>"&lt;all_urls&gt;"</code> is also permitted. The match patterns identify a group of URLs for which the extension is requesting extra privileges:</p>
             <ul>
                 <li>XHR access to those origins</li>
@@ -2649,7 +2728,14 @@ interface BrowserExtEvent {
                 <li>the ability to receive events from the <code>webRequest</code> API for those origins</li>
             </ul>
         </section>
-        <section class='informative'>
+        <section>
+            <h3 id="active-tab">The <code>activeTab</code> permission</h3>
+            <p> The <code>"activeTab"</code> permission enables the use of <code>browser.tabs</code> API only if the user has actively initiated an action such as the <code>browserAction</code>. The <code>browser.tabs</code> API can be used until the tab is navigated to another page or closed.</p><p>Passive background-only extensions cannot use the <code>browser.tabs</code> API unless both the <code>"tabs"</code> permission and a URL pattern (e.g. <code>"&lt;all_urls&gt;"</code> or <code>"http://*"</code> or <code>"*://&.w3.org/*"</code>) are explicitly declared in <code>manifest.json</code>. </p>        </section>
+        <section>
+            <h3 id="required-keys">The <code>required_keys</code> key</h3>
+            <p>This key is optional, but if it is specified, it provides a list of strings representing manifest keys that MUST be supported. If the browser loading the extension does not support the specified key, the browser MUST reject the manifest and not load the extension.</p>
+        </section>
+                <section class='informative'>
             <h3>Full Example</h3>
 <pre>
 // Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, 
@@ -2663,7 +2749,7 @@ interface BrowserExtEvent {
   "name": "The Name of Your Extension",             // Required
   "version": "Your Extension Version",              // Required
   "default_locale": "en",                           // Required if locales are used. Otherwise, not allowed
-  "description": "Description for Your Extensions",   
+  "description": "Description for Your Extension",   
   "icons": {...},                                    
   "developer": {                                    
        "name": "Your Name or Company",              
@@ -2705,7 +2791,6 @@ interface BrowserExtEvent {
   "permissions": {                                  
        "activeTab",                                                
        "contextMenus",                              
-       "storage",                                   
        "tabs",                                      
        "webNavigation",                            
        "webRequest",                                
@@ -2784,8 +2869,8 @@ interface BrowserExtEvent {
             </section>
 
         </section>
-        <section  >
-            <h2>Testing Extensions with WebDriver</h2>
+        <section>
+            <h2 id="wd">Testing Extensions with WebDriver</h2>
             <p>
                 Browsers vendors MAY choose to implement WebDriver support in their browsers to allow for the automated testing of browser extensions. To implement this support, the browser MUST support:
             </p>
@@ -2814,7 +2899,7 @@ interface BrowserExtEvent {
                             </tr>  
                             <tr>
                                 <td>DELETE</td>
-                                <td>/session/{<var>sessionId</var>}/browserext/{extensionId}</td>
+                                <td>/session/{<var>sessionId</var>}/browserext<var>extensionId</var>}</td>
                                 <td>Uninstall a Browser Extension</td>
                             </tr>                                                      
                             <tr>
@@ -2842,7 +2927,16 @@ interface BrowserExtEvent {
                                 <td>/session/{<var>sessionId</var>}/element/{<var>element id</var>}/browserext/contextMenuItem/{<var>menuitemId</var>}</td>
                                 <td>Select Browser Extension Context Menu Item</td>
                             </tr>
-                        </tbody>
+                            <tr>
+                                <td>GET</td>
+                                <td>/session/{<var>sessionId</var>}/browserext/permissionPrompt</td>
+                                <td>Get Browser Extension Permission Prompt Text</td>
+                            </tr>
+                            <tr>
+                                <td>POST</td>
+                                <td>/session/{<var>sessionId</var>}/browserext/permissionPrompt/{<var>promptId</var>}/action/{<var>promptAction</var>}</td>
+                                <td>Take Browser Extension Permission Prompt Action</td>
+                            </tr>                        </tbody>
                     </table>
                 </section>
                 <section  >
@@ -2907,6 +3001,24 @@ interface BrowserExtEvent {
                                     element.
                                 </td>
                             </tr>
+                            <tr>
+                                <td><dfn id="dfn-no-such-browser-extension-permission-prompt" data-dfn-type="dfn">no such browser extension permission prompt</dfn></td>
+                                <td>400</td>
+                                <td><code>no such browser extension permission prompt</code></td>
+                                <td>
+                                    A request to obtain the permission prompt information could not be completed
+                                    because there is no permission prompt at this time or the requested prompt was not available.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><dfn id="dfn-no-such-browser-extension-permission-prompt-action" data-dfn-type="dfn">no such browser extension permission prompt action</dfn></td>
+                                <td>400</td>
+                                <td><code>no such browser extension permission prompt action</code></td>
+                                <td>
+                                    A request to take the specified action could not be completed
+                                    because the action was not available.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </section>
@@ -2924,53 +3036,7 @@ interface BrowserExtEvent {
                             An array of absolute paths which point to the location of browser extension files. The path <em title="MUST" class="rfc2119">MUST</em> point to either a single file appropriate for a specific brower (e.g. .crx) or a folder which contains the extension source files. If a folder is specified, the folder itself <em title="MUST" class="rfc2119">MUST</em> contain a <code>manifest.json</code> file. Subfolders containing <code>manifest.json</code> files will not be searched.
                         </dd>
                     </dl>
-                    <p>The following is an optional entry for the <i>server capabilities</i> JSON object:</p>
-                    <dl>
-                        <dt>
-                            "<code>browserExtPermissionPromptBehavior</code>"
-                        </dt>
-                        <dd>
-                            A string indicating how permission confirmation prompts should be addressed. This entry, if specified, will accept or dismiss the prompt before it can be handled by <a href="#browser-ext-permission-prompt-accept"><code>browserExtPermissionPromptAccept</code></a> or <a href="#browser-ext-permission-prompt-dismiss"><code>browserExtPermissionPromptDismiss</code></a>.
-                            <table class="simple">
-                                <tbody>
-                                    <tr>
-                                        <th>
-                                            Keyword
-                                        </th>
-                                        <th>
-                                            State
-                                        </th>
-                                        <th>
-                                            Description
-                                        </th>
-                                    </tr>
 
-                                    <tr>
-                                        <td>
-                                            "<code>accept</code>"
-                                        </td>
-                                        <td>
-                                            <dfn data-dfn-type="dfn" id="dfn-accept-state">Accept state</dfn>
-                                        </td>
-                                        <td>
-                                            All browser extension permission dialogs should be accepted.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            "<code>dismiss</code>"
-                                        </td>
-                                        <td>
-                                            <dfn data-dfn-type="dfn" id="dfn-dismiss-state">Dismiss state</dfn>
-                                        </td>
-                                        <td>
-                                            All browser extension permission dialogs should be dismissed.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </dd>
-                    </dl>
                     <section  >
                         <h4>Extension Lifetime</h4>
                         <p>No browser extension will be installed or pre-loaded during a WebDriver session unless it is explicitly specified in the <code>enabledBrowserExtensions</code> array. Browser extensions loaded during the session will not be available to other active instances of the browser that are not part of the WebDriver session. When the session ends, the array of browser extensions are unloaded and uninstalled.</p>
@@ -3466,47 +3532,7 @@ interface BrowserExtEvent {
                         </p>
                     </section>
                     <section>
-                        <h3><code>browserExtPermissionPromptAccept()</code></h3>
-                        <table class="simple jsoncommand">
-                            <tbody>
-                                <tr>
-                                    <th>HTTP Method</th>
-                                    <th>Path Template</th>
-                                    <th>Notes</th>
-                                </tr>
-                                <tr>
-                                    <td>POST</td>
-                                    <td id="browser-ext-permission-prompt-accept">/session/{<var>sessionId</var>}/browserext/permissionPrompt/accept</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p>
-                            This accepts a user prompt, allowing the browser extension to call the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>.
-                        </p>
-                    </section> 
-                    <section>
-                        <h3><code>browserExtPermissionPromptDismiss()</code></h3>
-                        <table class="simple jsoncommand">
-                            <tbody>
-                                <tr>
-                                    <th>HTTP Method</th>
-                                    <th>Path Template</th>
-                                    <th>Notes</th>
-                                </tr>
-                                <tr>
-                                    <td>POST</td>
-                                    <td id="browser-ext-permission-prompt-dismiss">/session/{<var>sessionId</var>}/browserext/permissionPrompt/dismiss</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p>
-                            This dismisses a user prompt, rejecting the browser extension's request to use the API or APIs specified in <a href="#browser-ext-permission-prompt-text"><code>getBrowserExtPermissionPromptText</code></a>.
-                        </p>
-                    </section> 
-                    <section>
-                        <h3><code>getBrowserExtPermissionPromptText()</code></h3>
+                        <h3><code>getBrowserExtPermissionPrompt()</code></h3>
                         <table class="simple jsoncommand">
                             <tbody>
                                 <tr>
@@ -3516,13 +3542,125 @@ interface BrowserExtEvent {
                                 </tr>
                                 <tr>
                                     <td>GET</td>
-                                    <td id="browser-ext-permission-prompt-text">/session/{<var>sessionId</var>}/browserext/permissionPrompt/text</td>
+                                    <td id="browser-ext-permission-prompt">/session/{<var>sessionId</var>}/browserext/permissionPrompt</td>
                                     <td></td>
                                 </tr>
                             </tbody>
                         </table>
                         <p>
-                            Returns a string that includes the names of APIs which require user confirmation.
+                            Upon installation of a browser extension, a browser MAY notify the user of potential privacy-related capabilities of the extension. For example, if an extension's <code>manifest.json</code> requests the <code>"tabs"</code> or <code>"webNavigation"</code> permission, the browser MAY request user confirmation of these permissions. This command returns a JSON object that includes the names of permissions which require user confirmation and other information about the prompt. A similar prompt MAY also occur if an extension has been updated and the newer version requires additional permisisons. If there is no prompt at the time this API is called, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned.
+                        </p>
+                        <ul><li>Let <var>permissionPrompt</var> be a new JSON Object.</li>
+                            <li>Set the property <code>promptId</code> to a string which is unique for each time a prompt is displayed.</li>
+                            <li>Set the property <code>promptMessageText</code> to a string which represents the text shown to the user, localized to the default locale specified in <code>manifest.json</code>.</li>
+                            <li>Set the property <code>promptDefaultLocale</code> to the default locale code specified in <code>manifest.json</code>. If locales are not used by the extension, the property SHOULD be omitted, but MAY return an empty string ("").</li>
+                            <li>Set the property <code>promptRequestingUrl</code> to a string representing the relevant URL. Strings returned here are the same strings defined in the <code>"permissions": [ ]</code> section of <code>manisfest.json</code>. If a URL is not applicable to the prompt, the property SHOULD be omitted but MAY also return an empty string ("").</li>
+                            <li>Set the property <code>promptPermissions</code> to an array of strings which correspond to requested permissions. Strings returned here are the same strings defined in the <code>"permissions": [ ]</code> section of <code>manisfest.json</code>. If permissions are not applicable to the prompt, the property SHOULD be omitted, but MAY include an empty array ([]) or an array of empty strings ([""]). </li>
+                            <li>Set the property <code>promptActions</code> to an array of strings which correspond to possible actions the user could take. The actions <code>allow</code> and <code>deny</code> are required. Other optional values MAY be returned, but the behavior is not prescribed in this specification.</li>
+                        </ul>
+                            <table class="simple">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                promptAction
+                                            </th>
+                                            <th>
+                                                Required
+                                            </th>
+                                            <th>
+                                                Description
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>allow</code>
+                                            </td>
+                                            <td>
+                                                Required
+                                            </td>
+                                            <td>
+                                                Allows the extension to use or access the capabilities or sites 
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>deny</code>
+                                            </td>
+                                            <td>
+                                                Required
+                                            </td>
+                                            <td>
+                                                Denies extension's use of the requested capabilities or sites. The browser implementation of <code>deny</code> is not prescribed in this specification, and MAY result in the cancellation of the extension's installation. 
+                                            </td>
+
+                                        </tr>
+                                                                                <tr>
+                                            <td>
+                                                <code>dismiss</code>
+                                            </td>
+                                            <td>
+                                                Optional
+                                            </td>
+                                            <td>
+                                                Some browsers MAY provide the user with an option to close a prompt without taking an <code>accept</code> or <code>deny</code> action. The browser implementation of <code>dismiss</code> is not prescribed in this specification, and MAY result in the cancellation of the extension's installation. 
+                                            </td>
+                                        </tr>
+                                                                                <tr>
+                                            <td>
+                                                <code><i>{custom}</i></code>
+                                            </td>
+                                            <td>
+                                                Optional
+                                            </td>
+                                            <td>
+                                                Some browsers MAY provide additional options not prescribed in this table. For example, <code>alwaysAllow</code>, <code>allowOnce</code> or <code>allowForThisSiteOnly</code> may be presented in a permission prompt. The browser implementation for these custom actions is not prescribed in this specification. 
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            <aside class="example">
+                            <div class="example-permissionPrompt-unlocalized-noUrl"></div>
+                                <p>This extension, which does not use locales, prompts to request broad permissions that do not correspond to a specific URL.</p>
+                            <pre class="hljs xquery">
+{ 
+<span class="hljs-string">"promptId"</span>: <span class="hljs-string">"1"</span>,
+<span class="hljs-string">"promptMessageText"</span>: <span class="hljs-string">"A new extension Sample1 has been installed. It can access your browsing activity. Do you wish to continue? Yes No Close"</span>,
+<span class="hljs-string">"promptPermissions"</span>: <span class="hljs-string">["tabs","webNavigation"]</span>,
+<span class="hljs-string">"promptActions"</span>: <span class="hljs-string">["allow","deny","dismiss"]</span>
+}</pre>
+                        </aside> 
+                                                    <aside class="example">
+                            <div class="example-permissionPrompt-localized-with-url"></div>
+                                <p>This extension, which uses locales to provide translated strings, prompts for permissions specific to a banking URL.</p>
+                            <pre class="hljs xquery">
+{ 
+<span class="hljs-string">"promptId"</span>: <span class="hljs-string">"2"</span>,
+<span class="hljs-string">"promptMessageText"</span>: <span class="hljs-string">"A new extension RegionalBankAssistant1 has been installed. It can read and modify data on regionalbank1.com. Enable Cancel"</span>,
+<span class="hljs-string">"promptDefaultLocale"</span>: <span class="hljs-string">"en"</span>,
+<span class="hljs-string">"promptRequestingUrl"</span>: <span class="hljs-string">["http://*.regionalbank1.com"]</span>,
+<span class="hljs-string">"promptActions"</span>: <span class="hljs-string">["allow","deny"]</span>
+}</pre>
+                        </aside> 
+                    </section> 
+                    <section>
+                        <h3><code>takeBrowserExtPermissionPromptAction()</code></h3>
+                        <table class="simple jsoncommand">
+                            <tbody>
+                                <tr>
+                                    <th>HTTP Method</th>
+                                    <th>Path Template</th>
+                                    <th>Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>POST</td>
+                                    <td id="browser-ext-permission-prompt-action">/session/{<var>sessionId</var>}/browserext/permissionPrompt/{<var>promptId</var>}/action/{<var>promptAction</var>}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            Performs the action specified by <code>promptAction</code>. If there is no prompt at the time this API is called, or if the requested <code>promptId</code> is not available, the error "<a href="#dfn-no-such-browser-extension-permission-prompt">no such browser extension permission prompt</a>" is returned. If the requested <code>promptAction</code> is not available, the error "<a href="#dfn-no-such-browser-extension-permission-prompt-action">no such browser extension permission prompt action</a>" is returned.
                         </p>
                     </section> 
                 </section>
