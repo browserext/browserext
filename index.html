@@ -291,8 +291,8 @@ interface BrowserExtI18n_ {
                                 Next, we specify the available contexts ("Window" for background/event/popup/options...) and "ContentScript" for the content context.
 
 <pre class="idl">
-[NoInterfaceObject, Exposed=(Window,ContentScript)] 
-interface BrowserExtI18nAPI_ {
+[Exposed=(Window,ContentScript)]
+interface mixin BrowserExtI18nAPI_ {
     readonly attribute BrowserExtI18n_ i18n;
 };
                         </pre>
@@ -301,7 +301,7 @@ interface BrowserExtI18nAPI_ {
                                 Connect the <code>i18n</code> object to the <code>browser.*</code> object.
 
 <pre class="idl">
-Browser implements BrowserExtI18nAPI_;
+Browser includes BrowserExtI18nAPI_;
 </pre>
                             </li>
                             <li>
@@ -385,12 +385,12 @@ partial dictionary BrowserExtManifest_ {
 
 <pre class="def idl">
 [CheckAnyPermissions_browserExt_]
-interface BrowserExtGlobal {
+interface mixin BrowserExtGlobal {
     readonly attribute Browser browser;
 };
-Window implements BrowserExtGlobal;
+Window includes BrowserExtGlobal;
 
-[NoInterfaceObject] 
+[NoInterfaceObject, Exposed=Window]
 interface Browser { 
 };
 dictionary BrowserExtIcon {
@@ -630,11 +630,11 @@ interface BrowserExtBrowserAction {
     Promise&lt;void&gt; setIcon(BrowserExtBadgePathTabId details);
     void setPopup(BrowserExtBadgeTabIdPopup details);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtBrowserAction_]
-interface BrowserExtBrowserActionAPI {
+[CheckAnyPermissions_browserExtBrowserAction_]
+interface mixin BrowserExtBrowserActionAPI {
     readonly attribute BrowserExtBrowserAction browserAction; 
 };
-Browser implements BrowserExtBrowserActionAPI;
+Browser includes BrowserExtBrowserActionAPI;
 </pre>
                         <section class="introductory">
                             <h4> Definitions</h4>
@@ -792,11 +792,11 @@ interface BrowserExtContextMenus {
     Promise&lt;void&gt;  removeAll();
     Promise&lt;void&gt;  update((long or DOMString) itemId, BrowserExtContextMenuUpdateDetails details);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtContextMenus_]
-interface BrowserExtContextMenusAPI {
+[CheckAnyPermissions_browserExtContextMenus_]
+interface mixin BrowserExtContextMenusAPI {
     readonly attribute BrowserExtContextMenus contextMenus; 
 };
-Browser implements BrowserExtContextMenusAPI;
+Browser includes BrowserExtContextMenusAPI;
 </pre>
     <section class="introductory">
         <h4> Definitions</h4>
@@ -1046,11 +1046,11 @@ This is an asynchronous function that returns a Promise.</dd>
 interface BrowserExtI18n {
     DOMString getMessage(DOMString messageName, sequence&lt;DOMString?&gt;? substitutions);
 };
-[NoInterfaceObject, Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_] 
-interface BrowserExtI18nAPI {
+[Exposed=(Window,ContentScript), CheckAnyPermissions_browserExt_] 
+interface mixin BrowserExtI18nAPI {
         readonly attribute BrowserExtI18n i18n;
 };
-Browser implements BrowserExtI18nAPI;
+Browser includes BrowserExtI18nAPI;
 partial dictionary BrowserExtManifest {
     DOMString? defaultLocaleValue;
 };
@@ -1120,6 +1120,7 @@ dictionary BrowserExtBadgePath {
     DOMString path;
 };
 callback BrowserExtPageActionOnClickedCallback = void (BrowserExtTabsTab tab);
+[NoInterfaceObject]
 interface BrowserExtPageAction {
     Promise&lt;DOMString?&gt; getPopup(BrowserExtTabIdDetails details);
     Promise&lt;DOMString?&gt; getTitle(BrowserExtTabIdDetails details);
@@ -1130,11 +1131,11 @@ interface BrowserExtPageAction {
     void setTitle(BrowserExtBadgeTextTabId details);
     void show(long tabId);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtPageAction_]
-interface BrowserExtPageActionAPI {
+[CheckAnyPermissions_browserExtPageAction_]
+interface mixin BrowserExtPageActionAPI {
     readonly attribute BrowserExtPageAction pageAction; 
 };
-Browser implements BrowserExtPageActionAPI;
+Browser includes BrowserExtPageActionAPI;
 </pre>
                         <section class="introductory">
                             <h4> Definitions</h4>
@@ -1252,11 +1253,11 @@ interface BrowserExtBrowserRuntime {
     attribute BrowserExtRuntimePort Port;
     attribute BrowserExtRuntimeMessageSender MessageSender;
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExt_]
-interface BrowserExtRuntimeAPI {
+[CheckAnyPermissions_browserExt_]
+interface mixin BrowserExtRuntimeAPI {
     readonly attribute BrowserExtRuntime runtime; 
 };
-Browser implements BrowserExtRuntimeAPI;
+Browser includes BrowserExtRuntimeAPI;
 </pre>
                         <section class="introductory">
                             <h4> Definitions</h4>
@@ -1495,11 +1496,11 @@ interface BrowserExtBrowserTabs {
     Promise&lt;any&gt; sendMessage(long tabId, any message, optional BrowserExtTabSendMessageOptions details);
     Promise&lt;BrowserExtTabsTab&gt; update(optional long tabId, BrowserExtTabUpdateDetails details);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtTabs_]
-interface BrowserExtTabsAPI {
+[CheckAnyPermissions_browserExtTabs_]
+interface mixin BrowserExtTabsAPI {
 readonly attribute BrowserExtTabs tabs; 
 };
-Browser implements BrowserExtTabsAPI;
+Browser includes BrowserExtTabsAPI;
 </pre>
                         <section class="introductory">
                             <h4> Definitions</h4>
@@ -1878,11 +1879,11 @@ interface BrowserExtBrowserWebNavigation {
     void onReferenceFragmentUpdated(BrowserExtWebNavigationOnReferenceFragmentUpdated callback);
 };
     
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtWebNavigation_]
-interface BrowserExtWebNavigationAPI {
+[CheckAnyPermissions_browserExtWebNavigation_]
+interface mixin BrowserExtWebNavigationAPI {
     readonly attribute BrowserExtWebNavigation webNavigation; 
 };
-Browser implements BrowserExtWebNavigationAPI;
+Browser includes BrowserExtWebNavigationAPI;
 </pre>
                         <section class="introductory">
                             <h4> Definitions</h4>
@@ -2142,11 +2143,11 @@ interface BrowserExtBrowserWebRequest {
     void onHeadersReceived(BrowserExtWebRequestOnHeadersReceivedCallback callback);
     void onSendHeaders(Function callback);
 };
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExtWebRequest_]
-interface BrowserExtWebRequestAPI {
+[CheckAnyPermissions_browserExtWebRequest_]
+interface mixin BrowserExtWebRequestAPI {
     readonly attribute BrowserExtWebRequest webRequest; 
 };
-Browser implements BrowserWebRequestAPI;
+Browser includes BrowserWebRequestAPI;
 </pre>
                         <section class="introductory">
                             <h4> Definitions</h4>
@@ -2429,11 +2430,11 @@ interface BrowserExtWindows {
     Promise&lt;BrowserExtWindowsWindow&gt; update(long windowId, optional BrowserExtWindowUpdateDetails details);
 };
     
-[NoInterfaceObject, Exposed=Window, CheckAnyPermissions_browserExt_]
-interface BrowserExtWindowsAPI {
+[CheckAnyPermissions_browserExt_]
+interface mixin BrowserExtWindowsAPI {
 readonly attribute BrowserExtWindows windows; 
 };
-Browser implements BrowserExtWindowsAPI;
+Browser includes BrowserExtWindowsAPI;
 </pre>
                         <section class="introductory">
                             <h4> Definitions</h4>
