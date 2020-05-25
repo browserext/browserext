@@ -2660,10 +2660,34 @@ interface BrowserExtEvent {
         <h2 id="manifest-json">Manifest Format</h2>
         <section>
             <h3>Pre-parsing</h3>
-            <p>Standards-compliant browsers are expected to ignore "//" comments. Disregarding comments, the manifest.json file format for browser extensions is expected to be fully JSON compliant. Malformed JSON files are not supported.  If manifest keys that are not defined in this specification are specified, other browsers MAY ignore those keys.</p>
+	    <p>The manifest.json file format for browser extensions uses the [[JSON]] syntax,
+	    with one extension: comments are allowed.
+	    Like whitespace, comments can appear before or after any token, but not within tokens, and are ignored.
+	    Sequences of characters that would correspond to a comment,
+	    but appeat within a string token
+	    are not treated as comments, and are handled as normal string content.
+	    Comments are defined to be either of the following:</p>
+	    <ul>
+		    <li>A solidus (U+002F), followed by another solidus (U+002F), followed any sequence of characters other than a line feed (U+000A) or carriage return (U+000D), and terminated by a line feed (U+000A) or carriage return (U+000D)
+		    <li>A solidus (U+002F), followed by and asterisk (U+002A), followed any sequence of characters other than asterisk (U+002A) followed by a solidus (U+002F), and terminated by an asterisk (U+002A) followed by a solidus (U+002F).
+	    </ul>
+	    <p>Files that do not comply with this extended JSON syntax must be rejected.<p>
         </section>
         <section>
             <h3>List of Keys</h3>
+	    <p>If manifest keys that are not recognized by the UA are found in the manifest,
+	    Theses keys must be ignored by the UA,
+	    and the manifest must be accepted as if these keys had not been specified.
+	    Likewise, if values unrecognized by the UA are used for optional keys,
+	    the manifest must be accepted as if these keys had not been specified.
+	    in this specification are specified, other browsers MAY ignore those keys.</p>
+
+	    <p>If values unrecognized by the UA are used for required keys,
+	    the manifest must be rejected.</p>
+
+	    <p>If any required key is missing, or if any disallowed key is present,
+	    the manifest must be rejected.</p>
+
             <p>The full list of supported manifest keys is provided below:</p>
             <table class="simple">
                 <tr><th width="100px">Key</th><th>Required</th><th>Details</th></tr>
