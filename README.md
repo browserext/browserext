@@ -1,6 +1,6 @@
 # The Browser Extension Specification
 
-⚠ Implementation of the technologies discussed and tentatively specified in this Community Group is ongoing and none of the original contributors have expressed opposition to this work. However, due to various circumstances, the level of participation has droped below the level at which productive discussion is possible, and activity in this group has stopped as a result.
+⚠ Implementation of the technologies discussed and tentatively specified in this Community Group is ongoing and none of the original contributors have expressed opposition to this work. However, due to various circumstances, the level of participation has dropped below the level at which productive discussion is possible, and activity in this group has stopped as a result.
 
 The specifications have therefore not been maintained in a while, and are out of date.
 
